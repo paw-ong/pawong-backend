@@ -4,6 +4,10 @@
 ### dotenv ###
 .env
 
+### es, mysql data ###
+infra/docker-compose/elasticsearch/data/*
+infra/docker-compose/mysql/db/*
+
 ### Git ###
 # Created by git for backups. To disable backups in Git:
 # $ git config --global mergetool.keepBackup false
