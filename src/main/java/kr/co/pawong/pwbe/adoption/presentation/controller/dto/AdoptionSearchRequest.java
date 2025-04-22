@@ -12,10 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AdoptionSearchCondition {
+public class AdoptionSearchRequest {
     private List<UpKindCd> upKindCds;   // ex: upKindCds=KIND1&upKindCds=KIND2
     private SexCd sexCd;              // ex: sexCd=FEMALE
     private NeuterYn neuterYn;        // ex: neuterYn=Y
     private List<String> regions;     // ex: regions=서울&regions=부산
-    private String keyword;           // ex: keyword=온순한
+    private String searchTerm;           // 검색어 문장
 }
