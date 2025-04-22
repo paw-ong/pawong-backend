@@ -1,5 +1,6 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.external;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.ai.openai.api.OpenAiApi;
@@ -12,8 +13,9 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 스프링 부트 없이 테스트가 안 될 것 같아요. infrastructure라.. 비활성화 해놓겠습니다.
+ * infrastructure라.. 스프링 부트 없이 테스트가 안 될 것 같아요. 비활성화 해놓겠습니다.
  */
+@Disabled("OpenAI 연동 테스트는 전체 빌드 시 제외")
 @SpringBootTest(properties = "spring.profiles.active=dev")
 class OpenAiEmbeddingAdapterTest {
 
