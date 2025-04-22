@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdoptionAiServiceImpl implements AdoptionAiService {
     @Override
-    public String refineSearchCondition(String prompt) {
+    public String refineSearchCondition(String searchTerm) {
         return "";
     }
 
     @Override
-    public String embed(String completion) {
-        return "";
+    public float[] embed(String completion) {
+        return new float[0];
     }
 }
