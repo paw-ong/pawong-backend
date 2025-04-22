@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@Qualifier("OPENAI")
+@Qualifier("OPENAI_EMBEDDING")
 @RequiredArgsConstructor
 public class OpenAiEmbeddingAdapter implements EmbeddingProcessorPort {
 

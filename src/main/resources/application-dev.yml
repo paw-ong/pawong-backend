@@ -9,4 +9,8 @@ spring:
   ai:
     openai:
       api-key: ${OPEN_AI_KEY}
+      chat:
+        options:
+          model: o4-mini
+          temperature: 1.0
       embedding-model-name: text-embedding-ada-002
