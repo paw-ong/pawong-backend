@@ -1,12 +1,10 @@
 spring:
-  application:
-    name: pawong-backend
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:mysql://localhost:3306/likelion?serverTimezone=Asia/Seoul
-    username: likelion
-    password: likelion
+    url: ${DEV_DB_URL}
+    username: ${DEV_DB_USERNAME}
+    password: ${DEV_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   ai:
     openai:
