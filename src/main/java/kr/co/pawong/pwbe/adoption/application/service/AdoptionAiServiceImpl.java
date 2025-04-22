@@ -10,7 +10,8 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     }
 
     @Override
-    public String embed(String completion) {
-        return "";
+    public float[] embed(String completion) {
+        return new float[0];
     }
+
 }

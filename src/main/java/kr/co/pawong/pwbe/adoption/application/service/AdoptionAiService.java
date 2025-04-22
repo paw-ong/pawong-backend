@@ -4,5 +4,5 @@ public interface AdoptionAiService {
 
     String refineSearchCondition(String prompt);
 
-    String embed(String completion);
+    float[] embed(String completion);
 }
