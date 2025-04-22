@@ -12,11 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -81,7 +79,4 @@ public class ShelterEntity {
     private String careTel; // 전화번호
 
     private LocalDate dataStdDt; // 데이터 기준일자
-
-
-
 }
