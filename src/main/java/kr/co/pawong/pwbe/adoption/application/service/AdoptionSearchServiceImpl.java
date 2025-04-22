@@ -4,6 +4,7 @@ import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.dto.AdoptionSearchCondition;
 import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionSearchMapper;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.AdoptionEsRepository;
+import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
 import kr.co.pawong.pwbe.adoption.presentation.controller.dto.AdoptionSearchRequest;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionSearchService;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,10 @@ public class AdoptionSearchServiceImpl implements AdoptionSearchService {
      * @return adoption list
      */
     @Override
-    public List<Adoption> search(AdoptionSearchRequest request) {
+    public List<AdoptionDocument> search(AdoptionSearchRequest request) {
         String refinedSearchTerm = refineSearchTerm(request);
         AdoptionSearchCondition condition = AdoptionSearchMapper.fromRequest(request, refinedSearchTerm, embed(refinedSearchTerm));
-        return adoptionEsRepository.searchSimilarAdoptionIds(condition);
+        return adoptionEsRepository.searchSimilarAdoptions(condition);
     }
 
     // 위임, 정제된 검색어 문장
