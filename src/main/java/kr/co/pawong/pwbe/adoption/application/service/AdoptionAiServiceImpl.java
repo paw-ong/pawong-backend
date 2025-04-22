@@ -14,12 +14,20 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
 
     @Override
     public String refineSearchCondition(String searchTerm) {
-        return "";
+        validateNotBlank(searchTerm);
+        return promptPort.refineByPrompt(searchTerm);
     }
 
     @Override
     public float[] embed(String completion) {
-        return new float[0];
+        validateNotBlank(completion);
+        return embeddingPort.embed(completion);
+    }
+
+    private void validateNotBlank(String input) {
+        if (input == null || input.isBlank()) {
+            throw new IllegalArgumentException("Input cannot be null or blank.");
+        }
     }
 
 }
