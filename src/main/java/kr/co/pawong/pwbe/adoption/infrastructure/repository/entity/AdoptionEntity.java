@@ -20,6 +20,7 @@ import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
 import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
+import kr.co.pawong.pwbe.shelter.infrastructure.repository.entity.ShelterEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -91,6 +92,6 @@ public class AdoptionEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "shelter_id")
-    private Shelter shelter; // 보호소id(외래키)
+    private ShelterEntity shelterEntity; // 보호소id(외래키)
 
 }

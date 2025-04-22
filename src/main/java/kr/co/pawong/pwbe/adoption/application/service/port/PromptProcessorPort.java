@@ -2,4 +2,5 @@ package kr.co.pawong.pwbe.adoption.application.service.port;
 
 public interface PromptProcessorPort {
 
+    String refineByPrompt(String prompt);
 }
