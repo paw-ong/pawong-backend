@@ -68,7 +68,7 @@ public class Adoption {
     }
 
     // AdoptionUpdate -> Adoption
-    public static Adoption update(AdoptionUpdate adoptionUpdate) {
+    public Adoption update(AdoptionUpdate adoptionUpdate) {
         return Adoption.builder()
                 .adoptionId(adoptionUpdate.getAdoptionId())
                 .desertionNo(adoptionUpdate.getDesertionNo())
