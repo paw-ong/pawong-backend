@@ -63,7 +63,8 @@ public class AdoptionDocument {
                 .sexCd(adoption.getSexCd())
                 .neuterYn(adoption.getNeuterYn())
                 .specialMark(adoption.getSpecialMark())
+                .searchField("")
+                .embedding(null)
                 .build();
     }
-
 }
