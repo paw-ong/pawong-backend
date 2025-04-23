@@ -1,7 +1,9 @@
 package kr.co.pawong.pwbe.adoption.enums;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 public enum UpKindCd {
     DOG("417000"),
@@ -20,6 +22,7 @@ public enum UpKindCd {
                 return kind;
             }
         }
-        throw new IllegalArgumentException("종류코드 오류: " + value);
+        log.warn("종류코드 오류: {}", value);
+        return null;
     }
 }

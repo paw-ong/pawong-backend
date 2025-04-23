@@ -1,7 +1,9 @@
 package kr.co.pawong.pwbe.adoption.enums;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 public enum UpKindNm {
     DOG("개"),
@@ -20,6 +22,7 @@ public enum UpKindNm {
                 return kind;
             }
         }
-        throw new IllegalArgumentException("종류명 오류: " + value);
+        log.warn("종류명 오류: {}", value);
+        return null;
     }
 }

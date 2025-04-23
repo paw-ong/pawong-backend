@@ -1,7 +1,9 @@
 package kr.co.pawong.pwbe.adoption.enums;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 public enum ProcessState {
     PROTECTED("보호중"),
@@ -24,6 +26,7 @@ public enum ProcessState {
                 return processState;
             }
         }
-        throw new IllegalArgumentException("종류코드 오류: " + state);
+        log.warn("종류코드 오류: {}", state);
+        return null;
     }
 }
