@@ -1,5 +1,9 @@
 package kr.co.pawong.pwbe.adoption.presentation.port;
 
-public interface AdoptionUpdateService {
+import java.util.List;
+import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
 
+public interface AdoptionUpdateService {
+    // AdoptionCreate -> Adoption
+    void saveAdoption(List<AdoptionCreate> adoptionCreate);
 }
