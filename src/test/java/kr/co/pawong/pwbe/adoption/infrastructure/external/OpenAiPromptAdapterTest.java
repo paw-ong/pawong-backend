@@ -1,11 +1,10 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.external;
 
+import kr.co.pawong.pwbe.adoption.infrastructure.adapter.openai.OpenAiPromptAdapter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Disabled("OpenAI 연동 테스트는 전체 빌드 시 제외")
 @SpringBootTest(properties = "spring.profiles.active=dev")

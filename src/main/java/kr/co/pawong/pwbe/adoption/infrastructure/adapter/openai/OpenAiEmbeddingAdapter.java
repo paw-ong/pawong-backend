@@ -1,8 +1,7 @@
-package kr.co.pawong.pwbe.adoption.infrastructure.external;
+package kr.co.pawong.pwbe.adoption.infrastructure.adapter.openai;
 
 import kr.co.pawong.pwbe.adoption.application.service.port.EmbeddingProcessorPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
