@@ -14,10 +14,10 @@ public enum UpKindNm {
         this.value = value;
     }
 
-    public static String fromValue(String value) {
+    public static UpKindNm fromValue(String value) {
         for (UpKindNm kind : UpKindNm.values()) {
             if (kind.getValue().equals(value)) {
-                return String.valueOf(kind.getValue());
+                return kind;
             }
         }
         throw new IllegalArgumentException("종류명 오류: " + value);

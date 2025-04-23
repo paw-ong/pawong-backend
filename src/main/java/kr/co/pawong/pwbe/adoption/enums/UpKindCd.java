@@ -14,10 +14,10 @@ public enum UpKindCd {
         this.value = value;
     }
 
-    public static String fromValue(String value) {
+    public static UpKindCd fromValue(String value) {
         for (UpKindCd kind : UpKindCd.values()) {
             if (kind.getValue().equals(value)) {
-                return String.valueOf(kind.getValue());
+                return kind;
             }
         }
         throw new IllegalArgumentException("종류코드 오류: " + value);
