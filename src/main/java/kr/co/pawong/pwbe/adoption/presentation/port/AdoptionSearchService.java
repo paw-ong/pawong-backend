@@ -1,11 +1,11 @@
 package kr.co.pawong.pwbe.adoption.presentation.port;
 
-import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
-import kr.co.pawong.pwbe.adoption.presentation.controller.dto.AdoptionSearchRequest;
+import kr.co.pawong.pwbe.adoption.presentation.controller.dto.request.AdoptionSearchRequest;
+import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionSearchResponses;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+@Service    // testing..
 public interface AdoptionSearchService {
 
-    List<AdoptionDocument> search(AdoptionSearchRequest condition);
+    AdoptionSearchResponses search(AdoptionSearchRequest condition);
 }
