@@ -106,7 +106,7 @@ public class ApiRequestService {
                                 .updTm(updTm)
                                 .build();
 
-                        adoptionCreate.updateActiveState(adoptionCreate);
+                        adoptionCreate.updateActiveState();
                         adoptionCreates.add(adoptionCreate);
                     }
 

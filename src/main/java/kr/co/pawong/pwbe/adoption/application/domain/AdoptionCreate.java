@@ -42,14 +42,13 @@ public class AdoptionCreate {
     private LocalDateTime updTm; // 수정일
     private Shelter shelter; // 보호소id(외래키)
 
-    public ProcessState updateActiveState(AdoptionCreate adoptionCreate) {
+    public void updateActiveState() {
         // ProcessState에 따른 ActiveState 설정
-        if (adoptionCreate.getProcessState() == ProcessState.PROTECTED) {
-            adoptionCreate.activeState = ActiveState.ACTIVE;
+        if (this.getProcessState() == ProcessState.PROTECTED) {
+            this.activeState = ActiveState.ACTIVE;
         } else {
-            adoptionCreate.activeState = ActiveState.INACTIVE;
+            this.activeState = ActiveState.INACTIVE;
         }
-        return null;
     }
 }
 
