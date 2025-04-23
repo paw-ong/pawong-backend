@@ -1,11 +1,5 @@
 package kr.co.pawong.pwbe.adoption.application.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import kr.co.pawong.pwbe.adoption.enums.ActiveState;
@@ -45,4 +39,60 @@ public class Adoption {
     private LocalDateTime updTm; // 수정일
     private Shelter shelter; // 보호소id(외래키)
 
+    // AdoptionCreate -> Adoption
+    public static Adoption from(AdoptionCreate adoptionCreate) {
+        return Adoption.builder()
+                .desertionNo(adoptionCreate.getDesertionNo())
+                .happenDt(adoptionCreate.getHappenDt())
+                .happenPlace(adoptionCreate.getHappenPlace())
+                .upKindNm(adoptionCreate.getUpKindNm())
+                .upKindCd(adoptionCreate.getUpKindCd())
+                .kindNm(adoptionCreate.getKindNm())
+                .kindCd(adoptionCreate.getKindCd())
+                .colorCd(adoptionCreate.getColorCd())
+                .age(adoptionCreate.getAge())
+                .weight(adoptionCreate.getWeight())
+                .noticeNo(adoptionCreate.getNoticeNo())
+                .noticeSdt(adoptionCreate.getNoticeSdt())
+                .noticeEdt(adoptionCreate.getNoticeEdt())
+                .popfile1(adoptionCreate.getPopfile1())
+                .popfile2(adoptionCreate.getPopfile2())
+                .processState(adoptionCreate.getProcessState())
+                .activeState(adoptionCreate.getActiveState())
+                .sexCd(adoptionCreate.getSexCd())
+                .neuterYn(adoptionCreate.getNeuterYn())
+                .specialMark(adoptionCreate.getSpecialMark())
+                .updTm(adoptionCreate.getUpdTm())
+                .shelter(adoptionCreate.getShelter())
+                .build();
+    }
+
+    // AdoptionUpdate -> Adoption
+    public static Adoption update(AdoptionUpdate adoptionUpdate) {
+        return Adoption.builder()
+                .adoptionId(adoptionUpdate.getAdoptionId())
+                .desertionNo(adoptionUpdate.getDesertionNo())
+                .happenDt(adoptionUpdate.getHappenDt())
+                .happenPlace(adoptionUpdate.getHappenPlace())
+                .upKindNm(adoptionUpdate.getUpKindNm())
+                .upKindCd(adoptionUpdate.getUpKindCd())
+                .kindNm(adoptionUpdate.getKindNm())
+                .kindCd(adoptionUpdate.getKindCd())
+                .colorCd(adoptionUpdate.getColorCd())
+                .age(adoptionUpdate.getAge())
+                .weight(adoptionUpdate.getWeight())
+                .noticeNo(adoptionUpdate.getNoticeNo())
+                .noticeSdt(adoptionUpdate.getNoticeSdt())
+                .noticeEdt(adoptionUpdate.getNoticeEdt())
+                .popfile1(adoptionUpdate.getPopfile1())
+                .popfile2(adoptionUpdate.getPopfile2())
+                .processState(adoptionUpdate.getProcessState())
+                .activeState(adoptionUpdate.getActiveState())
+                .sexCd(adoptionUpdate.getSexCd())
+                .neuterYn(adoptionUpdate.getNeuterYn())
+                .specialMark(adoptionUpdate.getSpecialMark())
+                .updTm(adoptionUpdate.getUpdTm())
+                .shelter(adoptionUpdate.getShelter())
+                .build();
+    }
 }

@@ -1,6 +1,5 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
 import kr.co.pawong.pwbe.adoption.enums.ProcessState;
@@ -20,18 +20,14 @@ import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
 import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import kr.co.pawong.pwbe.shelter.infrastructure.repository.entity.ShelterEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Adoption")
 public class AdoptionEntity {
 
@@ -89,8 +85,71 @@ public class AdoptionEntity {
 
     private LocalDateTime updTm; // 수정일
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "shelter_id")
-    private Shelter shelter; // 보호소id(외래키)
+    private ShelterEntity shelterEntity; // 보호소id(외래키)
 
+    // Adoption -> AdoptionEntity
+    public static AdoptionEntity from(Adoption adoption) {
+        AdoptionEntity entity = new AdoptionEntity();
+
+        entity.adoptionId = adoption.getAdoptionId();
+        entity.desertionNo = adoption.getDesertionNo();
+        entity.happenDt = adoption.getHappenDt();
+        entity.happenPlace = adoption.getHappenPlace();
+        entity.upKindNm = adoption.getUpKindNm();
+        entity.upKindCd = adoption.getUpKindCd();
+        entity.kindNm = adoption.getKindNm();
+        entity.kindCd = adoption.getKindCd();
+        entity.colorCd = adoption.getColorCd();
+        entity.age = adoption.getAge();
+        entity.weight = adoption.getWeight();
+        entity.noticeNo = adoption.getNoticeNo();
+        entity.noticeSdt = adoption.getNoticeSdt();
+        entity.noticeEdt = adoption.getNoticeEdt();
+        entity.popfile1 = adoption.getPopfile1();
+        entity.popfile2 = adoption.getPopfile2();
+        entity.processState = adoption.getProcessState();
+        entity.activeState = adoption.getActiveState();
+        entity.sexCd = adoption.getSexCd();
+        entity.neuterYn = adoption.getNeuterYn();
+        entity.specialMark = adoption.getSpecialMark();
+        entity.updTm = adoption.getUpdTm();
+        entity.shelterEntity = null;
+                //ShelterEntity.from(adoption.getShelter());
+
+        return entity;
+    }
+
+    // AdoptionEntity -> Adoption
+    public Adoption toModel() {
+        Shelter shelter = null;
+                //shelterEntity != null ? shelterEntity.toModel() : null;
+
+        return Adoption.builder()
+                .adoptionId(adoptionId)
+                .desertionNo(desertionNo)
+                .happenDt(happenDt)
+                .happenPlace(happenPlace)
+                .upKindNm(upKindNm)
+                .upKindCd(upKindCd)
+                .kindNm(kindNm)
+                .kindCd(kindCd)
+                .colorCd(colorCd)
+                .age(age)
+                .weight(weight)
+                .noticeNo(noticeNo)
+                .noticeSdt(noticeSdt)
+                .noticeEdt(noticeEdt)
+                .popfile1(popfile1)
+                .popfile2(popfile2)
+                .processState(processState)
+                .activeState(activeState)
+                .sexCd(sexCd)
+                .neuterYn(neuterYn)
+                .specialMark(specialMark)
+                .updTm(updTm)
+                .shelter(shelter)
+                .build();
+    }
 }
