@@ -2,7 +2,12 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,intellij,macos,windows,gradle,dotenv,git
 
 ### dotenv ###
-.env
+infra/docker-compose/elasticsearch/.env
+infra/docker-compose/mysql/.env
+
+### es, mysql data ###
+infra/docker-compose/elasticsearch/data/*
+infra/docker-compose/mysql/db/*
 
 ### es, mysql data ###
 infra/docker-compose/elasticsearch/data/*
