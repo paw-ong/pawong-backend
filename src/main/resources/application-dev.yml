@@ -16,3 +16,5 @@ spring:
       embedding:
         options:
           model: text-embedding-ada-002
+  elasticsearch:
+    uris: http://localhost:9200
