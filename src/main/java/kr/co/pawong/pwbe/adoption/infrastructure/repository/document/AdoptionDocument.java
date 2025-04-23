@@ -18,7 +18,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(indexName = "Adoption")
+@Document(indexName = "adoption")   // lowercase
 public class AdoptionDocument {
     @Id
     @Field(type = FieldType.Keyword, name = "adoptionId")
