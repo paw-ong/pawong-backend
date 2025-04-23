@@ -53,7 +53,7 @@ public class AdoptionDocument {
     @Field(type = FieldType.Dense_Vector, dims = 1536)
     private float[] embedding; // searchField 임베딩
 
-    public static AdoptionDocument fromEntity(Adoption adoption) {
+    public static AdoptionDocument from(Adoption adoption) {
         return AdoptionDocument.builder()
                 .adoptionId(adoption.getAdoptionId())
                 .upKindCd(adoption.getUpKindCd())
@@ -63,7 +63,8 @@ public class AdoptionDocument {
                 .sexCd(adoption.getSexCd())
                 .neuterYn(adoption.getNeuterYn())
                 .specialMark(adoption.getSpecialMark())
+                .searchField("")
+                .embedding(null)
                 .build();
     }
-
 }
