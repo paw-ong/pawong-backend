@@ -38,7 +38,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ApiRequestService {
     private final RestTemplate restTemplate;
 
-    public List<AdoptionCreate> saveAdoption() {
+    public List<AdoptionCreate> saveAdoptions() {
         List<AdoptionCreate> allAdoptionCreates = new ArrayList<>();
         int pageNo = 1;
         int numOfRows = 1000;
@@ -71,8 +71,7 @@ public class ApiRequestService {
                 AdoptionApi adoptionApi = responseEntity.getBody();
                 log.info("응답: {}", adoptionApi);
 
-                if (isvalidAdoptionData(adoptionApi)) {
-
+                if (isValidAdoptionData(adoptionApi)) {
                     List<AdoptionApi.Item> items = adoptionApi.getResponse().getBody().getItems().getItem();
                     List<AdoptionCreate> adoptionCreates = new ArrayList<>();
 
@@ -144,7 +143,8 @@ public class ApiRequestService {
         return allAdoptionCreates;
     }
 
-    private boolean isvalidAdoptionData(AdoptionApi adoptionApi) {
+    // 유효성 검사
+    private boolean isValidAdoptionData(AdoptionApi adoptionApi) {
         return Optional.ofNullable(adoptionApi)
                 .map(AdoptionApi::getResponse)
                 .map(Response::getBody)

@@ -23,7 +23,7 @@ public class AdoptionUpdateController {
 
     @PostMapping("/save")
     public ResponseEntity<Void> saveAdoptions() {
-        List<AdoptionCreate> adoptionCreates = apiRequestService.saveAdoption();
+        List<AdoptionCreate> adoptionCreates = apiRequestService.saveAdoptions();
         adoptionUpdateService.saveAdoptions(adoptionCreates);
 
         log.info("총 {}개의 입양동물 데이터가 성공적으로 저장되었습니다.", adoptionCreates.size());
