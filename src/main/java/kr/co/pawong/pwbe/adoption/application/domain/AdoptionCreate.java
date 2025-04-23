@@ -13,10 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,5 +41,15 @@ public class AdoptionCreate {
     private String specialMark; // 특징
     private LocalDateTime updTm; // 수정일
     private Shelter shelter; // 보호소id(외래키)
+
+    public ProcessState updateActiveState(AdoptionCreate adoptionCreate) {
+        // ProcessState에 따른 ActiveState 설정
+        if (adoptionCreate.getProcessState() == ProcessState.PROTECTED) {
+            adoptionCreate.activeState = ActiveState.ACTIVE;
+        } else {
+            adoptionCreate.activeState = ActiveState.INACTIVE;
+        }
+        return null;
+    }
 }
 

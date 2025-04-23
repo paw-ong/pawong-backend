@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
-import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
 import kr.co.pawong.pwbe.adoption.enums.ProcessState;
 import kr.co.pawong.pwbe.adoption.enums.SexCd;
@@ -107,13 +106,7 @@ public class ApiRequestService {
                                 .updTm(updTm)
                                 .build();
 
-                        // ProcessState에 따른 ActiveState 설정
-                        if (adoptionCreate.getProcessState() == ProcessState.PROTECTED) {
-                            adoptionCreate.setActiveState(ActiveState.ACTIVE);
-                        } else {
-                            adoptionCreate.setActiveState(ActiveState.INACTIVE);
-                        }
-
+                        adoptionCreate.updateActiveState(adoptionCreate);
                         adoptionCreates.add(adoptionCreate);
                     }
 
