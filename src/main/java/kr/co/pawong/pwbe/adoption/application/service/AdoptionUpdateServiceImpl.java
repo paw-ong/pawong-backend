@@ -18,12 +18,12 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
 
     // AdoptionCreate -> Adoption -> Repo에 전달
     @Override
-    public void saveAdoption(List<AdoptionCreate> adoptionCreate) {
-        List<Adoption> adoptions = adoptionCreate.stream()
+    public void saveAdoptions(List<AdoptionCreate> adoptionCreates) {
+        List<Adoption> adoptions = adoptionCreates.stream()
                 .map(Adoption::from)
                 .toList();
 
-        adoptionUpdateRepository.saveAdoption(adoptions);
-        adoptionIndexRepository.saveBulk(adoptions);
+        adoptionUpdateRepository.saveAdoptions(adoptions);
+        adoptionIndexRepository.saveAdoptions(adoptions);
     }
 }

@@ -5,5 +5,5 @@ import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
 
 public interface AdoptionUpdateService {
     // AdoptionCreate -> Adoption
-    void saveAdoption(List<AdoptionCreate> adoptionCreate);
+    void saveAdoptions(List<AdoptionCreate> adoptionCreates);
 }

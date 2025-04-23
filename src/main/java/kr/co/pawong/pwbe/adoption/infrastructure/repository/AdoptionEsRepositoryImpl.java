@@ -21,7 +21,7 @@ public class AdoptionEsRepositoryImpl implements AdoptionIndexRepository {
 
     // Adoption -> AdoptionDocument ES 저장
     @Override
-    public void saveBulk(List<Adoption> adoptions) {
+    public void saveAdoptions(List<Adoption> adoptions) {
         if (adoptions.isEmpty()) {
             return;
         }
@@ -34,7 +34,7 @@ public class AdoptionEsRepositoryImpl implements AdoptionIndexRepository {
                     .map(adoption -> {
                         try {
                             // Adoption -> AdoptionDocument
-                            AdoptionDocument adoptionDocument = AdoptionDocument.fromEntity(adoption);
+                            AdoptionDocument adoptionDocument = AdoptionDocument.from(adoption);
                             return new IndexQueryBuilder()
                                     .withIndex(indexName)
                                     .withObject(adoptionDocument)

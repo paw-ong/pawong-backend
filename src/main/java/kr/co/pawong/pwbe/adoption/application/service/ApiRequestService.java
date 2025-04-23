@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
 import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
@@ -17,6 +18,9 @@ import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
 import kr.co.pawong.pwbe.adoption.infrastructure.external.AdoptionApi;
+import kr.co.pawong.pwbe.adoption.infrastructure.external.AdoptionApi.Body;
+import kr.co.pawong.pwbe.adoption.infrastructure.external.AdoptionApi.Items;
+import kr.co.pawong.pwbe.adoption.infrastructure.external.AdoptionApi.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -67,11 +71,7 @@ public class ApiRequestService {
                 AdoptionApi adoptionApi = responseEntity.getBody();
                 log.info("응답: {}", adoptionApi);
 
-                if (adoptionApi != null && adoptionApi.getResponse() != null &&
-                adoptionApi.getResponse().getBody() != null &&
-                adoptionApi.getResponse().getBody().getItems() != null &&
-                adoptionApi.getResponse().getBody().getItems().getItem() != null &&
-                !adoptionApi.getResponse().getBody().getItems().getItem().isEmpty()) {
+                if (isvalidAdoptionData(adoptionApi)) {
 
                     List<AdoptionApi.Item> items = adoptionApi.getResponse().getBody().getItems().getItem();
                     List<AdoptionCreate> adoptionCreates = new ArrayList<>();
@@ -142,6 +142,16 @@ public class ApiRequestService {
             }
         }
         return allAdoptionCreates;
+    }
+
+    private boolean isvalidAdoptionData(AdoptionApi adoptionApi) {
+        return Optional.ofNullable(adoptionApi)
+                .map(AdoptionApi::getResponse)
+                .map(Response::getBody)
+                .map(Body::getItems)
+                .map(Items::getItem)
+                .filter(items -> !items.isEmpty())
+                .isPresent();
     }
 
     // String -> LocalDate

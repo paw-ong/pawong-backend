@@ -6,8 +6,9 @@ import kr.co.pawong.pwbe.adoption.application.service.ApiRequestService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,17 +21,13 @@ public class AdoptionUpdateController {
     private final ApiRequestService apiRequestService;
     private final AdoptionUpdateService adoptionUpdateService;
 
-    @GetMapping("/save")
-    public ResponseEntity<String> saveAdoption() {
+    @PostMapping("/save")
+    public ResponseEntity<Void> saveAdoptions() {
         List<AdoptionCreate> adoptionCreates = apiRequestService.saveAdoption();
-        adoptionUpdateService.saveAdoption(adoptionCreates);
+        adoptionUpdateService.saveAdoptions(adoptionCreates);
 
-        String message = String.format("총 %d개의 입양동물 데이터 중 %d개가 성공적으로 저장되었습니다",
-                adoptionCreates.size(), adoptionCreates.size());
-        log.info(message);
+        log.info("총 {}개의 입양동물 데이터가 성공적으로 저장되었습니다.", adoptionCreates.size());
 
-        return ResponseEntity.ok(message);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
-
 }
