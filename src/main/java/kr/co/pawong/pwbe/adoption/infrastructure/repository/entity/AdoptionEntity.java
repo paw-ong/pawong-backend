@@ -21,13 +21,14 @@ import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
 import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import kr.co.pawong.pwbe.shelter.infrastructure.repository.entity.ShelterEntity;
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "Adoption")
 public class AdoptionEntity {
 
