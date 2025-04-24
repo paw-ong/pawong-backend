@@ -1,4 +1,4 @@
-package kr.co.pawong.pwbe.adoption.infrastructure.adapter.openai;
+package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.openai;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -13,8 +13,8 @@ class OpenAiChatAdapterTest {
     private OpenAiChatAdapter openAiChatAdapter;
 
     @Test
-    void 질의_되나_확인() {
-        String output = openAiChatAdapter.refineByPrompt("너 모델 이름 뭐야");
+    void AI_채팅_확인() {
+        String output = openAiChatAdapter.refineByFeature("새끼 강아지인데 어르신들과 잘 지내고 순종적인");
         System.out.println(output);
     }
 }

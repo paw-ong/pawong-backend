@@ -1,6 +1,5 @@
-package kr.co.pawong.pwbe.adoption.infrastructure.adapter.openai;
+package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.openai;
 
-import kr.co.pawong.pwbe.adoption.infrastructure.adapter.openai.OpenAiEmbeddingAdapter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,11 @@ import java.util.Arrays;
 class OpenAiEmbeddingAdapterTest {
 
     @Autowired
-    private OpenAiEmbeddingAdapter openAiEmbeddingAdapter;    // ← 생성자 대신 여기에 @Autowired
+    private OpenAiEmbeddingAdapter openAiEmbeddingAdapter;
 
     @Test
     void 임베딩_되나_확인() {
-        float[] output = openAiEmbeddingAdapter.embed("테스트입니다.");
+        float[] output = openAiEmbeddingAdapter.embed("새끼 강아지인데 어르신들과 잘 지내고 순종적인");
         System.out.println("벡터 차원: " + output.length);
         System.out.println("벡터: " + Arrays.toString(output));
     }
