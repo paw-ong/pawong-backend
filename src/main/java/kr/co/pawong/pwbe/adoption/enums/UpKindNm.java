@@ -1,7 +1,9 @@
 package kr.co.pawong.pwbe.adoption.enums;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 public enum UpKindNm {
     DOG("개"),
@@ -14,12 +16,13 @@ public enum UpKindNm {
         this.value = value;
     }
 
-    public static String fromValue(String value) {
+    public static UpKindNm fromValue(String value) {
         for (UpKindNm kind : UpKindNm.values()) {
             if (kind.getValue().equals(value)) {
-                return String.valueOf(kind.getValue());
+                return kind;
             }
         }
-        throw new IllegalArgumentException("종류명 오류: " + value);
+        log.warn("종류명 오류: {}", value);
+        return null;
     }
 }
