@@ -16,3 +16,10 @@ spring:
       embedding:
         options:
           model: text-embedding-ada-002
+
+auth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    redirect-url: ${KAKAO_REDIRECT_URL}
+    token-url: ${KAKAO_TOKEN_URL}
+    user-info-url: ${KAKAO_API_URL}
