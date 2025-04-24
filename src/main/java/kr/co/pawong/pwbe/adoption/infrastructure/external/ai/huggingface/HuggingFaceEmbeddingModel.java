@@ -1,4 +1,4 @@
-package kr.co.pawong.pwbe.adoption.infrastructure.adapter.huggingface;
+package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.huggingface;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.document.Document;

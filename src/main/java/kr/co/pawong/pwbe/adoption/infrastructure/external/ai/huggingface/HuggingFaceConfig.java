@@ -1,4 +1,4 @@
-package kr.co.pawong.pwbe.adoption.infrastructure.adapter.huggingface;
+package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.huggingface;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
