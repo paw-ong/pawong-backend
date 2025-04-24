@@ -12,6 +12,8 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -19,6 +21,8 @@ import java.util.List;
 public class AdoptionSearchRepositoryImpl implements AdoptionSearchRepository {
 
     private final ElasticsearchOperations elasticsearchOperations;
+
+
 
     @Override
     public List<AdoptionDocument> searchSimilarAdoptions(AdoptionSearchCondition condition) {
@@ -71,11 +75,19 @@ public class AdoptionSearchRepositoryImpl implements AdoptionSearchRepository {
 
         // 임베딩 벡터 검색 (cosine 유사도)
         if (condition.getEmbedding() != null && condition.getEmbedding().length == 1536) {
+
+            // embedding 벡터 단순 주소값으로 전달 안하고, 실제 값들 반환
+            float[] embedding = condition.getEmbedding();
+            List<Float> embeddingList = new ArrayList<>(embedding.length);
+            for (float f : embedding) {
+                embeddingList.add(f);
+            }
+
             semanticQueryBuilder.should(s -> s.scriptScore(ss -> ss
                     .query(q -> q.matchAll(m -> m)) // 모든 문서 대상
                     .script(sc -> sc.inline(i -> i
                             .source("cosineSimilarity(params.query_vector, 'embedding') + 1.0")
-                            .params("query_vector", JsonData.of(condition.getEmbedding()))
+                            .params("query_vector", JsonData.of(embeddingList))
                     ))
                     .boost(2.0f)
             ));
