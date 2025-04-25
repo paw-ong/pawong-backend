@@ -1,13 +1,16 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.huggingface;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
+@RequiredArgsConstructor
 public class HuggingFaceConfig {
 
     public static final String HUGGINGFACE_WEB_CLIENT_BEAN_NAME = "huggingfaceWebClient";
@@ -35,7 +38,7 @@ public class HuggingFaceConfig {
     public HuggingFaceEmbeddingModel huggingFaceEmbeddingModel(
             @Qualifier(HUGGINGFACE_WEB_CLIENT_BEAN_NAME) WebClient webClient
     ) {
-        return new HuggingFaceEmbeddingModel(webClient, embeddingModelName);
+        return new HuggingFaceEmbeddingModel(retryTemplate(), webClient, embeddingModelName);
     }
 
     // Chat을 위한 Chat Model 빈 등록
@@ -43,6 +46,15 @@ public class HuggingFaceConfig {
     public HuggingFaceChatModel huggingFaceChatModel(
             @Qualifier(HUGGINGFACE_WEB_CLIENT_BEAN_NAME) WebClient webClient
     ) {
-        return new HuggingFaceChatModel(webClient, chatModelName);
+        return new HuggingFaceChatModel(retryTemplate(), webClient, chatModelName);
+    }
+
+    @Bean
+    public RetryTemplate retryTemplate() {
+        return RetryTemplate.builder()
+                .maxAttempts(3)              // 기본 3회 시도
+                .fixedBackoff(1_000)         // 재시도 간격 1초
+                .retryOn(Exception.class)    // 재시도할 예외 지정
+                .build();
     }
 }
