@@ -25,8 +25,7 @@ public class AdoptionSearchRepositoryImpl implements AdoptionSearchRepository {
 
     @Override
     public List<Adoption> searchSimilarAdoptions(AdoptionSearchCondition condition) {
-        SearchHits<AdoptionDocument> hits = searchSimilarAdoptionSearchHits(condition);
-        return hits.stream()
+        return searchSimilarAdoptionSearchHits(condition).stream()
                 .map(SearchHit::getContent)
                 .map(AdoptionDocument::toModel)
                 .toList();
@@ -34,75 +33,80 @@ public class AdoptionSearchRepositoryImpl implements AdoptionSearchRepository {
 
     @Override
     public SearchHits<AdoptionDocument> searchSimilarAdoptionSearchHits(AdoptionSearchCondition condition) {
-        BoolQuery.Builder filterQueryBuilder = new BoolQuery.Builder();
+        Query finalQuery = buildFinalQuery(condition);
+
+        NativeQuery searchQuery = NativeQuery.builder()
+                .withQuery(finalQuery)
+                .withMaxResults(20)
+                .build();
+
+        return elasticsearchOperations.search(searchQuery, AdoptionDocument.class);
+    }
+
+    private Query buildFinalQuery(AdoptionSearchCondition condition) {
+        BoolQuery.Builder boolQuery = new BoolQuery.Builder();
+        boolQuery.must(buildFilterQuery(condition));
+        boolQuery.must(buildSemanticQuery(condition));
+        return boolQuery.build()._toQuery();
+    }
+
+    private Query buildFilterQuery(AdoptionSearchCondition condition) {
+        BoolQuery.Builder filter = new BoolQuery.Builder();
 
         if (condition.getUpKindCds() != null && !condition.getUpKindCds().isEmpty()) {
-            filterQueryBuilder.filter(f -> f.terms(t -> t
+            filter.filter(f -> f.terms(t -> t
                     .field("upKindCd")
                     .terms(ts -> ts.value(condition.getUpKindCds().stream()
-                            .map(upKindCd -> FieldValue.of(upKindCd.toString()))
+                            .map(cd -> FieldValue.of(cd.toString()))
                             .toList()))
             ));
         }
 
         if (condition.getSexCd() != null) {
-            filterQueryBuilder.filter(f -> f.term(t -> t
+            filter.filter(f -> f.term(t -> t
                     .field("sexCd")
                     .value(condition.getSexCd().toString())
             ));
         }
 
         if (condition.getNeuterYn() != null) {
-            filterQueryBuilder.filter(f -> f.term(t -> t
+            filter.filter(f -> f.term(t -> t
                     .field("neuterYn")
                     .value(condition.getNeuterYn().toString())
             ));
         }
 
-        // 하이브리드 검색 쿼리 (텍스트 + 임베딩)
-        BoolQuery.Builder semanticQueryBuilder = new BoolQuery.Builder();
+        return filter.build()._toQuery();
+    }
 
-        // 정제된 검색 텍스트
+    private Query buildSemanticQuery(AdoptionSearchCondition condition) {
+        BoolQuery.Builder semantic = new BoolQuery.Builder();
+
         if (condition.getRefinedSearchTerm() != null && !condition.getRefinedSearchTerm().isEmpty()) {
-            semanticQueryBuilder.should(s -> s.match(m -> m
+            semantic.should(s -> s.match(m -> m
                     .field("searchField")
                     .query(condition.getRefinedSearchTerm())
                     .analyzer("korean")
-                    .boost(1.0f)    // 가중치를 1배 적용
+                    .boost(1.0f)    // 형태소는 1배의 가중치
             ));
         }
 
-        // embedding 검색
         if (condition.getEmbedding() != null && condition.getEmbedding().length == 1536) {
-
-            // embedding 벡터 단순 주소값으로 전달 안하고, 실제 값들 반환
-            float[] embedding = condition.getEmbedding();
-            List<Float> embeddingList = new ArrayList<>(embedding.length);
-            for (float f : embedding) {
+            List<Float> embeddingList = new ArrayList<>(condition.getEmbedding().length);
+            for (float f : condition.getEmbedding()) {
                 embeddingList.add(f);
             }
 
-            semanticQueryBuilder.should(s -> s.scriptScore(ss -> ss
-                    .query(q -> q.matchAll(m -> m)) // 모든 document 대상
+            semantic.should(s -> s.scriptScore(ss -> ss
+                    .query(q -> q.matchAll(m -> m))
                     .script(sc -> sc.inline(i -> i
-                            .source("cosineSimilarity(params.query_vector, 'embedding') + 1.0")
+                            .source("cosineSimilarity(params.query_vector, 'embedding') + 1.0") // cosine similarity 활용
                             .params("query_vector", JsonData.of(embeddingList))
                     ))
-                    .boost(2.0f)    // 가중치를 2배 적용 (비중을 형태소 분석 대비 높게 적용한다.)
+                    .boost(2.0f)    // 벡터는 2배의 가중치
             ));
         }
 
-        // 3. 최종 쿼리 조합
-        Query finalQuery = new BoolQuery.Builder()
-                .must(filterQueryBuilder.build()._toQuery()) // 필터 적용 (must 쿼리가 키워드와 결합되는 경우 정확한 keyword로 필터링함)
-                .must(semanticQueryBuilder.build()._toQuery()) // 하이브리드 검색 (must가 텍스트와 결합되는 경우 형태소분석 + vector 유사도로 검색됨)
-                .build()._toQuery();
-
-        NativeQuery searchQuery = NativeQuery.builder()
-                .withQuery(finalQuery)
-                .withMaxResults(20)     // 임의로 20개
-                .build();
-
-        return elasticsearchOperations.search(searchQuery, AdoptionDocument.class);
+        return semantic.build()._toQuery();
     }
 }
