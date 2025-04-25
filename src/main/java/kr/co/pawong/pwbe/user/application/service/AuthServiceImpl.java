@@ -24,7 +24,7 @@ public class AuthServiceImpl implements AuthService {
   public AuthResponse kakaoLogin(String code) {
     User loginUser = kakaoService.login(code);
     return new AuthResponse(
-        jwtTokenProvider.getJwtToken(loginUser.getUserId()),
+        jwtTokenProvider.generateJwtToken(loginUser.getUserId()),
         loginUser.getUserId(),
         loginUser.getStatus());
   }
@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
     User pendingUser = userQueryRepository.findByUserId(userId);
     User updatedUser = userCommandRepository.update(pendingUser.update(userUpdate));
     return new AuthResponse(
-        jwtTokenProvider.getJwtToken(updatedUser.getUserId()),
+        jwtTokenProvider.generateJwtToken(updatedUser.getUserId()),
         updatedUser.getUserId(),
         updatedUser.getStatus()
     );
