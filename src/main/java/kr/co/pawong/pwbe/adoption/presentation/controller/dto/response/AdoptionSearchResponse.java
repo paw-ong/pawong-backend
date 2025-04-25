@@ -13,6 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AdoptionSearchResponse {
-
     private Long adoptionId;    // ES에서 검색 시 반환하는 것은 ID값
 }

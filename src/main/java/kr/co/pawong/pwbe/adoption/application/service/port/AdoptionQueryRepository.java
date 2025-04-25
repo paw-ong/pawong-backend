@@ -1,5 +1,7 @@
 package kr.co.pawong.pwbe.adoption.application.service.port;
 
-public interface AdoptionQueryRepository {
+import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 
+public interface AdoptionQueryRepository {
+    Adoption findById(Long adoptionId);
 }
