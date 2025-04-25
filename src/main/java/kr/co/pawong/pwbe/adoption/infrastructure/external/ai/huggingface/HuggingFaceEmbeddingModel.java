@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @reference: https://huggingface.co/docs/inference-providers/tasks/feature-extraction
@@ -50,11 +51,11 @@ public class HuggingFaceEmbeddingModel implements EmbeddingModel {
                 }
         );
 
-        List<Embedding> embeddings = new ArrayList<>();
-        if (resp != null) {
-            for (int i = 0; i < resp.size(); i++) {
-                embeddings.add(new Embedding(resp.get(i), i));
-            }
+        // null일 경우 빈 배열로 치환
+        resp = Objects.requireNonNullElse(resp, List.of());
+        List<Embedding> embeddings = new ArrayList<>(resp.size());
+        for (int i = 0; i < resp.size(); i++) {
+            embeddings.add(new Embedding(resp.get(i), i));
         }
         return new EmbeddingResponse(embeddings);
     }
