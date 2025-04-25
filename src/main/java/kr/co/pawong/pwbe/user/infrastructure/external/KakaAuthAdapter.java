@@ -6,12 +6,14 @@ import kr.co.pawong.pwbe.user.infrastructure.external.dto.KakaoTokenResponse;
 import kr.co.pawong.pwbe.user.infrastructure.external.dto.KakaoUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Component
@@ -35,14 +37,22 @@ public class KakaAuthAdapter implements KakaoAuthPort {
     form.add("redirect_uri", KAKAO_REDIRECT_URL);
     form.add("code",         code);
 
-    KakaoTokenResponse resp = webClient.post()
+    return webClient.post()
         .uri(KAKAO_TOKEN_URL)
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         .body(BodyInserters.fromFormData(form))
         .retrieve()
+        .onStatus(HttpStatusCode::is4xxClientError, res ->
+            res.bodyToMono(String.class)
+                .flatMap(body ->
+                    Mono.error(new RuntimeException("Kakao API error: " + body))))
+        .onStatus(HttpStatusCode::is5xxServerError, res ->
+            res.bodyToMono(String.class)
+                .flatMap(body ->
+                    Mono.error(new RuntimeException("Kakao Server error: " + body))))
         .bodyToMono(KakaoTokenResponse.class)
+        .map(KakaoTokenResponse::getAccess_token)
         .block();
-    return Objects.requireNonNull(resp).getAccess_token();
   }
 
   @Override
