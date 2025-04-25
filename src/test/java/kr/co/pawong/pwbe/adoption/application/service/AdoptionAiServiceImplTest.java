@@ -5,6 +5,8 @@ import kr.co.pawong.pwbe.adoption.fake.FakeChatAdapter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 class AdoptionAiServiceImplTest {
 
     private final AdoptionAiService adoptionAiService =
@@ -29,7 +31,7 @@ class AdoptionAiServiceImplTest {
         String input = null;
         // When & Then
         Assertions.assertThatThrownBy(() -> adoptionAiService.embed(input))
-                        .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -86,4 +88,43 @@ class AdoptionAiServiceImplTest {
         Assertions.assertThatThrownBy(() -> adoptionAiService.refineSearchCondition(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    void 태깅_정상_요청() {
+        // Given
+        String input = "test";
+        // When
+        List<String> output = adoptionAiService.tagging("test");
+        // Then
+        Assertions.assertThat(output).isEqualTo(List.of("정이많음", "사람을좋아함"));
+    }
+
+    @Test
+    void 태깅_시에_null이_입력된_경우_IllegalArgumentException을_던짐() {
+        // Given
+        String input = null;
+        // When & Then
+        Assertions.assertThatThrownBy(() -> adoptionAiService.tagging(input))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 태깅_시에_빈_문자열이_입력된_경우_IllegalArgumentException을_던짐() {
+        // Given
+        String input = "";
+        // When & Then
+        Assertions.assertThatThrownBy(() -> adoptionAiService.tagging(input))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 태깅_시에_공백이_입력된_경우_IllegalArgumentException을_던짐() {
+        // Given
+        String input = "  \n  ";
+        // When & Then
+        Assertions.assertThatThrownBy(() -> adoptionAiService.tagging(input))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+
 }
