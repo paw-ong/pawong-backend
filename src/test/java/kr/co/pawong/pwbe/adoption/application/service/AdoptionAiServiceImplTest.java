@@ -1,18 +1,16 @@
 package kr.co.pawong.pwbe.adoption.application.service;
 
 import kr.co.pawong.pwbe.adoption.fake.FakeEmbeddingAdapter;
-import kr.co.pawong.pwbe.adoption.fake.FakePromptAdapter;
+import kr.co.pawong.pwbe.adoption.fake.FakeChatAdapter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AdoptionAiServiceImplTest {
 
     private final AdoptionAiService adoptionAiService =
             new AdoptionAiServiceImpl(
                     new FakeEmbeddingAdapter(),
-                    new FakePromptAdapter()
+                    new FakeChatAdapter()
             );
 
     @Test
