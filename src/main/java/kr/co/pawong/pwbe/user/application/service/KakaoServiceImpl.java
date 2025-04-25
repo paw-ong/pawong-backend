@@ -1,14 +1,13 @@
 package kr.co.pawong.pwbe.user.application.service;
 
 import kr.co.pawong.pwbe.user.application.domain.User;
-import kr.co.pawong.pwbe.user.application.domain.UserCreate;
 import kr.co.pawong.pwbe.user.application.service.port.KakaoAuthPort;
-import kr.co.pawong.pwbe.user.application.service.port.UserQueryRepository;
 import kr.co.pawong.pwbe.user.infrastructure.external.dto.KakaoUserResponse;
 import kr.co.pawong.pwbe.user.infrastructure.repository.UserJpaRepository;
 import kr.co.pawong.pwbe.user.infrastructure.repository.entity.UserEntity;
 import kr.co.pawong.pwbe.user.presentation.controller.port.KakaoService;
-import kr.co.pawong.pwbe.user.presentation.controller.port.UserUpdateService;
+import kr.co.pawong.pwbe.user.presentation.controller.port.UserCommandService;
+import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class KakaoServiceImpl implements KakaoService {
 
-  private final UserJpaRepository userJpaRepository;
-  private final UserUpdateService userUpdateService;
+  private final UserQueryService userQueryService;
+  private final UserCommandService userCommandService;
   private final KakaoAuthPort kakaoAuthPort;
 
   @Override
@@ -26,10 +25,10 @@ public class KakaoServiceImpl implements KakaoService {
   }
 
   public User createOrGetUser(KakaoUserResponse kakaoUserInfo) {
-    UserEntity userEntity = userJpaRepository.findBySocialId(kakaoUserInfo.id);
-    if (userEntity == null) {
-      return userUpdateService.createUser(kakaoUserInfo.toUserCreate());
+    User getUser = userQueryService.getUserBySocialId(kakaoUserInfo.id);
+    if(getUser == null) {
+      return userCommandService.createUser(kakaoUserInfo.toUserCreate());
     }
-    return userEntity.toDomain();
+    return getUser;
   }
 }
