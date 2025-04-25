@@ -26,10 +26,12 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class HuggingFaceChatModel implements ChatModel {
 
+    private final int MAX_TOKEN_LENGTH = 200;
+
     private final RetryTemplate retryTemplate;
     private final WebClient webClient;     // baseUrl="https://router.huggingface.co/hf-inference"
     private final String modelName;        // ex) "Qwen/QwQ-32B"
-    private final ChatOptions defaultOptions = ChatOptions.builder().maxTokens(500).build();
+    private final ChatOptions defaultOptions = ChatOptions.builder().maxTokens(MAX_TOKEN_LENGTH).build();
 
     @Override
     public ChatResponse call(Prompt prompt) {
