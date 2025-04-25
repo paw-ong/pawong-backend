@@ -19,7 +19,6 @@ services:
       - ./data:/usr/share/elasticsearch/data
     ports:
       - "${ELASTIC_PORT}:9200"
-      - "9300:9300"
     networks:
       - elk-network
     healthcheck:
