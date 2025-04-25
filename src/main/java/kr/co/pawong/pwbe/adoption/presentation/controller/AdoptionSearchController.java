@@ -5,6 +5,7 @@ import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionQ
 import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionSearchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/adoption")
@@ -14,16 +15,15 @@ public class AdoptionSearchController {
 
     private final AdoptionSearchService adoptionSearchService;
 
-    // ResponseEntity<> 추후반환
     @GetMapping("/search")
-    public AdoptionQueryResponses search(@ModelAttribute AdoptionSearchRequest request) {
-        return adoptionSearchService.search(request);
+    public ResponseEntity<AdoptionQueryResponses> search(@ModelAttribute AdoptionSearchRequest request) {
+        AdoptionQueryResponses response = adoptionSearchService.search(request);
+        return ResponseEntity.ok(response);
     }
-
-    // 일단은 검색 결과부터 확인, responseentity<> 추후반환
+    
     @GetMapping("/search/document")
-    public AdoptionSearchResponses searchDocumentIds(@ModelAttribute AdoptionSearchRequest request) {
-        return adoptionSearchService.searchDocumentIds(request);
+    public ResponseEntity<AdoptionSearchResponses> searchDocumentIds(@ModelAttribute AdoptionSearchRequest request) {
+        AdoptionSearchResponses response = adoptionSearchService.searchDocumentIds(request);
+        return ResponseEntity.ok(response);
     }
-
 }
