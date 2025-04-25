@@ -16,6 +16,11 @@ spring:
       embedding:
         options:
           model: text-embedding-ada-002
+  jpa:
+    show-sql: true                # 콘솔에 SQL 찍기
+    properties:
+      hibernate:
+        format_sql: true          # 보기 좋게 포맷팅
 
 auth:
   kakao:
@@ -23,3 +28,5 @@ auth:
     redirect-url: ${KAKAO_REDIRECT_URL}
     token-url: ${KAKAO_TOKEN_URL}
     user-info-url: ${KAKAO_API_URL}
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
