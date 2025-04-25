@@ -14,7 +14,7 @@ public class AdoptionSearchController {
     private final AdoptionSearchService adoptionSearchService;
 
     // 일단은 검색 결과부터 확인, responseentity<> 변환은 추후에 추가하자
-    @GetMapping("/search")
+    @GetMapping("/search/document")
     public AdoptionSearchResponses search(@ModelAttribute AdoptionSearchRequest request) {
         return adoptionSearchService.search(request);
     }

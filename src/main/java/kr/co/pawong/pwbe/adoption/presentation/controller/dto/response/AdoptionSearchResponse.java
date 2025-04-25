@@ -14,13 +14,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AdoptionSearchResponse {
 
-    private Long adoptionId;    // 실제 반환용
-
-    private String specialMark;     // 테스트: 특징 확인용
-
-    private UpKindCd upKindCd;      // 테스트: 축종코드 필터링 확인용
-
-    private NeuterYn neuterYn;      // 테스트: 중성화여부 필터링 확인용
-
-    private SexCd sexCd;        // 테스트: 성별 필터링 확인용
+    private Long adoptionId;    // ES에서 검색 시 반환하는 것은 ID값
 }

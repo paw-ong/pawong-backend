@@ -67,4 +67,18 @@ public class AdoptionDocument {
                 .embedding(null)
                 .build();
     }
+
+    public Adoption toModel() {
+        return Adoption.builder()
+                .adoptionId(this.adoptionId)
+                .upKindCd(this.upKindCd)
+                .kindNm(this.kindNm)
+                .colorCd(this.colorCd)
+                .age(this.age)
+                .sexCd(this.sexCd)
+                .neuterYn(this.neuterYn)
+                .specialMark(this.specialMark)
+                .build();
+    }
+
 }

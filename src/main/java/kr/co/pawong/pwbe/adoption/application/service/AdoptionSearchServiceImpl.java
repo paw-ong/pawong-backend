@@ -1,5 +1,6 @@
 package kr.co.pawong.pwbe.adoption.application.service;
 
+import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.dto.AdoptionSearchCondition;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionSearchRepository;
 import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionSearchMapper;
@@ -21,15 +22,16 @@ public class AdoptionSearchServiceImpl implements AdoptionSearchService {
     private final AdoptionSearchRepository adoptionSearchRepository;
     private final AdoptionAiService adoptionAiService;
 
+    // ES에서 검색 시 adoptionId를 반환
     @Override
     public AdoptionSearchResponses search(AdoptionSearchRequest request) {
         String refinedSearchTerm = refineSearchTerm(request);
         AdoptionSearchCondition condition = AdoptionSearchMapper.fromRequest(request, refinedSearchTerm, embed(refinedSearchTerm));
 
-        List<AdoptionDocument> adoptionDocuments = adoptionSearchRepository.searchSimilarAdoptions(condition);
+        List<Adoption> adoptions = adoptionSearchRepository.searchSimilarAdoptions(condition);
 
-        return new AdoptionSearchResponses(adoptionDocuments.stream()
-                .map(adoptionDocument -> AdoptionSearchMapper.toResponse(adoptionDocument))
+        return new AdoptionSearchResponses(adoptions.stream()
+                .map(AdoptionSearchMapper::toResponse)
                 .collect(Collectors.toList()));
     }
 
