@@ -30,6 +30,13 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
         return chatPort.getTagsByFeature(feature);
     }
 
+    // 문장 임베딩하는 함수
+    @Override
+    public float[] embed(String completion) {
+        validateNotBlank(completion);
+        return embeddingPort.embed(completion);
+    }
+
     // 입력값 검증하는 함수
     private void validateNotBlank(String input) {
         if (input == null || input.isBlank()) {
