@@ -1,5 +1,8 @@
 package kr.co.pawong.pwbe.user.presentation.controller.port;
 
-public interface UserUpdateService {
+import kr.co.pawong.pwbe.user.application.domain.User;
+import kr.co.pawong.pwbe.user.application.domain.UserCreate;
 
+public interface UserUpdateService {
+  User createUser(UserCreate userCreate);
 }

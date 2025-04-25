@@ -2,7 +2,6 @@ package kr.co.pawong.pwbe.user.presentation.controller;
 
 import kr.co.pawong.pwbe.user.presentation.controller.dto.response.AuthResponse;
 import kr.co.pawong.pwbe.user.presentation.controller.port.AuthService;
-import kr.co.pawong.pwbe.user.presentation.controller.port.KakaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,5 +20,10 @@ public class AuthController {
   public ResponseEntity<AuthResponse> kakaoLogin(@RequestParam("code") String code) {
     return ResponseEntity.ok(authService.kakaoLogin(code));
   }
+
+//  @PostMapping("/user")
+//  public ResponseEntity<AuthResponse> signin(@RequestBody SignUpRequest signUpRequest) {
+//    return ResponseEntity.ok(authService.createUser(signUpRequest));
+//  }
 
 }

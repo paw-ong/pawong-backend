@@ -1,5 +1,8 @@
 package kr.co.pawong.pwbe.user.infrastructure.repository;
 
-public interface UserJpaRepository {
+import kr.co.pawong.pwbe.user.infrastructure.repository.entity.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
+  UserEntity findBySocialId(Long socialId);
 }

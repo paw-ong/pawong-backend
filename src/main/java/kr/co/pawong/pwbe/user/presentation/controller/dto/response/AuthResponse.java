@@ -1,14 +1,13 @@
 package kr.co.pawong.pwbe.user.presentation.controller.dto.response;
 
+import kr.co.pawong.pwbe.user.enums.UserStatus;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class AuthResponse {
   private String accessToken;
-  private String refreshToken;
-
-  public AuthResponse(String accessToken, String refreshToken) {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
-  }
+  private Long userId;
+  private UserStatus status;
 }

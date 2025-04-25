@@ -1,5 +1,6 @@
 package kr.co.pawong.pwbe.user.infrastructure.external.dto;
 
+import kr.co.pawong.pwbe.user.application.domain.UserCreate;
 import lombok.Data;
 import lombok.Getter;
 
@@ -34,4 +35,11 @@ public class KakaoUserResponse {
     }
   }
 
+  public UserCreate toUserCreate() {
+    return UserCreate.builder()
+        .socialId(id)
+        .nickname(properties.nickname)
+        .profileImage(properties.profile_image)
+        .build();
+  }
 }
