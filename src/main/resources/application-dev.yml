@@ -6,6 +6,7 @@ spring:
     username: ${DEV_DB_USERNAME}
     password: ${DEV_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   ai:
     openai:
       api-key: ${OPEN_AI_KEY}
@@ -16,3 +17,12 @@ spring:
       embedding:
         options:
           model: text-embedding-ada-002
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        show-sql: true
+        format-sql: true
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true

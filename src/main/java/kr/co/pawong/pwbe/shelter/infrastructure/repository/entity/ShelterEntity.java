@@ -1,10 +1,7 @@
 package kr.co.pawong.pwbe.shelter.infrastructure.repository.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 import kr.co.pawong.pwbe.shelter.enums.DivisionNm;
@@ -38,6 +35,10 @@ public class ShelterEntity {
 
     private String jibunAddr; // 소재지번주소
 
+    private String city; // 시도
+
+    private String town; // 시군구
+
     private Double lat; // 위도(double)
 
     private Double lng; // 경도(double)
@@ -67,7 +68,7 @@ public class ShelterEntity {
     private Integer specsPersonCnt; // 사양관리사 인원수
 
     private Integer medicalCnt; // 진료실 수
-
+    @Column(name = "BREED_CNT")
     private Integer breedCnt; // 사육실 수
 
     private Integer quarabtineCnt; // 격리실 수
