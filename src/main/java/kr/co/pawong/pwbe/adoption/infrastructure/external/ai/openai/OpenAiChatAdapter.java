@@ -10,6 +10,8 @@ import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static kr.co.pawong.pwbe.adoption.infrastructure.external.ai.enums.SystemMessage.*;
 
 /**
@@ -23,14 +25,17 @@ public class OpenAiChatAdapter implements ChatProcessorPort {
     private final OpenAiChatModel chatModel;
 
     @Override
-    public String refineByFeature(String feature) {
-        // 시스템 메시지 삽입
-        Prompt prompt = new Prompt(
-                new SystemMessage(TEMPLATE_1.getMessage()),
-                new UserMessage(feature)
-        );
-        // 요청
-        Generation result = chatModel.call(prompt).getResult();
-        return result != null ? result.getOutput().getText() : "";
+    public String queryByPrompt(String prompt) {
+        return "";
+    }
+
+    @Override
+    public String refineAdoptionSentence(String sentence) {
+        return "";
+    }
+
+    @Override
+    public List<String> getTagsByFeature(String feature) {
+        return List.of();
     }
 }

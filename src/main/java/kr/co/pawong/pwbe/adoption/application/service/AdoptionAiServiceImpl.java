@@ -5,6 +5,8 @@ import kr.co.pawong.pwbe.adoption.application.service.port.ChatProcessorPort;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @exception: null이나 빈 문자열, 공백이 입력된 경우 IllegalArgumentException을 던집니다.
  */
@@ -18,14 +20,14 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     @Override
     public String refineSearchCondition(String searchTerm) {
         validateNotBlank(searchTerm);
-        return chatPort.refineByFeature(searchTerm);
+        return chatPort.refineAdoptionSentence(searchTerm);
     }
 
-    // 문장 임베딩하는 함수
+    // 입력된 문장에 대해 태그를 선택해서 문자열 리스트로 반환하는 함수
     @Override
-    public float[] embed(String completion) {
-        validateNotBlank(completion);
-        return embeddingPort.embed(completion);
+    public List<String> tagging(String feature) {
+        validateNotBlank(feature);
+        return chatPort.getTagsByFeature(feature);
     }
 
     // 입력값 검증하는 함수

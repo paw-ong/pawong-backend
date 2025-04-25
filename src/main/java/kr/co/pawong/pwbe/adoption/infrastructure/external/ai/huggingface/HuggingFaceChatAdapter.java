@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Qualifier("HUGGINGFACE_CHAT")
 @RequiredArgsConstructor
@@ -13,7 +15,17 @@ public class HuggingFaceChatAdapter implements ChatProcessorPort {
     private final HuggingFaceChatModel chatModel;
 
     @Override
-    public String refineByFeature(String feature) {
-        return chatModel.call(feature);
+    public String queryByPrompt(String prompt) {
+        return "";
+    }
+
+    @Override
+    public String refineAdoptionSentence(String sentence) {
+        return "";
+    }
+
+    @Override
+    public List<String> getTagsByFeature(String feature) {
+        return List.of();
     }
 }
