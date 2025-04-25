@@ -12,6 +12,6 @@ public class WebConfig implements WebMvcConfigurer {
     private final StringToUpKindConverter stringToUpKindConverter;
 
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new StringToUpKindConverter());
+        registry.addConverter(stringToUpKindConverter);
     }
 }
