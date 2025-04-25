@@ -4,5 +4,5 @@ import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 
 public interface AdoptionQueryService {
 
-    Adoption fetchAdoptionById(Long adoptionId);
+    Adoption fetchAdoptionById(Long id);
 }
