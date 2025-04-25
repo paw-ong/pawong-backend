@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Users")
+@Table(name = "Users")   // User가 예약어라 Users로 만들었습니다.
 public class UserEntity {
 
   @Id
@@ -62,6 +62,14 @@ public class UserEntity {
         .updatedAt(user.getUpdatedAt())
         .deletedAt(user.getDeletedAt())
         .build();
+  }
+
+  public UserEntity update(User user) {
+    this.nickname = user.getNickname();
+    this.region = user.getRegion();
+    this.tel = user.getTel();
+    this.updatedAt = LocalDate.now();
+    return this;
   }
 
 }

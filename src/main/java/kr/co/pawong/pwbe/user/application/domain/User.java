@@ -29,6 +29,14 @@ public class User {
         .build();
   }
 
+  public User update(UserUpdate userUpdate) {
+    this.nickname = userUpdate.getNickname();
+    this.region = userUpdate.getRegion();
+    this.tel = userUpdate.getTel();
+    this.updatedAt = LocalDate.now();
+    return this;
+  }
+
 
 
 }
