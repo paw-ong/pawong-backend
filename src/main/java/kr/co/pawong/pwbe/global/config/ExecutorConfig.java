@@ -9,7 +9,7 @@ import java.util.concurrent.Executor;
 @Configuration
 public class ExecutorConfig {
 
-    @Bean("adoptionExecutor")
+    @Bean("aiExecutor")
     public Executor adoptionExecutor() {
         ThreadPoolTaskExecutor exec = new ThreadPoolTaskExecutor();
         exec.setCorePoolSize(10);
