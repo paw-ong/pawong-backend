@@ -1,9 +1,12 @@
 package kr.co.pawong.pwbe.user.infrastructure.external.dto;
 
+import java.util.Map;
 import kr.co.pawong.pwbe.user.application.domain.UserCreate;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
+@Builder
 @Data
 public class KakaoUserResponse {
   public Long id;
@@ -11,9 +14,9 @@ public class KakaoUserResponse {
   public Properties properties;
   public KakaoAccount kakao_account;
 
-  @Getter
+  @Builder
   @Data
-  public class Properties {
+  public static class Properties {
     public String nickname;
     public String profile_image;
     public String thumbnail_image;
@@ -40,6 +43,21 @@ public class KakaoUserResponse {
         .socialId(id)
         .nickname(properties.nickname)
         .profileImage(properties.profile_image)
+        .build();
+  }
+
+  public static KakaoUserResponse from(OAuth2User oAuth2User) {
+    Map<String, Object> props = oAuth2User.getAttribute("properties");
+    KakaoUserResponse.Properties properties = KakaoUserResponse.Properties.builder()
+        .nickname(props.get("nickname").toString())
+        .profile_image(props.get("profile_image").toString())
+        .thumbnail_image(props.get("thumbnail_image").toString())
+        .build();
+
+    return KakaoUserResponse.builder()
+        .id(oAuth2User.getAttribute("id"))
+        .connected_at(oAuth2User.getAttribute("connected_at"))
+        .properties(properties)
         .build();
   }
 }
