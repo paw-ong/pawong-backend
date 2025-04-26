@@ -81,39 +81,45 @@ public class Shelter {
                 .build();
     }
 
-    public ShelterEntity toEntity() {
-        return ShelterEntity.builder()
-                .shelterId(this.shelterId)
-                .careNm(this.careNm)
-                .careRegNo(this.careRegNo)
-                .orgNm(this.orgNm)
-                .divisionNm(this.divisionNm)
-                .saveTrgtAnimal(this.saveTrgtAnimal)
-                .careAddr(this.careAddr)
-                .jibunAddr(this.jibunAddr)
-                .lat(this.lat)
-                .lng(this.lng)
-                .dsignationDate(this.dsignationDate)
-                .weekOprStime(this.weekOprStime)
-                .weekOprEtime(this.weekOprEtime)
-                .weekCellStime(this.weekCellStime)
-                .weekCellEtime(this.weekCellEtime)
-                .weekendOprStime(this.weekendOprStime)
-                .weekendOprEtime(this.weekendOprEtime)
-                .weekendCellStime(this.weekendCellStime)
-                .weekendCellEtime(this.weekendCellEtime)
-                .closeDay(this.closeDay)
-                .vetPersonCnt(this.vetPersonCnt)
-                .specsPersonCnt(this.specsPersonCnt)
-                .medicalCnt(this.medicalCnt)
-                .breedCnt(this.breedCnt)
-                .quarabtineCnt(this.quarabtineCnt)
-                .feedCnt(this.feedCnt)
-                .transCarCnt(this.transCarCnt)
-                .careTel(this.careTel)
-                .dataStdDt(this.dataStdDt)
+
+    // // ShelterUpdate -> Shelter
+    public static Shelter update(ShelterUpdate shelterUpdate){
+        return Shelter.builder()
+                .shelterId(shelterUpdate.getShelterId())
+                .careNm(shelterUpdate.getCareNm())
+                .careRegNo(shelterUpdate.getCareRegNo())
+                .orgNm(shelterUpdate.getOrgNm())
+                .divisionNm(shelterUpdate.getDivisionNm())
+                .saveTrgtAnimal(shelterUpdate.getSaveTrgtAnimal())
+                .careAddr(shelterUpdate.getCareAddr())
+                .jibunAddr(shelterUpdate.getJibunAddr())
+                .city(shelterUpdate.getCity())
+                .town(shelterUpdate.getTown())
+                .lat(shelterUpdate.getLat())
+                .lng(shelterUpdate.getLng())
+                .dsignationDate(shelterUpdate.getDsignationDate())
+                .weekOprStime(shelterUpdate.getWeekOprStime())
+                .weekOprEtime(shelterUpdate.getWeekOprEtime())
+                .weekCellStime(shelterUpdate.getWeekCellStime())
+                .weekCellEtime(shelterUpdate.getWeekCellEtime())
+                .weekendOprStime(shelterUpdate.getWeekendOprStime())
+                .weekendOprEtime(shelterUpdate.getWeekendOprEtime())
+                .weekendCellStime(shelterUpdate.getWeekCellStime())
+                .weekendCellEtime(shelterUpdate.getWeekendCellEtime())
+                .closeDay(shelterUpdate.getCloseDay())
+                .vetPersonCnt(shelterUpdate.getVetPersonCnt())
+                .specsPersonCnt(shelterUpdate.getSpecsPersonCnt())
+                .medicalCnt(shelterUpdate.getMedicalCnt())
+                .breedCnt(shelterUpdate.getBreedCnt())
+                .quarabtineCnt(shelterUpdate.getQuarabtineCnt())
+                .feedCnt(shelterUpdate.getFeedCnt())
+                .transCarCnt(shelterUpdate.getTransCarCnt())
+                .careTel(shelterUpdate.getCareTel())
+                .dataStdDt(shelterUpdate.getDataStdDt())
                 .build();
     }
+
+
 }
 
 

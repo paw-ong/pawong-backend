@@ -46,6 +46,7 @@ public class ShelterCreate {
     private String careTel; // 전화번호
     private LocalDate dataStdDt; // 데이터 기준일자
 
+    // 동물보호소 중복 확인
     public ShelterEntity toEntityShelter() {
         ShelterEntity shelterEntity = ShelterEntity.builder()
                 .shelterId(this.shelterId)

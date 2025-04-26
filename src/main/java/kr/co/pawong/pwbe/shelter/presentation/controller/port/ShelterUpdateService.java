@@ -4,7 +4,7 @@ import kr.co.pawong.pwbe.shelter.application.domain.ShelterCreate;
 import java.util.List;
 
 
-public interface ShelterService {
+public interface ShelterUpdateService {
     // ShelterCreate -> Shelter
     void saveShelters(List<ShelterCreate> shelterCreates);
 
