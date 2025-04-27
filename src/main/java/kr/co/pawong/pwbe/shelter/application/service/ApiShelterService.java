@@ -215,6 +215,14 @@ public class ApiShelterService {
         }
     }
 
+    /**
+     * 주어진 문자열(value)을 Enum 타입(enumClass)으로 변환하는 메서드.
+     *
+     * - value: DB나 외부 API로부터 들어온 "한글" 문자열 (예: "동물병원")
+     * - enumClass: 변환하고 싶은 Enum 클래스 타입 (예: DivisionNm.class)
+     *
+     * 이 메서드는 Enum의 'name()'이 아니라, Enum 내부의 'name 필드 값'을 기준으로 매칭한다.
+     */
     private <T extends Enum<T>> T convertToEnum(String data, Class<T> enumClass) {
         if (data == null) {
             return null;
@@ -239,7 +247,7 @@ public class ApiShelterService {
             String[] parts = careAddr.split(" ");
             if (parts.length >= 2) {
                 result[0] = parts[0]; // city
-                result[1] = parts[1]; // town
+                result[1] = parts[1]; // district
             }
         }
 
