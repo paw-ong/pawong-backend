@@ -14,7 +14,7 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
     private final AdoptionJpaRepository adoptionJpaRepository;
 
     @Override
-    public Adoption findById(Long id) {
+    public Adoption findByIdOrThrow(Long id) {
         AdoptionEntity entity = adoptionJpaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Adoption not found with id: " + id));
 

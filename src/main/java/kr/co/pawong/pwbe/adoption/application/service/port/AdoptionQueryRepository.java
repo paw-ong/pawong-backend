@@ -3,5 +3,5 @@ package kr.co.pawong.pwbe.adoption.application.service.port;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 
 public interface AdoptionQueryRepository {
-    Adoption findById(Long id);
+    Adoption findByIdOrThrow(Long id);
 }

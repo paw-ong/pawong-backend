@@ -14,7 +14,7 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
 
     @Override
     public Adoption fetchAdoptionById(Long adoptionId) {
-        return adoptionQueryRepository.findById(adoptionId);
+        return adoptionQueryRepository.findByIdOrThrow(adoptionId);
     }
 
 }
