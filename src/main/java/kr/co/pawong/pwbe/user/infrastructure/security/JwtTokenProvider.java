@@ -23,7 +23,7 @@ public class JwtTokenProvider {
     @Getter
     private static final long tokenValidityInMs = 60L * 60 * 1000 * 1000;
 
-    public JwtTokenProvider(@Value("${auth.jwt.secret-key}") String key) {
+    public JwtTokenProvider(@Value("${spring.security.jwt.secret-key}") String key) {
         this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
