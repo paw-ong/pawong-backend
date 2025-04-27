@@ -1,5 +1,6 @@
 package kr.co.pawong.pwbe.user.config;
 
+import kr.co.pawong.pwbe.user.infrastructure.security.CustomAuthenticationEntryPoint;
 import kr.co.pawong.pwbe.user.infrastructure.security.CustomOAuth2UserService;
 import kr.co.pawong.pwbe.user.infrastructure.security.filter.JwtFilter;
 import kr.co.pawong.pwbe.user.infrastructure.security.JwtTokenProvider;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Slf4j
 @Configuration
@@ -37,13 +39,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-            .anyRequest().authenticated())
+                .requestMatchers(HttpMethod.POST, "/api/auth/kakao").permitAll()
+                .anyRequest().authenticated())
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(customOAuth2UserService))
                 .successHandler(oAuth2AuthenticationSuccessHandler())
-            );
+            )
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
