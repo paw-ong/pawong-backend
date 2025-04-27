@@ -22,7 +22,7 @@ public class ShelterUpdate {
     private String careAddr; // 소재지 도로명 주소
     private String jibunAddr; // 소재지번주소
     private String city; // 시도
-    private String town; // 시군구
+    private String district; // 시군구
     private Double lat; // 위도(double)
     private Double lng; // 경도(double)
     private LocalDate dsignationDate; // 동물보호센터 지정일자

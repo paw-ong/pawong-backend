@@ -23,7 +23,7 @@ public class ShelterCreate {
     private String careAddr; // 소재지 도로명 주소
     private String jibunAddr; // 소재지번주소
     private String city; // 시도
-    private String town; // 시군구
+    private String district; // 시군구
     private Double lat; // 위도(double)
     private Double lng; // 경도(double)
     private LocalDate dsignationDate; // 동물보호센터 지정일자
@@ -58,7 +58,7 @@ public class ShelterCreate {
                 .careAddr(this.careAddr)
                 .jibunAddr(this.jibunAddr)
                 .city(this.city)
-                .town(this.town)
+                .district(this.district)
                 .lat(this.lat)
                 .lng(this.lng)
                 .dsignationDate(this.dsignationDate)

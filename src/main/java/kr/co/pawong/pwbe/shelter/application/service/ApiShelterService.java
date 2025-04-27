@@ -70,7 +70,7 @@ public class ApiShelterService {
                                 .careAddr(item.getCareAddr())
                                 .jibunAddr(item.getJibunAddr())
                                 .city(addr[0])
-                                .town(addr[1])
+                                .district(addr[1])
                                 .lat(parseDouble(item.getLat(), null))
                                 .lng(parseDouble(item.getLng(), null))
                                 .dsignationDate(dsignationDate)
@@ -223,7 +223,7 @@ public class ApiShelterService {
     }
 
     private String[] parseAddress(String careAddr) {
-        String[] result = new String[2]; // [0] = city, [1] = town
+        String[] result = new String[2]; // [0] = city, [1] = district
 
         if (careAddr != null && !careAddr.isEmpty()) {
             String[] parts = careAddr.split(" ");

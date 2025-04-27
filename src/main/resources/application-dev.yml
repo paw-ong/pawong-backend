@@ -17,3 +17,12 @@ spring:
       embedding:
         options:
           model: text-embedding-ada-002
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        show-sql: true
+        format-sql: true
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true

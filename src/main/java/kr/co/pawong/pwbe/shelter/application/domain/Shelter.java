@@ -21,7 +21,7 @@ public class Shelter {
     private String careAddr; // 소재지 도로명 주소
     private String jibunAddr; // 소재지번주소
     private String city; // 시도
-    private String town; // 시군구
+    private String district; // 시군구
     private Double lat; // 위도(double)
     private Double lng; // 경도(double)
     private LocalDate dsignationDate; // 동물보호센터 지정일자
@@ -56,7 +56,7 @@ public class Shelter {
                 .careAddr(shelterCreate.getCareAddr())
                 .jibunAddr(shelterCreate.getJibunAddr())
                 .city(shelterCreate.getCity())
-                .town(shelterCreate.getTown())
+                .district(shelterCreate.getDistrict())
                 .lat(shelterCreate.getLat())
                 .lng(shelterCreate.getLng())
                 .dsignationDate(shelterCreate.getDsignationDate())
@@ -94,7 +94,7 @@ public class Shelter {
                 .careAddr(shelterUpdate.getCareAddr())
                 .jibunAddr(shelterUpdate.getJibunAddr())
                 .city(shelterUpdate.getCity())
-                .town(shelterUpdate.getTown())
+                .district(shelterUpdate.getDistrict())
                 .lat(shelterUpdate.getLat())
                 .lng(shelterUpdate.getLng())
                 .dsignationDate(shelterUpdate.getDsignationDate())
