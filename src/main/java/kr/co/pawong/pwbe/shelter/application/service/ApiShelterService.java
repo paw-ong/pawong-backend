@@ -34,9 +34,14 @@ public class ApiShelterService {
         while (hasMoreData) {
             log.info("데이터 가져오기: 페이지 {}, 페이지당 {} 건", pageNo, numOfRows);
 
-            URI uri = UriComponentsBuilder.fromHttpUrl("https://apis.data.go.kr/1543061/animalShelterSrvc_v2/shelterInfo_v2").queryParam("serviceKey", "mIh16wSgE8R9SjJMMwvxYwP%2BInJxEi0M5ZLimKlsKz6nIjuGNb6aEPbGyEU2bT4s1ty83mIWB4fW8h5N3u9LCA%3D%3D").queryParam("numOfRows", numOfRows).queryParam("pageNo", pageNo).queryParam("_type", "json").queryParam("MobileOS", "ETC").queryParam("MobileApp", "AppTest").build(true).toUri();
+            URI uri = UriComponentsBuilder.fromHttpUrl("https://apis.data.go.kr/1543061/animalShelterSrvc_v2/shelterInfo_v2")
+                    .queryParam("serviceKey", "mIh16wSgE8R9SjJMMwvxYwP%2BInJxEi0M5ZLimKlsKz6nIjuGNb6aEPbGyEU2bT4s1ty83mIWB4fW8h5N3u9LCA%3D%3D")
+                    .queryParam("numOfRows", numOfRows).queryParam("pageNo", pageNo)
+                    .queryParam("_type", "json")
+                    .queryParam("MobileOS", "ETC").queryParam("MobileApp", "AppTest")
+                    .build(true).toUri();
 
-            log.info("요청 주소: {}", uri.toString());
+            log.info("요청 주소: {}", uri);
 
             org.springframework.http.HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -215,11 +220,16 @@ public class ApiShelterService {
             return null;
         }
 
-        try {
-            return Enum.valueOf(enumClass, data);
-        } catch (IllegalArgumentException e) {
-            return null;
+        // Enum 클래스 안에 정의된 모든 상수 순회
+        for (T constant : enumClass.getEnumConstants()) {
+            // 현재 constant가 DivisionNm 타입이면
+            if (constant instanceof DivisionNm divisionNm && divisionNm.getName().equals(data)) {
+                // name 필드("동물병원", "개인" 등)가 입력 문자열과 일치하면 해당 Enum 반환
+                return constant;
+            }
         }
+        // 매칭되는 Enum이 없으면 null 반환
+        return null;
     }
 
     private String[] parseAddress(String careAddr) {

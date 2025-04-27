@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import kr.co.pawong.pwbe.shelter.enums.DivisionNm;
+import kr.co.pawong.pwbe.shelter.infrastructure.converter.DivisionNmConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,8 @@ public class ShelterEntity {
     private String careNm; // 동물보호센터명
     private String careRegNo; // 보호소 번호
     private String orgNm; // 관리 기관명
+    @Convert(converter = DivisionNmConverter.class)
+    @Column(name = "division_nm")
     private DivisionNm divisionNm; // 동물보호센터 유형 - (ENUM)
     private String saveTrgtAnimal; // 구조대상동물
     private String careAddr; // 소재지 도로명 주소
