@@ -8,7 +8,6 @@ import kr.co.pawong.pwbe.adoption.enums.ProcessState;
 import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
-import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -36,8 +35,10 @@ public class Adoption {
     private SexCd sexCd; // 성별
     private NeuterYn neuterYn; // 중성화여부(타입)
     private String specialMark; // 특징
+    private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    private Shelter shelter; // 보호소id(외래키)
+    private String taggingField;
+    private String searchField;
 
     // AdoptionCreate -> Adoption
     public static Adoption from(AdoptionCreate adoptionCreate) {
@@ -62,8 +63,8 @@ public class Adoption {
                 .sexCd(adoptionCreate.getSexCd())
                 .neuterYn(adoptionCreate.getNeuterYn())
                 .specialMark(adoptionCreate.getSpecialMark())
+                .careRegNo(adoptionCreate.getCareRegNo())
                 .updTm(adoptionCreate.getUpdTm())
-                .shelter(adoptionCreate.getShelter())
                 .build();
     }
 
@@ -91,8 +92,8 @@ public class Adoption {
                 .sexCd(adoptionUpdate.getSexCd())
                 .neuterYn(adoptionUpdate.getNeuterYn())
                 .specialMark(adoptionUpdate.getSpecialMark())
+                .careRegNo(adoptionUpdate.getCareRegNo())
                 .updTm(adoptionUpdate.getUpdTm())
-                .shelter(adoptionUpdate.getShelter())
                 .build();
     }
 }

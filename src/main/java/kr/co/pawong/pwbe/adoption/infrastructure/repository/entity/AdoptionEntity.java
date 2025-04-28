@@ -7,8 +7,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,9 +18,6 @@ import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
 import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
-import kr.co.pawong.pwbe.shelter.infrastructure.repository.entity.ShelterEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -86,9 +81,9 @@ public class AdoptionEntity {
 
     private LocalDateTime updTm; // 수정일
 
-    @ManyToOne
-    @JoinColumn(name = "shelter_id")
-    private ShelterEntity shelterEntity; // 보호소id(외래키)
+    private String taggingField;
+
+    private String searchField;
 
     // Adoption -> AdoptionEntity
     public static AdoptionEntity from(Adoption adoption) {
@@ -116,8 +111,8 @@ public class AdoptionEntity {
         entity.neuterYn = adoption.getNeuterYn();
         entity.specialMark = adoption.getSpecialMark();
         entity.updTm = adoption.getUpdTm();
-        entity.shelterEntity = null;
-                //ShelterEntity.from(adoption.getShelter());
+        entity.taggingField = null;
+        entity.searchField = null;
 
         return entity;
     }
@@ -130,27 +125,14 @@ public class AdoptionEntity {
         return Adoption.builder()
                 .adoptionId(adoptionId)
                 .desertionNo(desertionNo)
-                .happenDt(happenDt)
-                .happenPlace(happenPlace)
-                .upKindNm(upKindNm)
                 .upKindCd(upKindCd)
-                .kindNm(kindNm)
-                .kindCd(kindCd)
-                .colorCd(colorCd)
-                .age(age)
-                .weight(weight)
-                .noticeNo(noticeNo)
-                .noticeSdt(noticeSdt)
-                .noticeEdt(noticeEdt)
-                .popfile1(popfile1)
-                .popfile2(popfile2)
-                .processState(processState)
                 .activeState(activeState)
                 .sexCd(sexCd)
                 .neuterYn(neuterYn)
                 .specialMark(specialMark)
                 .updTm(updTm)
-                .shelter(shelter)
+                .taggingField(taggingField)
+                .searchField(searchField)
                 .build();
     }
 }

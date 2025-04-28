@@ -8,7 +8,6 @@ import kr.co.pawong.pwbe.adoption.enums.ProcessState;
 import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
-import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,8 +38,8 @@ public class AdoptionCreate {
     private SexCd sexCd; // 성별
     private NeuterYn neuterYn; // 중성화여부(타입)
     private String specialMark; // 특징
+    private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    private Shelter shelter; // 보호소id(외래키)
 
     public void updateActiveState() {
         // ProcessState에 따른 ActiveState 설정
