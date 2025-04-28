@@ -16,7 +16,7 @@ class HuggingFaceEmbeddingAdapterTest {
 
     @Test
     void 임베딩_되나_확인() {
-        float[] output = embeddingAdapter.embed("테스트입니다.");
+        float[] output = embeddingAdapter.embed("새끼 강아지인데 어르신들과 잘 지내고 순종적인");
         System.out.println("벡터 차원: " + (output == null ? null : output.length));
         System.out.println("벡터: " + Arrays.toString(output));
     }
