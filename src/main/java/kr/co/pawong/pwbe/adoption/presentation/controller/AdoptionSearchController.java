@@ -21,7 +21,8 @@ public class AdoptionSearchController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/search/document")
+    // adoptionId 리스트만 반환하는 테스트용 API
+    @GetMapping("/test/search")
     public ResponseEntity<AdoptionIdSearchResponses> searchDocumentIds(@ModelAttribute AdoptionSearchRequest request) {
         AdoptionIdSearchResponses response = adoptionSearchService.searchDocumentIds(request);
         return ResponseEntity.ok(response);
