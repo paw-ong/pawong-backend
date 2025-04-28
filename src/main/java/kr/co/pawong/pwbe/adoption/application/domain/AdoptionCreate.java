@@ -40,6 +40,9 @@ public class AdoptionCreate {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
+    private String searchField;
+    private String tagsField;
+    private Float[] embedding;
 
     public void updateActiveState() {
         // ProcessState에 따른 ActiveState 설정

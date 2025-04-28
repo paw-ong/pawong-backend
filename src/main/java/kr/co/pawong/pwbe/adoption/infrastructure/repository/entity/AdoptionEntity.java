@@ -81,9 +81,9 @@ public class AdoptionEntity {
 
     private LocalDateTime updTm; // 수정일
 
-    private String taggingField;
-
     private String searchField;
+
+    private String tagsField;
 
     // Adoption -> AdoptionEntity
     public static AdoptionEntity from(Adoption adoption) {
@@ -111,8 +111,8 @@ public class AdoptionEntity {
         entity.neuterYn = adoption.getNeuterYn();
         entity.specialMark = adoption.getSpecialMark();
         entity.updTm = adoption.getUpdTm();
-        entity.taggingField = null;
-        entity.searchField = null;
+        entity.searchField = adoption.getSearchField();
+        entity.tagsField = adoption.getTagsField();
 
         return entity;
     }
@@ -131,7 +131,7 @@ public class AdoptionEntity {
                 .neuterYn(neuterYn)
                 .specialMark(specialMark)
                 .updTm(updTm)
-                .taggingField(taggingField)
+                .tagsField(tagsField)
                 .searchField(searchField)
                 .build();
     }

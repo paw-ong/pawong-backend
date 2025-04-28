@@ -37,8 +37,9 @@ public class Adoption {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    private String taggingField;
+    private String tagsField;
     private String searchField;
+    private Float[] embedding;
 
     // AdoptionCreate -> Adoption
     public static Adoption from(AdoptionCreate adoptionCreate) {
@@ -65,6 +66,9 @@ public class Adoption {
                 .specialMark(adoptionCreate.getSpecialMark())
                 .careRegNo(adoptionCreate.getCareRegNo())
                 .updTm(adoptionCreate.getUpdTm())
+                .searchField(adoptionCreate.getSearchField())
+                .tagsField(adoptionCreate.getTagsField())
+                .embedding(adoptionCreate.getEmbedding())
                 .build();
     }
 
@@ -94,6 +98,8 @@ public class Adoption {
                 .specialMark(adoptionUpdate.getSpecialMark())
                 .careRegNo(adoptionUpdate.getCareRegNo())
                 .updTm(adoptionUpdate.getUpdTm())
+                .searchField(adoptionUpdate.getSearchField())
+                .tagsField(adoptionUpdate.getTagsField())
                 .build();
     }
 }
