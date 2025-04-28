@@ -1,0 +1,20 @@
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./logs/nginx:/var/log/nginx   # 로그를 호스트 ./logs/nginx 에 마운트
+
+  backend:
+    image: pawong-backend:latest
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env                       # 컨테이너에 .env 파일 주입
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev  # dev 프로파일
