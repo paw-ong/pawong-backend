@@ -1,6 +1,7 @@
 package kr.co.pawong.pwbe.adoption.application.service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AdoptionAiService {
 
@@ -12,4 +13,13 @@ public interface AdoptionAiService {
 
     // 문장 임베딩하는 함수
     float[] embed(String completion);
+
+    // 여러 개 문장을 병렬로 정제해서 순서대로 반환
+    List<Optional<String>> refineSearchConditionBatch(List<String> terms);
+
+    //여러 개 feature를 병렬로 태깅해서 순서대로 반환
+    List<Optional<List<String>>> tagBatch(List<String> features);
+
+    // 여러 개 문장에 대해 병렬로 임베딩해서 순서대로 반환
+    List<Optional<float[]>> embedBatch(List<String> completions);
 }

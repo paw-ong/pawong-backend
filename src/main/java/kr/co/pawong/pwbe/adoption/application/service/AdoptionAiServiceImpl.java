@@ -2,12 +2,15 @@ package kr.co.pawong.pwbe.adoption.application.service;
 
 import kr.co.pawong.pwbe.adoption.application.service.port.EmbeddingProcessorPort;
 import kr.co.pawong.pwbe.adoption.application.service.port.ChatProcessorPort;
+import kr.co.pawong.pwbe.adoption.application.service.util.AdoptionAiExecutor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
+ * Adoption에서 사용하는 AI 관련 기능을 제공합니다.
  * @exception: null이나 빈 문자열, 공백이 입력된 경우 IllegalArgumentException을 던집니다.
  */
 @Service
@@ -15,6 +18,7 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
 
     private final EmbeddingProcessorPort embeddingPort;
     private final ChatProcessorPort chatPort;
+    private final AdoptionAiExecutor executor;
 
     // 문장 정제하는 함수
     @Override
@@ -37,6 +41,21 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
         return embeddingPort.embed(completion);
     }
 
+    @Override
+    public List<Optional<String>> refineSearchConditionBatch(List<String> terms) {
+        return executor.run(terms, this::refineSearchCondition);
+    }
+
+    @Override
+    public List<Optional<List<String>>> tagBatch(List<String> features) {
+        return executor.run(features, this::tag);
+    }
+
+    @Override
+    public List<Optional<float[]>> embedBatch(List<String> completions) {
+        return executor.run(completions, this::embed);
+    }
+
     // 입력값 검증하는 함수
     private void validateNotBlank(String input) {
         if (input == null || input.isBlank()) {
@@ -52,10 +71,12 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
 
     public AdoptionAiServiceImpl(
             @Qualifier(EMBEDDING_BEAN_NAME) EmbeddingProcessorPort embeddingPort,
-            @Qualifier(CHAT_BEAN_NAME) ChatProcessorPort chatPort
+            @Qualifier(CHAT_BEAN_NAME) ChatProcessorPort chatPort,
+            AdoptionAiExecutor adoptionAiExecutor
     ) {
         this.embeddingPort = embeddingPort;
         this.chatPort = chatPort;
+        this.executor = adoptionAiExecutor;
     }
 
 }

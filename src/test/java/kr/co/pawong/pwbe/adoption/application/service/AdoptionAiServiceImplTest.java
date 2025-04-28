@@ -1,26 +1,40 @@
 package kr.co.pawong.pwbe.adoption.application.service;
 
+import kr.co.pawong.pwbe.adoption.application.service.port.ChatProcessorPort;
+import kr.co.pawong.pwbe.adoption.application.service.port.EmbeddingProcessorPort;
+import kr.co.pawong.pwbe.adoption.application.service.util.AdoptionAiExecutor;
 import kr.co.pawong.pwbe.adoption.fake.FakeEmbeddingAdapter;
 import kr.co.pawong.pwbe.adoption.fake.FakeChatAdapter;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 class AdoptionAiServiceImplTest {
+    private AdoptionAiServiceImpl service;
 
-    private final AdoptionAiService adoptionAiService =
-            new AdoptionAiServiceImpl(
-                    new FakeEmbeddingAdapter(),
-                    new FakeChatAdapter()
-            );
+    @BeforeEach
+    void setUp() {
+        // 동기 실행용 executor
+        Executor syncExec = Runnable::run;
+        AdoptionAiExecutor executor = new AdoptionAiExecutor(syncExec);
 
+        // fake adapter 준비
+        ChatProcessorPort fakeChat = new FakeChatAdapter();
+        EmbeddingProcessorPort fakeEmb = new FakeEmbeddingAdapter();
+
+        service = new AdoptionAiServiceImpl(fakeEmb, fakeChat, executor);
+    }
+
+    /** embed */
     @Test
     void 임베딩_정상_요청() {
         // Given
         String input = "test";
         // When
-        float[] output = adoptionAiService.embed(input);
+        float[] output = service.embed(input);
         // Then
         Assertions.assertThat(output).isEqualTo(new float[]{1.01f, 1.02f});
     }
@@ -30,7 +44,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = null;
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.embed(input))
+        Assertions.assertThatThrownBy(() -> service.embed(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -39,7 +53,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "";
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.embed(input))
+        Assertions.assertThatThrownBy(() -> service.embed(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -48,16 +62,17 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "    \n   ";
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.embed(input))
+        Assertions.assertThatThrownBy(() -> service.embed(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    /** refine */
     @Test
     void 문자열_정제_정상_요청() {
         // Given
         String input = "test";
         // When
-        String output = adoptionAiService.refineSearchCondition(input);
+        String output = service.refineSearchCondition(input);
         // Then
         Assertions.assertThat(output).isEqualTo(input);
     }
@@ -67,7 +82,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = null;
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.refineSearchCondition(input))
+        Assertions.assertThatThrownBy(() -> service.refineSearchCondition(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -76,7 +91,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "";
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.refineSearchCondition(input))
+        Assertions.assertThatThrownBy(() -> service.refineSearchCondition(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -85,16 +100,17 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "  \n  ";
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.refineSearchCondition(input))
+        Assertions.assertThatThrownBy(() -> service.refineSearchCondition(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    /** tag */
     @Test
     void 태깅_정상_요청() {
         // Given
         String input = "test";
         // When
-        List<String> output = adoptionAiService.tag(input);
+        List<String> output = service.tag(input);
         // Then
         Assertions.assertThat(output).isEqualTo(List.of("정이많음", "사람을좋아함"));
     }
@@ -104,7 +120,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = null;
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.tag(input))
+        Assertions.assertThatThrownBy(() -> service.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -113,7 +129,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "";
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.tag(input))
+        Assertions.assertThatThrownBy(() -> service.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -122,9 +138,8 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "  \n  ";
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.tag(input))
+        Assertions.assertThatThrownBy(() -> service.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
-
 
 }
