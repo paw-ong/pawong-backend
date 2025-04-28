@@ -9,8 +9,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
+
+import static org.assertj.core.api.Assertions.*;
 
 class AdoptionAiServiceImplTest {
     private AdoptionAiServiceImpl service;
@@ -36,7 +40,7 @@ class AdoptionAiServiceImplTest {
         // When
         float[] output = service.embed(input);
         // Then
-        Assertions.assertThat(output).isEqualTo(new float[]{1.01f, 1.02f});
+        assertThat(output).isEqualTo(new float[]{1.01f, 1.02f});
     }
 
     @Test
@@ -44,7 +48,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = null;
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.embed(input))
+        assertThatThrownBy(() -> service.embed(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -53,7 +57,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "";
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.embed(input))
+        assertThatThrownBy(() -> service.embed(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -62,7 +66,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "    \n   ";
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.embed(input))
+        assertThatThrownBy(() -> service.embed(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -74,7 +78,7 @@ class AdoptionAiServiceImplTest {
         // When
         String output = service.refineSearchCondition(input);
         // Then
-        Assertions.assertThat(output).isEqualTo(input);
+        assertThat(output).isEqualTo(input);
     }
 
     @Test
@@ -82,7 +86,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = null;
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.refineSearchCondition(input))
+        assertThatThrownBy(() -> service.refineSearchCondition(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -91,7 +95,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "";
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.refineSearchCondition(input))
+        assertThatThrownBy(() -> service.refineSearchCondition(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -100,7 +104,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "  \n  ";
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.refineSearchCondition(input))
+        assertThatThrownBy(() -> service.refineSearchCondition(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -112,7 +116,7 @@ class AdoptionAiServiceImplTest {
         // When
         List<String> output = service.tag(input);
         // Then
-        Assertions.assertThat(output).isEqualTo(List.of("정이많음", "사람을좋아함"));
+        assertThat(output).isEqualTo(List.of("정이많음", "사람을좋아함"));
     }
 
     @Test
@@ -120,7 +124,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = null;
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.tag(input))
+        assertThatThrownBy(() -> service.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -129,7 +133,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "";
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.tag(input))
+        assertThatThrownBy(() -> service.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -138,8 +142,112 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "  \n  ";
         // When & Then
-        Assertions.assertThatThrownBy(() -> service.tag(input))
+        assertThatThrownBy(() -> service.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    /** embed batch */
+    @Test
+    void 임베딩_병렬_작업이_모두_성공한_경우() {
+        // Given
+        List<String> texts = List.of("test1", "test2");
+        // When
+        List<Optional<float[]>> results = service.embedBatch(texts);
+        // Then
+        assertThat(results)
+                .hasSize(2)
+                .satisfiesExactly(
+                        opt0 -> assertThat(opt0).get().isEqualTo(new float[]{1.01f, 1.02f}),     // length=1 -> [1.0]
+                        opt1 -> assertThat(opt1).get().isEqualTo(new float[]{1.01f, 1.02f})      // length=2 -> [2.0]
+                );
+    }
+
+    @Test
+    void 임베딩_병렬_작업에_실패가_포함된_경우_해당값은_Optional_Empty_가_됨() {
+        // Given
+        // "fail" 입력시 예외 발생
+        List<String> texts = Arrays.asList("ok", "fail", "zzz", null, "    ");
+        // When
+        List<Optional<float[]>> results = service.embedBatch(texts);
+        // Then
+        assertThat(results)
+                .hasSize(5)
+                .satisfiesExactly(
+                        opt0 -> assertThat(opt0).get().isEqualTo(new float[]{1.01f, 1.02f}),     // "ok".length=2
+                        opt1 -> assertThat(opt1).isEmpty(),                       // "fail" 예외
+                        opt2 -> assertThat(opt2).get().isEqualTo(new float[]{1.01f, 1.02f}),     // "zzz".length=3
+                        opt3 -> assertThat(opt3).isEmpty(),                       // 입력값이 null인 예외
+                        opt4 -> assertThat(opt4).isEmpty()                        // 입력값이 공백인 예외
+                );
+    }
+
+    /** refine batch */
+    @Test
+    void 문자열_정제_병렬_작업이_모두_성공한_경우() {
+        // Given
+        List<String> inputs = List.of("one", "two");
+        // When
+        List<Optional<String>> results = service.refineSearchConditionBatch(inputs);
+        // Then
+        assertThat(results)
+                .hasSize(2)
+                .containsExactly(
+                        Optional.of("test"),
+                        Optional.of("test")
+                );
+    }
+
+    @Test
+    void 문자열_정제_병렬_작업에_실패가_포함된_경우_해당값은_Optional_Empty_가_됨() {
+        // Given
+        // "fail" 입력시 예외 발생
+        List<String> inputs = Arrays.asList("ok", "fail", "also", null, "\n \t");
+        // When
+        List<Optional<String>> results = service.refineSearchConditionBatch(inputs);
+        // Then
+        assertThat(results)
+                .hasSize(5)
+                .satisfiesExactly(
+                        opt0 -> assertThat(opt0).contains("test"),
+                        opt1 -> assertThat(opt1).isEmpty(),
+                        opt2 -> assertThat(opt2).contains("test"),
+                        opt3 -> assertThat(opt3).isEmpty(),
+                        opt4 -> assertThat(opt4).isEmpty()
+                );
+    }
+
+    /** tag batch */
+    @Test
+    void 태깅_병렬_작업이_모두_성공한_경우() {
+        // Given
+        List<String> features = List.of("a", "b");
+        // When
+        List<Optional<List<String>>> results = service.tagBatch(features);
+        // Then
+        assertThat(results)
+                .hasSize(2)
+                .containsExactly(
+                        Optional.of(List.of("정이많음", "사람을좋아함")),
+                        Optional.of(List.of("정이많음", "사람을좋아함"))
+                );
+    }
+
+    @Test
+    void 태깅_병렬_작업에_실패가_포함된_경우_Optional_Empty_가_됨() {
+        // Given
+        List<String> features = Arrays.asList("x", "fail", "y", null, " \t \n  ");
+        // When
+        List<Optional<List<String>>> results = service.tagBatch(features);
+        // Then
+        assertThat(results)
+                .hasSize(5)
+                .satisfiesExactly(
+                        opt0 -> assertThat(opt0).contains(List.of("정이많음", "사람을좋아함")),
+                        opt1 -> assertThat(opt1).isEmpty(),
+                        opt2 -> assertThat(opt2).contains(List.of("정이많음", "사람을좋아함")),
+                        opt3 -> assertThat(opt3).isEmpty(),
+                        opt4 -> assertThat(opt4).isEmpty()
+                );
     }
 
 }
