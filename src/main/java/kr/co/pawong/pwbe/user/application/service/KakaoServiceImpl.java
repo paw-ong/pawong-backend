@@ -15,12 +15,6 @@ public class KakaoServiceImpl implements KakaoService {
 
   private final UserQueryService userQueryService;
   private final UserCommandService userCommandService;
-  private final KakaoAuthPort kakaoAuthPort;
-
-  @Override
-  public User login(String code) {
-    return createOrGetUser(kakaoAuthPort.getKakaoUserInfo(code));
-  }
 
   @Override
   public User createOrGetUser(KakaoUserResponse kakaoUserInfo) {

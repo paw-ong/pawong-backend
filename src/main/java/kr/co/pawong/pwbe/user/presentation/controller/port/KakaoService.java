@@ -7,6 +7,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface KakaoService {
-  User login(String code);
   User createOrGetUser(KakaoUserResponse kakaoUserInfo);
 }

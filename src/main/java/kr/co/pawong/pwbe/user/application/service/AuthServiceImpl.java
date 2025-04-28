@@ -21,14 +21,6 @@ public class AuthServiceImpl implements AuthService {
   private final UserQueryRepository userQueryRepository;
   private final UserCommandRepository userCommandRepository;
 
-  @Override
-  public AuthResponse kakaoLogin(String code) {
-    User loginUser = kakaoService.login(code);
-    return new AuthResponse(
-        loginUser.getUserId(),
-        loginUser.getStatus());
-  }
-
   @Transactional
   @Override
   public AuthResponse signUp(Long userId, UserUpdate userUpdate) {
