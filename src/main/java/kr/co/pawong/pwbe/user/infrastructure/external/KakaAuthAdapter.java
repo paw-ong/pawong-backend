@@ -1,6 +1,5 @@
 package kr.co.pawong.pwbe.user.infrastructure.external;
 
-import java.util.Objects;
 import kr.co.pawong.pwbe.user.application.service.port.KakaoAuthPort;
 import kr.co.pawong.pwbe.user.infrastructure.external.dto.KakaoTokenResponse;
 import kr.co.pawong.pwbe.user.infrastructure.external.dto.KakaoUserResponse;
@@ -21,13 +20,13 @@ public class KakaAuthAdapter implements KakaoAuthPort {
 
   private final WebClient webClient;
 
-  @Value("${auth.kakao.redirect-url}")
+  @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
   private String KAKAO_REDIRECT_URL;
-  @Value("${auth.kakao.token-url}")
+  @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
   private String KAKAO_TOKEN_URL;
-  @Value("${auth.kakao.user-info-url}")
+  @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
   private String KAKAO_API_URL;
-  @Value("${auth.kakao.client-id}")
+  @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
   private String kakaoClientId;
 
   public String getKakaoAccessToken(String code) {
