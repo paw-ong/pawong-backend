@@ -29,6 +29,7 @@ public class AdoptionSearchMapper {
     // 검색 결과 카드에 필요한 mapping
     public static AdoptionSearchResponse toSearchResponse(Adoption adoption) {
         return AdoptionSearchResponse.builder()
+                .adoptionId(adoption.getAdoptionId())
                 .popfile1(adoption.getPopfile1())
                 .kindNm(adoption.getKindNm())
                 .sexCd(adoption.getSexCd())

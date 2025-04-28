@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AdoptionSearchResponse {
+    private Long adoptionId;
     private String popfile1;
     private String kindNm;
     private SexCd sexCd;
