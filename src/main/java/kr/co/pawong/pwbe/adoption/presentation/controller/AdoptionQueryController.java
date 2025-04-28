@@ -1,6 +1,5 @@
 package kr.co.pawong.pwbe.adoption.presentation.controller;
 
-import kr.co.pawong.pwbe.adoption.application.service.dto.response.PagedAdoptionQueryResponses;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class AdoptionQueryController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
 
-        SliceAdoptionSearchResponses response = adoptionQueryService.fetchAllAdoptions(page, size);
+        SliceAdoptionSearchResponses response = adoptionQueryService.fetchSlicedAdoptions(page, size);
         return ResponseEntity.ok(response);
     }
 }

@@ -2,6 +2,7 @@ package kr.co.pawong.pwbe.adoption.application.service;
 
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionCard;
+import kr.co.pawong.pwbe.adoption.application.service.dto.response.PagedAdoptionQueryResponses;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
 import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionCardMapper;
@@ -19,16 +20,32 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
 
     private final AdoptionQueryRepository adoptionQueryRepository;
 
-    // infinite scroll을 위한 slice 방식
+    // page 방식
     @Override
-    public SliceAdoptionSearchResponses fetchAllAdoptions(int page, int size) {
+    public PagedAdoptionQueryResponses fetchPagedAdoptions(int page, int size) {
         Page<Adoption> adoptionPage = adoptionQueryRepository.findAllPaged(page, size);
-        List<AdoptionCard> adoptionSearchResponses = adoptionPage.getContent()
-                .stream()
-                .map(AdoptionCardMapper::toAdoptionCard)
-                .collect(Collectors.toList());
-        boolean hasNext = adoptionPage.hasNext();
-        return new SliceAdoptionSearchResponses(hasNext, adoptionSearchResponses);
+        List<AdoptionCard> adoptionCards = mapToAdoptionCards(adoptionPage);
+        return new PagedAdoptionQueryResponses(
+                page,
+                size,
+                adoptionPage.getTotalElements(),
+                adoptionPage.getTotalPages(),
+                adoptionCards
+        );
     }
 
+    // infinite scroll을 위한 slice 방식
+    @Override
+    public SliceAdoptionSearchResponses fetchSlicedAdoptions(int page, int size) {
+        Page<Adoption> adoptionPage = adoptionQueryRepository.findAllPaged(page, size);
+        List<AdoptionCard> adoptionCards = mapToAdoptionCards(adoptionPage);
+        boolean hasNext = adoptionPage.hasNext();
+        return new SliceAdoptionSearchResponses(hasNext, adoptionCards);
+    }
+
+    private List<AdoptionCard> mapToAdoptionCards(Page<Adoption> adoptionPage) {
+        return adoptionPage.getContent().stream()
+                .map(AdoptionCardMapper::toAdoptionCard)
+                .collect(Collectors.toList());
+    }
 }
