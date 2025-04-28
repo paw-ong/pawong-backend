@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class SignUpRequest {
-  private Long userId;
   private String nickname;
   private String region;
   private String tel;

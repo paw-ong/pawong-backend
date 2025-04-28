@@ -1,5 +1,6 @@
 package kr.co.pawong.pwbe.user.application.service;
 
+import jakarta.transaction.Transactional;
 import kr.co.pawong.pwbe.user.application.domain.User;
 import kr.co.pawong.pwbe.user.application.domain.UserUpdate;
 import kr.co.pawong.pwbe.user.application.service.port.UserCommandRepository;
@@ -24,17 +25,16 @@ public class AuthServiceImpl implements AuthService {
   public AuthResponse kakaoLogin(String code) {
     User loginUser = kakaoService.login(code);
     return new AuthResponse(
-        jwtTokenProvider.generateJwtToken(loginUser.getUserId()),
         loginUser.getUserId(),
         loginUser.getStatus());
   }
 
+  @Transactional
   @Override
   public AuthResponse signUp(Long userId, UserUpdate userUpdate) {
     User pendingUser = userQueryRepository.findByUserId(userId);
     User updatedUser = userCommandRepository.update(pendingUser.update(userUpdate));
     return new AuthResponse(
-        jwtTokenProvider.generateJwtToken(updatedUser.getUserId()),
         updatedUser.getUserId(),
         updatedUser.getStatus()
     );

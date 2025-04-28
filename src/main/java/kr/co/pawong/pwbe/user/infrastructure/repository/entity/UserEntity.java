@@ -45,7 +45,7 @@ public class UserEntity {
         .profileImage(profileImage)
         .region(region)
         .tel(tel)
-        .status(UserStatus.PENDING)
+        .status(status)
         .build();
   }
 
@@ -69,6 +69,7 @@ public class UserEntity {
     this.region = user.getRegion();
     this.tel = user.getTel();
     this.updatedAt = LocalDate.now();
+    this.status = user.getStatus();
     return this;
   }
 

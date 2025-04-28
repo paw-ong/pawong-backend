@@ -34,6 +34,7 @@ public class User {
     this.region = userUpdate.getRegion();
     this.tel = userUpdate.getTel();
     this.updatedAt = LocalDate.now();
+    this.status = UserStatus.ACTIVE;
     return this;
   }
 
