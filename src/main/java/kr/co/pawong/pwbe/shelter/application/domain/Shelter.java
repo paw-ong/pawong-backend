@@ -83,7 +83,7 @@ public class Shelter {
 
 
     // // ShelterUpdate -> Shelter
-    public static Shelter update(ShelterUpdate shelterUpdate){
+    public Shelter update(ShelterUpdate shelterUpdate){
         return Shelter.builder()
                 .shelterId(shelterUpdate.getShelterId())
                 .careNm(shelterUpdate.getCareNm())

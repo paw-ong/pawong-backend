@@ -47,7 +47,7 @@ public class ShelterCreate {
     private LocalDate dataStdDt; // 데이터 기준일자
 
     // 동물보호소 중복 확인
-    public ShelterEntity toEntityShelter() {
+    public ShelterEntity toEntity() {
         ShelterEntity shelterEntity = ShelterEntity.builder()
                 .shelterId(this.shelterId)
                 .careNm(this.careNm)
