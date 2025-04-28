@@ -5,6 +5,8 @@ import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoption
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,14 +21,18 @@ public class AdoptionQueryController {
 
     // page 방식
     @GetMapping("")
-    public ResponseEntity<PagedAdoptionQueryResponses> getPagedAdoptions(Pageable pageable) {
+    public ResponseEntity<PagedAdoptionQueryResponses> getPagedAdoptions(
+            @PageableDefault(page = 0, size = 20, sort = "noticeSdt", direction = Sort.Direction.DESC) Pageable pageable) {
+
         PagedAdoptionQueryResponses response = adoptionQueryService.fetchPagedAdoptions(pageable);
         return ResponseEntity.ok(response);
     }
 
     // slice 방식 (무한 스크롤)
     @GetMapping("/slice")
-    public ResponseEntity<SliceAdoptionSearchResponses> getSlicedAdoptions(Pageable pageable) {
+    public ResponseEntity<SliceAdoptionSearchResponses> getSlicedAdoptions(
+            @PageableDefault(page = 0, size = 20, sort = "noticeSdt", direction = Sort.Direction.DESC) Pageable pageable) {
+
         SliceAdoptionSearchResponses response = adoptionQueryService.fetchSlicedAdoptions(pageable);
         return ResponseEntity.ok(response);
     }
