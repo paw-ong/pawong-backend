@@ -57,9 +57,9 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "test";
         // When
-        String output = adoptionAiService.refineSearchCondition("test");
+        String output = adoptionAiService.refineSearchCondition(input);
         // Then
-        Assertions.assertThat(output).isEqualTo("test");
+        Assertions.assertThat(output).isEqualTo(input);
     }
 
     @Test
@@ -94,7 +94,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "test";
         // When
-        List<String> output = adoptionAiService.tag("test");
+        List<String> output = adoptionAiService.tag(input);
         // Then
         Assertions.assertThat(output).isEqualTo(List.of("정이많음", "사람을좋아함"));
     }
