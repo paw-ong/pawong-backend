@@ -1,10 +1,9 @@
 package kr.co.pawong.pwbe.shelter.application.service;
 
 import kr.co.pawong.pwbe.shelter.application.domain.ShelterCreate;
+import kr.co.pawong.pwbe.shelter.application.service.port.ShelterUpdateRepository;
 import kr.co.pawong.pwbe.shelter.enums.DivisionNm;
 import kr.co.pawong.pwbe.shelter.infrastructure.external.ShelterApi;
-import kr.co.pawong.pwbe.shelter.infrastructure.repository.ShelterJpaRepository;
-import kr.co.pawong.pwbe.shelter.infrastructure.repository.entity.ShelterEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -22,7 +21,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ApiShelterService {
-    private final ShelterJpaRepository shelterJpaRepository;
+    private final ShelterUpdateRepository shelterUpdateRepository;
     private final RestTemplate restTemplate;
 
     public List<ShelterCreate> saveShelters() {
@@ -31,21 +30,27 @@ public class ApiShelterService {
         int numOfRows = 1000;
         boolean hasMoreData = true;
 
+        // 1. 미리 DB에 존재하는 careRegNo 목록을 Set으로 가져오기 (빠른 조회용)
+        Set<String> existingCareRegNos = new HashSet<>(shelterUpdateRepository.findAllCareRegNos());
+        log.info("이미 존재하는 보호소 수: {}", existingCareRegNos.size());
+
         while (hasMoreData) {
             log.info("데이터 가져오기: 페이지 {}, 페이지당 {} 건", pageNo, numOfRows);
 
             URI uri = UriComponentsBuilder.fromHttpUrl("https://apis.data.go.kr/1543061/animalShelterSrvc_v2/shelterInfo_v2")
                     .queryParam("serviceKey", "mIh16wSgE8R9SjJMMwvxYwP%2BInJxEi0M5ZLimKlsKz6nIjuGNb6aEPbGyEU2bT4s1ty83mIWB4fW8h5N3u9LCA%3D%3D")
-                    .queryParam("numOfRows", numOfRows).queryParam("pageNo", pageNo)
+                    .queryParam("numOfRows", numOfRows)
+                    .queryParam("pageNo", pageNo)
                     .queryParam("_type", "json")
-                    .queryParam("MobileOS", "ETC").queryParam("MobileApp", "AppTest")
-                    .build(true).toUri();
+                    .queryParam("MobileOS", "ETC")
+                    .queryParam("MobileApp", "AppTest")
+                    .build(true)
+                    .toUri();
 
             log.info("요청 주소: {}", uri);
 
-            org.springframework.http.HttpHeaders headers = new HttpHeaders();
+            HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             try {
@@ -54,11 +59,14 @@ public class ApiShelterService {
                 log.info("응답: {}", shelterApi);
 
                 if (isValidShelterData(shelterApi)) {
-
                     List<ShelterApi.Item> items = shelterApi.getResponse().getBody().getItems().getItem();
-                    List<ShelterCreate> shelterCreates = new ArrayList<>();
 
                     for (ShelterApi.Item item : items) {
+                        // 2. 이미 존재하는 careRegNo는 스킵
+                        if (existingCareRegNos.contains(item.getCareRegNo())) {
+                            log.info("중복된 보호소 (careRegNo={}): 스킵", item.getCareRegNo());
+                            continue;
+                        }
 
                         // 날짜 변환
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -98,20 +106,15 @@ public class ApiShelterService {
                                 .careTel(item.getCareTel())
                                 .dataStdDt(dataStdDt)
                                 .build();
-                        shelterCreates.add(shelterCreate);
+
+                        allShelterCreates.add(shelterCreate);
                     }
 
-                    allShelterCreates.addAll(shelterCreates);
-
-                    // 현재 페이지의 데이터 수가 numOfRows보다 적으면 더 이상 데이터가 없는 것으로 판단
                     if (items.size() < numOfRows) {
                         hasMoreData = false;
                         log.info("마지막 페이지 도달: {} 건의 데이터 검색됨", items.size());
                     } else {
-                        // 다음 페이지로 이동
                         pageNo++;
-
-                        // API 호출 간격을 두어 서버 부하 방지 (선택사항)
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
@@ -119,7 +122,6 @@ public class ApiShelterService {
                         }
                     }
                 } else {
-                    // 데이터가 없는 경우
                     hasMoreData = false;
                     log.info("더 이상 데이터가 없습니다.");
                 }
@@ -129,54 +131,10 @@ public class ApiShelterService {
             }
         }
 
-        if (!allShelterCreates.isEmpty()) {
-            // 중복 제거를 위한 Map 사용 (careNm을 키로 사용)
-            Map<String, ShelterEntity> uniqueSheltersMap = new HashMap<>();
-            int duplicateCount = 0;
-
-            for (ShelterCreate shelterCreate : allShelterCreates) {
-                String careNm = shelterCreate.getCareNm();
-
-                // 이미 해당 이름의 보호소가 맵에 있는지 확인
-                if (!uniqueSheltersMap.containsKey(careNm)) {
-                    ShelterEntity shelterEntity = shelterCreate.toEntityShelter();
-                    uniqueSheltersMap.put(careNm, shelterEntity);
-                } else {
-                    duplicateCount++;
-                }
-            }
-
-            // 중복 제거된 보호소 목록 생성
-            List<ShelterEntity> uniqueShelterEntitys = new ArrayList<>(uniqueSheltersMap.values());
-
-            // 기존 데이터베이스에 있는 보호소와 중복 제거
-            List<ShelterEntity> sheltersToSave = new ArrayList<>();
-            for (ShelterEntity shelterEntity : uniqueShelterEntitys) {
-                String careNm = shelterEntity.getCareNm();
-                // 데이터베이스에서 해당 이름의 보호소가 있는지 확인
-                List<ShelterEntity> existingShelters = shelterJpaRepository.findByCareNm(careNm);
-
-                if (existingShelters.isEmpty()) {
-                    // 데이터베이스에 없는 경우에만 저장 목록에 추가
-                    sheltersToSave.add(shelterEntity);
-                } else {
-                    log.info("데이터베이스에 이미 존재하는 보호소: {}", careNm);
-                }
-            }
-
-            // 새로운 보호소만 저장
-            if (!sheltersToSave.isEmpty()) {
-                shelterJpaRepository.saveAll(sheltersToSave);
-                log.info("총 {} 건의 새로운 보호소 데이터를 데이터베이스에 저장했습니다.", sheltersToSave.size());
-            } else {
-                log.info("저장할 새로운 보호소 데이터가 없습니다.");
-            }
-
-            log.info("API에서 가져온 총 보호소 수: {}, 중복 제거 후: {}, 중복 수: {}", allShelterCreates.size(), uniqueShelterEntitys.size(), duplicateCount);
-        }
-
+        log.info("총 {}개의 신규 보호소 데이터를 가져왔습니다.", allShelterCreates.size());
         return allShelterCreates;
     }
+
 
     private boolean isValidShelterData(ShelterApi shelterApi) {
         return Optional.ofNullable(shelterApi).map(ShelterApi::getResponse).map(ShelterApi.Response::getBody).map(ShelterApi.Body::getItems).map(ShelterApi.Items::getItem).filter(items -> !items.isEmpty()).isPresent();

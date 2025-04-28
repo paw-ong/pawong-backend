@@ -5,10 +5,12 @@ import kr.co.pawong.pwbe.shelter.application.domain.ShelterCreate;
 import kr.co.pawong.pwbe.shelter.application.service.port.ShelterUpdateRepository;
 import kr.co.pawong.pwbe.shelter.presentation.controller.port.ShelterUpdateService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ShelterUpdateServiceImpl implements ShelterUpdateService {

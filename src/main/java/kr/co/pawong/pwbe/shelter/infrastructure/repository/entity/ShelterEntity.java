@@ -23,6 +23,7 @@ public class ShelterEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long shelterId; // 보호소 id
     private String careNm; // 동물보호센터명
+    @Column(unique = true)
     private String careRegNo; // 보호소 번호
     private String orgNm; // 관리 기관명
     @Convert(converter = DivisionNmConverter.class)

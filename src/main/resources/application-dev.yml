@@ -25,3 +25,13 @@ spring:
         model: Qwen/QwQ-32B
       embedding:
         model: ai-human-lab/EEVE-Korean-10.8B-SFT-v0.1
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        show-sql: true
+        format-sql: true
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true

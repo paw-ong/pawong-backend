@@ -23,6 +23,11 @@ public class ShelterUpdateRepositoryImpl implements ShelterUpdateRepository {
                 .map(ShelterEntity::from)
                 .toList();
         shelterJpaRepository.saveAll(shelterEntities);
+        log.info("{}개의 보호소 정보가 저장되었습니다.", shelters.size());
+    }
+
+    public List<String> findAllCareRegNos() {
+        return shelterJpaRepository.findAllCareRegNos();
     }
 
 }

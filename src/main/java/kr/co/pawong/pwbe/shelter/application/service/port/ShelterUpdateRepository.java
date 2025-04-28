@@ -9,4 +9,6 @@ public interface ShelterUpdateRepository {
     // 동물보호센터 RDB저장
     void saveShelters(List<Shelter> shelter);
 
+    List<String> findAllCareRegNos();
+
 }
