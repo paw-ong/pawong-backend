@@ -34,12 +34,14 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();;
         String socialId = oauthUser.getName();
         User user = userQueryService.getUserBySocialId(Long.valueOf(socialId));
-        if(user.getStatus() != UserStatus.ACTIVE) {
-            response.sendRedirect(baseUrl+"/signup/additional-info");
-            return;
-        }
+
         // ACTIVE
         String token = jwtTokenProvider.generateTokenByOauth2(authentication, user.getUserId());
+        if(user.getStatus() != UserStatus.ACTIVE) {
+
+            response.sendRedirect(baseUrl+"/signup/additional-info?token=" + token);
+            return;
+        }
         // JWT를 쿼리 파라미터 등으로 클라이언트에 전달하거나 헤더에 넣어 응답함.
         response.sendRedirect(baseUrl+"/oauth2/redirect?token=" + token);
     }

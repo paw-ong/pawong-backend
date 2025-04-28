@@ -1,6 +1,5 @@
 package kr.co.pawong.pwbe.user.infrastructure.security;
 
-import kr.co.pawong.pwbe.user.application.service.port.UserQueryRepository;
 import kr.co.pawong.pwbe.user.infrastructure.repository.UserJpaRepository;
 import kr.co.pawong.pwbe.user.infrastructure.repository.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;

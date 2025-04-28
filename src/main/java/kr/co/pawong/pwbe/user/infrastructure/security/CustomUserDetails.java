@@ -19,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
   public CustomUserDetails(UserEntity userEntity) {
     this.userId = userEntity.getUserId();
     this.socialId = userEntity.getSocialId();
-    this.username = "";
+    this.username = String.valueOf(this.socialId);
     this.password = "";
     this.authorities = List.of();
   }
@@ -27,7 +27,7 @@ public class CustomUserDetails implements UserDetails {
   public CustomUserDetails(Long userId, Long socialId, List<SimpleGrantedAuthority> list) {
     this.userId = userId;
     this.socialId = socialId;
-    this.username = "";
+    this.username = String.valueOf(socialId);
     this.password = "";
     this.authorities = List.of();
   }

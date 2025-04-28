@@ -6,9 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import kr.co.pawong.pwbe.user.application.domain.User;
-import kr.co.pawong.pwbe.user.enums.UserStatus;
 import kr.co.pawong.pwbe.user.infrastructure.security.JwtTokenProvider;
-import kr.co.pawong.pwbe.user.infrastructure.security.exception.UserNotActiveException;
 import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +31,9 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private boolean isPassedUrls(String uri){
-        return uri.startsWith("/login/oauth2/code"); // oauth
+        return uri.startsWith("/oauth2/authorization")
+                || uri.startsWith("/oauth2/authorize")
+                || uri.startsWith("/login/oauth2/code"); // oauth
     }
 
     @Override
@@ -52,14 +52,18 @@ public class JwtFilter extends OncePerRequestFilter {
         if (jwtTokenProvider.validateToken(token)) {
             String userId = jwtTokenProvider.getUsername(token);
             User user = userQueryService.getUser(Long.valueOf(userId));
-            if(user == null || !user.getStatus().equals(UserStatus.ACTIVE)) {
-                throw new UserNotActiveException("추가 정보가 필요합니다");
-            }
-            // userId와 socialId로 customOauthUserDetail을 만든 Authentication객체를 SecurityContext에 저장합니다.
+
+            // userId와 socialId로 customOauthUserDetail을 만든 Authentication 객체를 SecurityContext에 저장합니다.
             UserDetails userDetails = jwtTokenProvider.getUserDetails(token, user.getSocialId());
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Unauthorized: Invalid or missing token");
+            response.getWriter().flush();
+            return;
         }
 
         filterChain.doFilter(request, response);

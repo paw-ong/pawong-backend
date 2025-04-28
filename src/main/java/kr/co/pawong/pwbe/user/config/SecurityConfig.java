@@ -38,22 +38,30 @@ public class SecurityConfig {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
         this.customOAuth2UserService = customOAuth2UserService;
-      this.userQueryService = userQueryService;
+        this.userQueryService = userQueryService;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login/oauth2/**").permitAll()
-                .anyRequest().authenticated())
+                .requestMatchers(
+                    "/api/auth/**",
+                    "/oauth2/authorization/**",
+                    "/login/oauth2/**",
+                    "/oauth2/authorize",
+                    "/oauth/authorize"
+                ).permitAll()
+            .anyRequest().authenticated())
+
             .oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfo -> userInfo
-                    .userService(customOAuth2UserService))
+                .userInfoEndpoint(userInfo ->
+                    userInfo.userService(customOAuth2UserService))
                 .successHandler(oAuth2AuthenticationSuccessHandler())
             )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 

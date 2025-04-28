@@ -1,6 +1,6 @@
 package kr.co.pawong.pwbe.user.presentation.controller;
 
-import kr.co.pawong.pwbe.user.infrastructure.security.CustomOAuth2User;
+import kr.co.pawong.pwbe.user.infrastructure.security.CustomUserDetails;
 import kr.co.pawong.pwbe.user.presentation.controller.dto.request.SignUpRequest;
 import kr.co.pawong.pwbe.user.presentation.controller.dto.response.AuthResponse;
 import kr.co.pawong.pwbe.user.presentation.controller.port.AuthService;
@@ -24,7 +24,8 @@ public class AuthController {
       @RequestBody SignUpRequest signUpRequest,
       Authentication authentication
   ) {
-    CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
+    CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
     Long userId = principal.getUserId();
     return ResponseEntity.ok(authService.signUp(userId, signUpRequest.update()));
   }
