@@ -1,6 +1,5 @@
 package kr.co.pawong.pwbe.adoption.presentation.controller.dto.response;
 
-import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,5 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdoptionSearchResponses {
-    private List<Adoption> adoptions;
+    private List<AdoptionSearchResponse> adoptionSearchResponses;
+
+
 }
