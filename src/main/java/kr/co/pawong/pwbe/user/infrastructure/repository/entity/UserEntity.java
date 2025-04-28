@@ -46,6 +46,9 @@ public class UserEntity {
         .region(region)
         .tel(tel)
         .status(status)
+        .createdAt(createdAt)
+        .updatedAt(updatedAt)
+        .deletedAt(deletedAt)
         .build();
   }
 
@@ -69,7 +72,7 @@ public class UserEntity {
     this.region = user.getRegion();
     this.tel = user.getTel();
     this.updatedAt = LocalDate.now();
-    this.status = user.getStatus();
+    this.status = UserStatus.ACTIVE;
     return this;
   }
 
