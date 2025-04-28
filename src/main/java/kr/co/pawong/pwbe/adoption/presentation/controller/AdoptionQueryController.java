@@ -1,6 +1,7 @@
 package kr.co.pawong.pwbe.adoption.presentation.controller;
 
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.PagedAdoptionQueryResponses;
+import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,11 @@ public class AdoptionQueryController {
     private final AdoptionQueryService adoptionQueryService;
 
     @GetMapping("")
-    public ResponseEntity<PagedAdoptionQueryResponses> getPagedAdoptions(
+    public ResponseEntity<SliceAdoptionSearchResponses> getAdoptions(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
 
-        PagedAdoptionQueryResponses response = adoptionQueryService.fetchPagedAdoptions(page, size);
+        SliceAdoptionSearchResponses response = adoptionQueryService.fetchAllAdoptions(page, size);
         return ResponseEntity.ok(response);
     }
 }

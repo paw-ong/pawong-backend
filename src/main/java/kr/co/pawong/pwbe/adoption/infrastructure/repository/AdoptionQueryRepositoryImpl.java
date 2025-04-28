@@ -29,7 +29,6 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
     public Page<Adoption> findAllPaged(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "noticeSdt"));
         Page<AdoptionEntity> entityPage = adoptionJpaRepository.findAll(pageable);
-
         return entityPage.map(AdoptionEntity::toModel);
     }
 }
