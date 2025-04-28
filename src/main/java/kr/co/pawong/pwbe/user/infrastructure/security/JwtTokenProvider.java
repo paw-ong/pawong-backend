@@ -27,42 +27,51 @@ public class JwtTokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateTokenByOauth2(Authentication authentication) {
+    public String generateTokenByOauth2(Authentication authentication, Long userId) {
         DefaultOAuth2User oauth2User = (DefaultOAuth2User) authentication.getPrincipal();
-        return getToken(oauth2User.getName(), oauth2User.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        return getToken(
+            userId,
+            oauth2User.getName(),
+            oauth2User.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
+        );
     }
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(Authentication authentication, Long userId) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        return getToken(userDetails.getUsername(), roles);
+        return getToken(userId, userDetails.getUsername(), roles);
     }
 
-    private String getToken(String username ,List<String> roles) {
+    private String getToken(Long userId, String username, List<String> roles) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + tokenValidityInMs);
         return Jwts.builder()
-                .setSubject(username)  // 사용자 식별 정보 (주로 username)
-                .claim("roles", roles)                  // 권한 정보
+                .setSubject(String.valueOf(userId))  // 사용자 식별 정보 (주로 username)
+                .claim("roles", roles)
+                .claim("username", username)          // 필요시 추가 정보// 권한 정보
                 .setIssuedAt(now)                       // 발행 시간
                 .setExpiration(validity)                // 만료 시간
                 .signWith(this.secretKey)// 서명 알고리즘
                 .compact();
     }
 
-    public UserDetails getUserDetails(String token) {
+    public UserDetails getUserDetails(String token, Long socialId) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
 
-        String username = claims.getSubject();
+        Long userId = Long.valueOf(claims.getSubject());
         List<String> roles = claims.get("roles", List.class);
 
-        return new CustomUserDetails(username, roles.stream().map(SimpleGrantedAuthority::new).toList());
+        return new CustomUserDetails(
+            userId,
+            socialId,
+            roles.stream().map(SimpleGrantedAuthority::new).toList()
+        );
     }
 
     public boolean validateToken(String token) {

@@ -5,7 +5,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import kr.co.pawong.pwbe.user.application.domain.User;
+import kr.co.pawong.pwbe.user.enums.UserStatus;
 import kr.co.pawong.pwbe.user.infrastructure.security.JwtTokenProvider;
+import kr.co.pawong.pwbe.user.infrastructure.security.exception.UserNotActiveException;
+import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,13 +21,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserQueryService userQueryService;
 
-    public JwtFilter(JwtTokenProvider jwtTokenProvider) {
+    public JwtFilter(
+        JwtTokenProvider jwtTokenProvider,
+        UserQueryService userQueryService) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.userQueryService = userQueryService;
     }
 
     private boolean isPassedUrls(String uri){
-        return uri.startsWith("/api/auth/kakao") // 로그인, 가입 등
+        return uri.startsWith("/api/auth/signup") // (추가정보입력)회원가입
+                || uri.startsWith("/api/user")
                 || uri.startsWith("/login/oauth2/code"); // oauth
     }
 
@@ -41,7 +50,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = extractToken(request);
 
         if (jwtTokenProvider.validateToken(token)) {
-            UserDetails userDetails = jwtTokenProvider.getUserDetails(token);
+            String socialId = jwtTokenProvider.getUsername(token);
+            User user = userQueryService.getUserBySocialId(Long.valueOf(socialId));
+            if(user == null || !user.getStatus().equals(UserStatus.ACTIVE)) {
+                throw new UserNotActiveException("추가 정보가 필요합니다");
+            }
+            UserDetails userDetails = jwtTokenProvider.getUserDetails(token, Long.valueOf(socialId));
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

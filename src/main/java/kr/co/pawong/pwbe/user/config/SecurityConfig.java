@@ -5,6 +5,7 @@ import kr.co.pawong.pwbe.user.infrastructure.security.CustomOAuth2UserService;
 import kr.co.pawong.pwbe.user.infrastructure.security.filter.JwtFilter;
 import kr.co.pawong.pwbe.user.infrastructure.security.JwtTokenProvider;
 import kr.co.pawong.pwbe.user.infrastructure.security.OAuth2AuthenticationSuccessHandler;
+import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,18 +30,25 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final UserQueryService userQueryService;
 
-    public SecurityConfig(JwtFilter jwtFilter, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService) {
+    public SecurityConfig(JwtFilter jwtFilter, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService,
+        UserQueryService userQueryService) {
         this.jwtFilter = jwtFilter;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
         this.customOAuth2UserService = customOAuth2UserService;
+      this.userQueryService = userQueryService;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.POST, "/api/auth/kakao").permitAll()
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                .requestMatchers("/api/user/**").permitAll()
+                .requestMatchers("/login/oauth2/**").permitAll()
                 .anyRequest().authenticated())
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
@@ -55,7 +64,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider);
+        return new OAuth2AuthenticationSuccessHandler(userQueryService, jwtTokenProvider);
     }
 
     @Bean
