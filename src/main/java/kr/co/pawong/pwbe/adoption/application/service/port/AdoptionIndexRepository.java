@@ -4,6 +4,10 @@ import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 
 public interface AdoptionIndexRepository {
-    // 유기동물정보 ES에 저장
-    void saveAdoptions(List<Adoption> adoptions);
+    // AdoptionEntity -> Adoption
+    List<Adoption> convertToAdoptions();
+
+    // Adoption -> AdoptionDocument -> ES
+    void saveAdoptionToEs(List<Adoption> adoptions);
+
 }
