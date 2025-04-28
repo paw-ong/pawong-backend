@@ -9,6 +9,7 @@ import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionCardMapper
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,12 +23,12 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
 
     // page 방식
     @Override
-    public PagedAdoptionQueryResponses fetchPagedAdoptions(int page, int size) {
-        Page<Adoption> adoptionPage = adoptionQueryRepository.findAllPaged(page, size);
+    public PagedAdoptionQueryResponses fetchPagedAdoptions(Pageable pageable) {
+        Page<Adoption> adoptionPage = adoptionQueryRepository.findAllPaged(pageable);
         List<AdoptionCard> adoptionCards = mapToAdoptionCards(adoptionPage);
         return new PagedAdoptionQueryResponses(
-                page,
-                size,
+                pageable.getPageNumber() + 1,  // 1페이지부터
+                pageable.getPageSize(),
                 adoptionPage.getTotalElements(),
                 adoptionPage.getTotalPages(),
                 adoptionCards
@@ -36,8 +37,8 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
 
     // infinite scroll을 위한 slice 방식
     @Override
-    public SliceAdoptionSearchResponses fetchSlicedAdoptions(int page, int size) {
-        Page<Adoption> adoptionPage = adoptionQueryRepository.findAllPaged(page, size);
+    public SliceAdoptionSearchResponses fetchSlicedAdoptions(Pageable pageable) {
+        Page<Adoption> adoptionPage = adoptionQueryRepository.findAllPaged(pageable);
         List<AdoptionCard> adoptionCards = mapToAdoptionCards(adoptionPage);
         boolean hasNext = adoptionPage.hasNext();
         return new SliceAdoptionSearchResponses(hasNext, adoptionCards);
