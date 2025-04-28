@@ -6,6 +6,7 @@ import kr.co.pawong.pwbe.shelter.enums.DivisionNm;
 import kr.co.pawong.pwbe.shelter.infrastructure.external.ShelterApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,6 +24,8 @@ import java.util.*;
 public class ApiShelterService {
     private final ShelterUpdateRepository shelterUpdateRepository;
     private final RestTemplate restTemplate;
+    @Value("${api.service-key}")
+    private String serviceKey;
 
     public List<ShelterCreate> saveShelters() {
         List<ShelterCreate> allShelterCreates = new ArrayList<>();
@@ -37,8 +40,9 @@ public class ApiShelterService {
         while (hasMoreData) {
             log.info("데이터 가져오기: 페이지 {}, 페이지당 {} 건", pageNo, numOfRows);
 
+
             URI uri = UriComponentsBuilder.fromHttpUrl("https://apis.data.go.kr/1543061/animalShelterSrvc_v2/shelterInfo_v2")
-                    .queryParam("serviceKey", "mIh16wSgE8R9SjJMMwvxYwP%2BInJxEi0M5ZLimKlsKz6nIjuGNb6aEPbGyEU2bT4s1ty83mIWB4fW8h5N3u9LCA%3D%3D")
+                    .queryParam("serviceKey", serviceKey)
                     .queryParam("numOfRows", numOfRows)
                     .queryParam("pageNo", pageNo)
                     .queryParam("_type", "json")

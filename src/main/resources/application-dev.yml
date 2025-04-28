@@ -25,5 +25,5 @@ spring:
         model: Qwen/QwQ-32B
       embedding:
         model: ai-human-lab/EEVE-Korean-10.8B-SFT-v0.1
-
-
+api:
+  service-key: ${SERVICE_KEY}
