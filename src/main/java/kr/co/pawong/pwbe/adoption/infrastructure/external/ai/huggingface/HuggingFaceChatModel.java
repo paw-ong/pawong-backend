@@ -1,7 +1,6 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.huggingface;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import kr.co.pawong.pwbe.adoption.infrastructure.external.ai.enums.SystemMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -35,24 +34,17 @@ public class HuggingFaceChatModel implements ChatModel {
 
     @Override
     public ChatResponse call(Prompt prompt) {
-        // 1) Prompt → HF messages 포맷으로 변환
-        Map<String, String> systemMap = Map.of(
-                "role",    "system",
-                "content", SystemMessage.TEMPLATE_1.getMessage()
-        );
-        List<Map<String, String>> userMap = prompt.getInstructions().stream()
+        // 1) prompt.getInstructions() → HF 스펙 메시지 리스트로 변환
+        List<Map<String,String>> hfMessages = prompt.getInstructions().stream()
                 .map(m -> Map.of(
-                        "role",    m.getMessageType().getValue(),
-                        "content", m.getContent()           // getContent() deprecated 경고 있으면 m.getText() 로 교체
+                        "role", m.getMessageType().getValue(),
+                        "content",  m.getContent()
                 ))
-                .toList();
-        List<Map<String, String>> messages = Stream
-                .concat(Stream.of(systemMap), userMap.stream())
                 .toList();
 
         // 2) 요청 바디 구성 (스펙 기반)
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("messages",   messages);
+        body.put("messages",   hfMessages);
         body.put("max_tokens", defaultOptions.getMaxTokens());
         body.put("stream",     false);
 
