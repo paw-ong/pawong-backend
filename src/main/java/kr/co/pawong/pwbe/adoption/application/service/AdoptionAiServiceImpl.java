@@ -26,12 +26,22 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
         validateNotBlank(searchTerm);
         return chatPort.refineAdoptionSentence(searchTerm);
     }
+    // 위의 함수를 병렬로 수행하는 함수
+    @Override
+    public List<Optional<String>> refineSearchConditionBatch(List<String> terms) {
+        return executor.run(terms, this::refineSearchCondition);
+    }
 
     // 입력된 문장에 대해 태그를 선택해서 문자열 리스트로 반환하는 함수
     @Override
     public List<String> tag(String feature) {
         validateNotBlank(feature);
         return chatPort.getTagsByFeature(feature);
+    }
+    // 위의 함수를 병렬로 수행하는 함수
+    @Override
+    public List<Optional<List<String>>> tagBatch(List<String> features) {
+        return executor.run(features, this::tag);
     }
 
     // 문장 임베딩하는 함수
@@ -40,17 +50,7 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
         validateNotBlank(completion);
         return embeddingPort.embed(completion);
     }
-
-    @Override
-    public List<Optional<String>> refineSearchConditionBatch(List<String> terms) {
-        return executor.run(terms, this::refineSearchCondition);
-    }
-
-    @Override
-    public List<Optional<List<String>>> tagBatch(List<String> features) {
-        return executor.run(features, this::tag);
-    }
-
+    // 위의 함수를 병렬로 수행하는 함수
     @Override
     public List<Optional<float[]>> embedBatch(List<String> completions) {
         return executor.run(completions, this::embed);

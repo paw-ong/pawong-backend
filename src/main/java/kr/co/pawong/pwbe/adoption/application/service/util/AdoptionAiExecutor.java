@@ -9,6 +9,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 
+/**
+ * global 에서 등록한 Executor 를 사용해서 병렬 처리를 구현합니다.
+ */
 @Component
 public class AdoptionAiExecutor {
     private final Executor executor;

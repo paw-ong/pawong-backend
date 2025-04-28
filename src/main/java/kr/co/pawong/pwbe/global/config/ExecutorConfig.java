@@ -9,6 +9,9 @@ import java.util.concurrent.Executor;
 @Configuration
 public class ExecutorConfig {
 
+    /**
+     * ThreadPool 을 사용하는 Executor 빈 등록
+     */
     @Bean("aiExecutor")
     public Executor adoptionExecutor() {
         ThreadPoolTaskExecutor exec = new ThreadPoolTaskExecutor();
