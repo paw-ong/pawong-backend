@@ -173,29 +173,17 @@ public class ApiShelterService {
         }
     }
 
-    /**
-     * 주어진 문자열(value)을 Enum 타입(enumClass)으로 변환하는 메서드.
-     *
-     * - value: DB나 외부 API로부터 들어온 "한글" 문자열 (예: "동물병원")
-     * - enumClass: 변환하고 싶은 Enum 클래스 타입 (예: DivisionNm.class)
-     *
-     * 이 메서드는 Enum의 'name()'이 아니라, Enum 내부의 'name 필드 값'을 기준으로 매칭한다.
-     */
+    // String -> Enum
     private <T extends Enum<T>> T convertToEnum(String data, Class<T> enumClass) {
         if (data == null) {
             return null;
         }
 
-        // Enum 클래스 안에 정의된 모든 상수 순회
-        for (T constant : enumClass.getEnumConstants()) {
-            // 현재 constant가 DivisionNm 타입이면
-            if (constant instanceof DivisionNm divisionNm && divisionNm.getName().equals(data)) {
-                // name 필드("동물병원", "개인" 등)가 입력 문자열과 일치하면 해당 Enum 반환
-                return constant;
-            }
+        try {
+            return Enum.valueOf(enumClass, data);
+        } catch (IllegalArgumentException e) {
+            return null;
         }
-        // 매칭되는 Enum이 없으면 null 반환
-        return null;
     }
 
     private String[] parseAddress(String careAddr) {
