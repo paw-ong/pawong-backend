@@ -24,6 +24,7 @@ import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionUpdateService;
 import kr.co.pawong.pwbe.adoption.presentation.port.ApiRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -41,6 +42,9 @@ public class ApiRequestServiceImpl implements ApiRequestService {
     private final RestTemplate restTemplate;
     private final AdoptionUpdateService adoptionUpdateService;
     private final AdoptionAiService adoptionAiService;
+
+    @Value("${publicdata.api-key}")
+    private String serviceKey;
 
     /**
      * 공공데이터 API에서 유기동물 정보를 가져와 저장하는 메서드
@@ -98,7 +102,7 @@ public class ApiRequestServiceImpl implements ApiRequestService {
         URI uri = UriComponentsBuilder.fromHttpUrl(
                         "https://apis.data.go.kr/1543061/abandonmentPublicService_v2/abandonmentPublic_v2")
                 .queryParam("serviceKey",
-                        "0O1KlLSEEGjpWzJOBa8Q9Mxfc3g%2FA%2BPSVTzNt3XSLdZdVuyaUMWYmsgAPe%2FwolWOrEVyUAYuk9rzp4VNwHNBOg%3D%3D")
+                        serviceKey)
                 .queryParam("numOfRows", numOfRows)
                 .queryParam("pageNo", pageNo)
                 .queryParam("_type", "json")
