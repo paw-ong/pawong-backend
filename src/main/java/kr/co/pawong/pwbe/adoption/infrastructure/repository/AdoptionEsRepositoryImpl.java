@@ -3,7 +3,7 @@ package kr.co.pawong.pwbe.adoption.infrastructure.repository;
 import java.util.List;
 import java.util.Objects;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionIndexRepository;
+import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionEsRepository;
 import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class AdoptionEsRepositoryImpl implements AdoptionIndexRepository {
+public class AdoptionEsRepositoryImpl implements AdoptionEsRepository {
     private final AdoptionJpaRepository adoptionJpaRepository;
     private final ElasticsearchOperations elasticsearchOperations;
 
