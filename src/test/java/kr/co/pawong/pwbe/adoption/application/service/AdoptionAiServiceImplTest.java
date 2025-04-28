@@ -94,7 +94,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "test";
         // When
-        List<String> output = adoptionAiService.tagging("test");
+        List<String> output = adoptionAiService.tag("test");
         // Then
         Assertions.assertThat(output).isEqualTo(List.of("정이많음", "사람을좋아함"));
     }
@@ -104,7 +104,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = null;
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.tagging(input))
+        Assertions.assertThatThrownBy(() -> adoptionAiService.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -113,7 +113,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "";
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.tagging(input))
+        Assertions.assertThatThrownBy(() -> adoptionAiService.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -122,7 +122,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "  \n  ";
         // When & Then
-        Assertions.assertThatThrownBy(() -> adoptionAiService.tagging(input))
+        Assertions.assertThatThrownBy(() -> adoptionAiService.tag(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

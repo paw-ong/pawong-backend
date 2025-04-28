@@ -25,7 +25,7 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
 
     // 입력된 문장에 대해 태그를 선택해서 문자열 리스트로 반환하는 함수
     @Override
-    public List<String> tagging(String feature) {
+    public List<String> tag(String feature) {
         validateNotBlank(feature);
         return chatPort.getTagsByFeature(feature);
     }
