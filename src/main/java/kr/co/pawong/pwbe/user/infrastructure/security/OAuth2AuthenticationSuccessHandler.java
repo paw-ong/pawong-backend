@@ -7,6 +7,7 @@ import kr.co.pawong.pwbe.user.application.domain.User;
 import kr.co.pawong.pwbe.user.enums.UserStatus;
 import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -14,6 +15,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Slf4j
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+    @Value("${spring.security.base-url}")
+    private String baseUrl;
     private final UserQueryService userQueryService;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -32,12 +35,12 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         String socialId = oauthUser.getName();
         User user = userQueryService.getUserBySocialId(Long.valueOf(socialId));
         if(user.getStatus() != UserStatus.ACTIVE) {
-            response.sendRedirect("http://localhost/signup/additional-info");
+            response.sendRedirect(baseUrl+"/signup/additional-info");
             return;
         }
         // ACTIVE
         String token = jwtTokenProvider.generateTokenByOauth2(authentication, user.getUserId());
         // JWT를 쿼리 파라미터 등으로 클라이언트에 전달하거나 헤더에 넣어 응답함.
-        response.sendRedirect("http://localhost/oauth2/redirect?token=" + token);
+        response.sendRedirect(baseUrl+"/oauth2/redirect?token=" + token);
     }
 }
