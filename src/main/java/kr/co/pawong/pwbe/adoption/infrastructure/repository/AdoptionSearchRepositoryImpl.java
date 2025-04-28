@@ -4,7 +4,7 @@ import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.json.JsonData;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.application.service.dto.AdoptionSearchCondition;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearchCondition;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionSearchRepository;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
 import lombok.RequiredArgsConstructor;

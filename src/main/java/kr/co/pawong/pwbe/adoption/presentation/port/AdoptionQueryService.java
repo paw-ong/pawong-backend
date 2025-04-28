@@ -1,8 +1,9 @@
 package kr.co.pawong.pwbe.adoption.presentation.port;
 
-import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.application.service.dto.response.PagedAdoptionQueryResponses;
+
 
 public interface AdoptionQueryService {
 
-    Adoption fetchAdoptionById(Long id);
+    PagedAdoptionQueryResponses fetchPagedAdoptions(int page, int size);
 }
