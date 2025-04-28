@@ -31,7 +31,7 @@ public class JwtTokenProvider {
         DefaultOAuth2User oauth2User = (DefaultOAuth2User) authentication.getPrincipal();
         return getToken(
             userId,
-            oauth2User.getName(),
+            oauth2User.getName(),       // socialId
             oauth2User.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
         );
     }
@@ -81,6 +81,8 @@ public class JwtTokenProvider {
         return false;
     }
 
+    // token에서 userId를 꺼내오는 메소드
+    // subject를 userId로 세팅해서
     public String getUsername(String token) {
         Claims claims = getClaims(token);
         return claims.getSubject();
@@ -93,10 +95,6 @@ public class JwtTokenProvider {
 
     private Claims getClaims(String token) {
         return Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
-    }
-
-    public String generateJwtToken(Long userId) {
-        return "Bearer test";
     }
 
 }

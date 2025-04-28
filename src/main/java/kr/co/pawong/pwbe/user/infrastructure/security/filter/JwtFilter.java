@@ -10,6 +10,7 @@ import kr.co.pawong.pwbe.user.enums.UserStatus;
 import kr.co.pawong.pwbe.user.infrastructure.security.JwtTokenProvider;
 import kr.co.pawong.pwbe.user.infrastructure.security.exception.UserNotActiveException;
 import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -31,9 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private boolean isPassedUrls(String uri){
-        return uri.startsWith("/api/auth/signup") // (추가정보입력)회원가입
-                || uri.startsWith("/api/user")
-                || uri.startsWith("/login/oauth2/code"); // oauth
+        return uri.startsWith("/login/oauth2/code"); // oauth
     }
 
     @Override
@@ -50,12 +50,13 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = extractToken(request);
 
         if (jwtTokenProvider.validateToken(token)) {
-            String socialId = jwtTokenProvider.getUsername(token);
-            User user = userQueryService.getUserBySocialId(Long.valueOf(socialId));
+            String userId = jwtTokenProvider.getUsername(token);
+            User user = userQueryService.getUser(Long.valueOf(userId));
             if(user == null || !user.getStatus().equals(UserStatus.ACTIVE)) {
                 throw new UserNotActiveException("추가 정보가 필요합니다");
             }
-            UserDetails userDetails = jwtTokenProvider.getUserDetails(token, Long.valueOf(socialId));
+            // userId와 socialId로 customOauthUserDetail을 만든 Authentication객체를 SecurityContext에 저장합니다.
+            UserDetails userDetails = jwtTokenProvider.getUserDetails(token, user.getSocialId());
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

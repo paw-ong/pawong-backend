@@ -1,7 +1,7 @@
 package kr.co.pawong.pwbe.user.presentation.controller;
 
 import jakarta.annotation.security.PermitAll;
-import kr.co.pawong.pwbe.user.infrastructure.security.CustomOAuth2User;
+import kr.co.pawong.pwbe.user.infrastructure.security.CustomUserDetails;
 import kr.co.pawong.pwbe.user.presentation.controller.dto.response.UserResponse;
 import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class UserController {
   public ResponseEntity<UserResponse> getUser(
       Authentication authentication
   ) {
-    CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
+    CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
     Long userId = principal.getUserId();
     UserResponse userResponse = new UserResponse(userQueryService.getUser(userId));
 

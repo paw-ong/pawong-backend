@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class CustomUserDetails implements UserDetails {
 
   private final Long userId;
+  private final Long socialId;
   private final String username;
   private final String password;
   private final List<? extends GrantedAuthority> authorities;
@@ -17,14 +18,16 @@ public class CustomUserDetails implements UserDetails {
 
   public CustomUserDetails(UserEntity userEntity) {
     this.userId = userEntity.getUserId();
-    this.username = String.valueOf(userEntity.getSocialId());
+    this.socialId = userEntity.getSocialId();
+    this.username = "";
     this.password = "";
     this.authorities = List.of();
   }
 
   public CustomUserDetails(Long userId, Long socialId, List<SimpleGrantedAuthority> list) {
     this.userId = userId;
-    this.username = String.valueOf(socialId);
+    this.socialId = socialId;
+    this.username = "";
     this.password = "";
     this.authorities = List.of();
   }
@@ -47,4 +50,10 @@ public class CustomUserDetails implements UserDetails {
   public Long getUserId() {
     return userId;
   }
+
+  public Long getSocialId() {
+    return socialId;
+  }
+
+
 }
