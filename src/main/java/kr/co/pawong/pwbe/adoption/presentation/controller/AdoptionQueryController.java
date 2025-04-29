@@ -19,17 +19,8 @@ public class AdoptionQueryController {
 
     private final AdoptionQueryService adoptionQueryService;
 
-    // page 방식
-    @GetMapping("")
-    public ResponseEntity<PagedAdoptionQueryResponses> getPagedAdoptions(
-            @PageableDefault(page = 0, size = 20, sort = "noticeSdt", direction = Sort.Direction.DESC) Pageable pageable) {
-
-        PagedAdoptionQueryResponses response = adoptionQueryService.fetchPagedAdoptions(pageable);
-        return ResponseEntity.ok(response);
-    }
-
     // slice 방식 (무한 스크롤)
-    @GetMapping("/slice")
+    @GetMapping("")
     public ResponseEntity<SliceAdoptionSearchResponses> getSlicedAdoptions(
             @PageableDefault(page = 0, size = 20, sort = "noticeSdt", direction = Sort.Direction.DESC) Pageable pageable) {
 
