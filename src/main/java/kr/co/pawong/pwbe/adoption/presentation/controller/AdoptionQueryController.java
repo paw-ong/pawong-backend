@@ -1,6 +1,5 @@
 package kr.co.pawong.pwbe.adoption.presentation.controller;
 
-import kr.co.pawong.pwbe.adoption.application.service.dto.response.PagedAdoptionQueryResponses;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;

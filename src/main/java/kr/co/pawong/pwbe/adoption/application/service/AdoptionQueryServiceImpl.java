@@ -2,7 +2,6 @@ package kr.co.pawong.pwbe.adoption.application.service;
 
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionCard;
-import kr.co.pawong.pwbe.adoption.application.service.dto.response.PagedAdoptionQueryResponses;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
 import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionCardMapper;
@@ -20,20 +19,6 @@ import java.util.stream.Collectors;
 public class AdoptionQueryServiceImpl implements AdoptionQueryService {
 
     private final AdoptionQueryRepository adoptionQueryRepository;
-
-    // page 방식
-    @Override
-    public PagedAdoptionQueryResponses fetchPagedAdoptions(Pageable pageable) {
-        Page<Adoption> adoptionPage = adoptionQueryRepository.findAllPaged(pageable);
-        List<AdoptionCard> adoptionCards = mapToAdoptionCards(adoptionPage);
-        return new PagedAdoptionQueryResponses(
-                pageable.getPageNumber() + 1,  // 1페이지부터
-                pageable.getPageSize(),
-                adoptionPage.getTotalElements(),
-                adoptionPage.getTotalPages(),
-                adoptionCards
-        );
-    }
 
     // infinite scroll을 위한 slice 방식
     @Override
