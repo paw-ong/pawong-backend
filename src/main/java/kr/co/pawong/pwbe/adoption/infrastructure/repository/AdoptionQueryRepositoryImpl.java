@@ -6,9 +6,7 @@ import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryReposito
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
