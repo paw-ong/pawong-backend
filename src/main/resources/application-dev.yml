@@ -25,5 +25,7 @@ spring:
         model: Qwen/QwQ-32B
       embedding:
         model: ai-human-lab/EEVE-Korean-10.8B-SFT-v0.1
+  elasticsearch:
+    uris: http://localhost:9200
 api:
   service-key: ${SERVICE_KEY}

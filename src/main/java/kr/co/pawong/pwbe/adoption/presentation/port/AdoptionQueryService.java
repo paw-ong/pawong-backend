@@ -1,5 +1,9 @@
 package kr.co.pawong.pwbe.adoption.presentation.port;
 
-public interface AdoptionQueryService {
+import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
+import org.springframework.data.domain.Pageable;
 
+
+public interface AdoptionQueryService {
+    SliceAdoptionSearchResponses fetchSlicedAdoptions(Pageable pageable);
 }
