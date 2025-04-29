@@ -1,7 +1,7 @@
 package kr.co.pawong.pwbe.adoption.application.service.port;
 
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.application.service.dto.AdoptionSearchCondition;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearchCondition;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
 import org.springframework.data.elasticsearch.core.SearchHits;
 

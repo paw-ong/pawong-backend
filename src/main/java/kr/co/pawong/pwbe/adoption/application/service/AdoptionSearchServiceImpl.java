@@ -1,23 +1,22 @@
 package kr.co.pawong.pwbe.adoption.application.service;
 
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.application.service.dto.AdoptionSearchCondition;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearchCondition;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionSearchRepository;
+import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionCardMapper;
 import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionSearchMapper;
+import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionCard;
 import kr.co.pawong.pwbe.adoption.presentation.controller.dto.request.AdoptionSearchRequest;
-import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionSearchResponse;
-import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionIdSearchResponse;
 import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionIdSearchResponses;
+import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionSearchService;
-
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,11 +36,11 @@ public class AdoptionSearchServiceImpl implements AdoptionSearchService {
                 .map(adoptionQueryRepository::findByIdOrThrow)
                 .collect(Collectors.toList());
         // 최종적으로 검색 결과를 위한 매핑 리스트 반환
-        List<AdoptionSearchResponse> adoptionSearchResponses = adoptions.stream()
-                .map(AdoptionSearchMapper::toSearchResponse)
+        List<AdoptionCard> adoptionCards = adoptions.stream()
+                .map(AdoptionCardMapper::toAdoptionCard)
                 .collect(Collectors.toList());
 
-        return new AdoptionSearchResponses(adoptionSearchResponses);
+        return new AdoptionSearchResponses(adoptionCards);
     }
 
     // ES에서 검색 시 adoptionId를 반환
