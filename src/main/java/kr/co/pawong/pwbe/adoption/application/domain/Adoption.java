@@ -42,8 +42,8 @@ public class Adoption {
     private String tagsField; // 태깅
     private String refinedSpecialMark; // 정제 데이터
     private float[] embedding; // 임베딩 값
-    private boolean isAiProcessed; // 정제 여부
-    private boolean isEmbedded; // 임베딩 여부
+    private boolean isAiProcessed = false; // 정제 여부
+    private boolean isEmbedded = false; // 임베딩 여부
 
     // AdoptionCreate -> Adoption
     public static Adoption from(AdoptionCreate adoptionCreate) {
@@ -107,12 +107,11 @@ public class Adoption {
      *
      * @param refinedSpecialMark   정제된 검색 필드 값
      * @param tagsField     정제된 태그 필드 값
-     * @param isAiProcessed AI 정제 완료 여부
      */
-    public void updateAiField(String refinedSpecialMark, String tagsField, boolean isAiProcessed) {
+    public void updateAiField(String refinedSpecialMark, String tagsField) {
         this.refinedSpecialMark = refinedSpecialMark;
         this.tagsField = tagsField;
-        this.isAiProcessed = isAiProcessed;
+        this.isAiProcessed = true;
     }
 
     /**
@@ -122,14 +121,39 @@ public class Adoption {
      */
     public void embed(float[] embedding) {
         this.embedding = embedding;
+        this.isEmbedded = true;
     }
 
     /**
-     * 임베딩 완료 여부를 저장하는 메서드
+     * Adoption 도메인 객체로부터 정제 필드(refinedSpecialMark)용 텍스트를 생성하고
+     * AI 서비스로 정제 결과를 반환하는 메서드
+     * (kindNm, colorCd, specialMark를 공백으로 연결하여 baseText로 사용)
      *
-     * @param embeddingDone 임베딩 완료 여부
+     * @return 정제 필드에 들어갈 정제된 문자열
      */
-    public void isEmbedded(boolean isEmbedded) {
-        this.isEmbedded = isEmbedded;
+    public String getRefinedSpecialMark() {
+
+        return String.join(" ",
+                this.kindNm != null ? this.kindNm : "",
+                this.colorCd != null ? this.colorCd : "",
+                this.specialMark != null ? this.specialMark : ""
+        ).trim();
+    }
+
+    /**
+     * Adoption 도메인 객체로부터 태그 필드(tagsField)용 텍스트를 생성하고
+     * AI 서비스로 태그 추출 결과를 반환하는 메서드
+     * (kindNm, colorCd, age, weight, specialMark를 공백으로 연결하여 baseText로 사용)
+     *
+     * @return 태그 필드에 들어갈 정제된 문자열
+     */
+    public String getTagsField() {
+        return String.join(" ",
+                this.kindNm != null ? this.kindNm : "",
+                this.colorCd != null ? this.colorCd : "",
+                this.age != null ? String.valueOf(this.age) : "",
+                this.weight != null ? this.weight : "",
+                this.specialMark != null ? this.specialMark : ""
+        ).trim();
     }
 }
