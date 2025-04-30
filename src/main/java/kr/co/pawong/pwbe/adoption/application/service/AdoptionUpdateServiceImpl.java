@@ -2,7 +2,6 @@ package kr.co.pawong.pwbe.adoption.application.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
@@ -48,17 +47,17 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
         for (Adoption adoption : adoptions) {
             if (adoption.getActiveState() == ActiveState.ACTIVE && !adoption.isAiProcessed()) {
                 log.info("AdoptionId = {}", adoption.getAdoptionId());
-                String refinedSpecialMark = adoptionAiService.refineSpecialMark(adoption.getRefinedSpecialMark());
-                List<String> tags = adoptionAiService.tag(adoption.getTagsField());
+                String refinedSpecialMark = adoptionAiService.refineSpecialMark(adoption.extractRefinedSpecialMark());
+                List<String> tags = adoptionAiService.tag(adoption.extractTagsField());
                 String tagsField = String.join(" ", tags);
 
                 boolean aiProcessed =
                         (refinedSpecialMark != null && !refinedSpecialMark.isBlank()) || (tagsField != null
                                 && !tagsField.isBlank());
 
-                if (!Objects.equals(adoption.getRefinedSpecialMark(), refinedSpecialMark)
-                        || !Objects.equals(adoption.getTagsField(), tagsField)
-                        || adoption.isAiProcessed() != aiProcessed) {
+                if (adoption.getRefinedSpecialMark().equals(refinedSpecialMark)
+                        || adoption.getTagsField().equals(tagsField)
+                        || aiProcessed) {
 
 
                     adoption.updateAiField(refinedSpecialMark, tagsField);
