@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionEsRepository;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionUpdateRepository;
-import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionEsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,19 +33,14 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
     @Override
     public void saveAdoptionToEs(List<Adoption> adoptions) {
         adoptions.forEach(adoption -> {
-            boolean hasSearch = adoption.getRefinedSpecialMark() != null && !adoption.getRefinedSpecialMark().isBlank();
-            boolean hasTag = adoption.getTagsField() != null && !adoption.getTagsField().isBlank();
 
-            if ((hasSearch || hasTag) && adoption.getActiveState() == ActiveState.ACTIVE) {
+            if ((adoption.isAiProcessed() && !adoption.isEmbedded())) {
                 String combinedField = Stream.of(adoption.getRefinedSpecialMark(), adoption.getTagsField())
                         .filter(field -> field != null && !field.isBlank())
                         .collect(Collectors.joining(","));
 
                 float[] embedding = adoptionAiService.embed(combinedField);
                 adoption.embed(embedding);
-                adoption.isEmbedded(true);
-            } else {
-                adoption.isEmbedded(false);
             }
         });
         // 임베딩이 포함된 Adoption 리스트를 Repo에 전달
