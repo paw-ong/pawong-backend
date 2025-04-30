@@ -37,9 +37,11 @@ public class Adoption {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    private String tagsField;
-    private String searchField;
-    private Float[] embedding;
+    private String tagsField; // 태깅
+    private String refinedSpecialMark; // 정제 데이터
+    private float[] embedding; // 임베딩 값
+    private boolean aiProcessed; // 정제 여부
+    private boolean embeddingDone; // 임베딩 여부
 
     // AdoptionCreate -> Adoption
     public static Adoption from(AdoptionCreate adoptionCreate) {
@@ -66,9 +68,6 @@ public class Adoption {
                 .specialMark(adoptionCreate.getSpecialMark())
                 .careRegNo(adoptionCreate.getCareRegNo())
                 .updTm(adoptionCreate.getUpdTm())
-                .searchField(adoptionCreate.getSearchField())
-                .tagsField(adoptionCreate.getTagsField())
-                .embedding(adoptionCreate.getEmbedding())
                 .build();
     }
 
@@ -98,8 +97,37 @@ public class Adoption {
                 .specialMark(adoptionUpdate.getSpecialMark())
                 .careRegNo(adoptionUpdate.getCareRegNo())
                 .updTm(adoptionUpdate.getUpdTm())
-                .searchField(adoptionUpdate.getSearchField())
-                .tagsField(adoptionUpdate.getTagsField())
                 .build();
+    }
+
+    /**
+     * AI 정제 결과로 searchField, tagsField, aiProcessed 값을 갱신하는 메서드
+     *
+     * @param refinedSpecialMark   정제된 검색 필드 값
+     * @param tagsField     정제된 태그 필드 값
+     * @param isAiProcessed AI 정제 완료 여부
+     */
+    public void updateAiField(String refinedSpecialMark, String tagsField, boolean isAiProcessed) {
+        this.refinedSpecialMark = refinedSpecialMark;
+        this.tagsField = tagsField;
+        this.aiProcessed = isAiProcessed;
+    }
+
+    /**
+     * 임베딩 결과를 Adoption 객체에 저장하는 메서드
+     *
+     * @param embedding 임베딩 벡터 값
+     */
+    public void embed(float[] embedding) {
+        this.embedding = embedding;
+    }
+
+    /**
+     * 임베딩 완료 여부를 저장하는 메서드
+     *
+     * @param embeddingDone 임베딩 완료 여부
+     */
+    public void embeddingDone(boolean embeddingDone) {
+        this.embeddingDone = embeddingDone;
     }
 }

@@ -17,7 +17,6 @@ import kr.co.pawong.pwbe.adoption.enums.ProcessState;
 import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
-import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -81,9 +80,15 @@ public class AdoptionEntity {
 
     private LocalDateTime updTm; // 수정일
 
-    private String searchField;
+    private String refinedSpecialMark; // 데이터 정제
 
-    private String tagsField;
+    private String tagsField; // 태깅
+
+    @Column(nullable = false)
+    private boolean aiProcessed;
+
+    @Column(nullable = false)
+    private boolean embeddingDone;
 
     // Adoption -> AdoptionEntity
     public static AdoptionEntity from(Adoption adoption) {
@@ -111,28 +116,27 @@ public class AdoptionEntity {
         entity.neuterYn = adoption.getNeuterYn();
         entity.specialMark = adoption.getSpecialMark();
         entity.updTm = adoption.getUpdTm();
-        entity.searchField = adoption.getSearchField();
+        entity.refinedSpecialMark = adoption.getRefinedSpecialMark();
         entity.tagsField = adoption.getTagsField();
+        entity.aiProcessed = adoption.isAiProcessed();
+        entity.embeddingDone = adoption.isEmbeddingDone();
 
         return entity;
     }
 
     // AdoptionEntity -> Adoption
     public Adoption toModel() {
-        Shelter shelter = null;
-                //shelterEntity != null ? shelterEntity.toModel() : null;
-
         return Adoption.builder()
-                .adoptionId(adoptionId)
-                .desertionNo(desertionNo)
-                .upKindCd(upKindCd)
-                .activeState(activeState)
-                .sexCd(sexCd)
-                .neuterYn(neuterYn)
-                .specialMark(specialMark)
-                .updTm(updTm)
-                .tagsField(tagsField)
-                .searchField(searchField)
+                .adoptionId(this.adoptionId)
+                .desertionNo(this.desertionNo)
+                .upKindCd(this.upKindCd)
+                .activeState(this.activeState)
+                .sexCd(this.sexCd)
+                .neuterYn(this.neuterYn)
+                .specialMark(this.specialMark)
+                .updTm(this.updTm)
+                .tagsField(this.tagsField)
+                .refinedSpecialMark(this.refinedSpecialMark)
                 .build();
     }
 }
