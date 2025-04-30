@@ -2,12 +2,10 @@ package kr.co.pawong.pwbe.adoption.presentation.controller;
 
 import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.application.service.ApiRequestServiceImpl;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionEsService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
-import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
-import kr.co.pawong.pwbe.adoption.application.service.ApiRequestService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionUpdateService;
+import kr.co.pawong.pwbe.adoption.presentation.port.ApiRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,22 +14,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequestMapping("/api/adoptions")
 @RequiredArgsConstructor
 public class AdoptionUpdateController {
 
-    private final ApiRequestServiceImpl apiRequestServiceImpl;
+    private final ApiRequestService apiRequestService;
     private final AdoptionQueryService adoptionQueryService;
     private final AdoptionUpdateService adoptionUpdateService;
     private final AdoptionEsService adoptionEsService;
 
     @PostMapping("/save")
     public ResponseEntity<Void> saveAdoptions() {
-        apiRequestServiceImpl.fetchAndSaveAdoptions();
+        apiRequestService.fetchAndSaveAdoptions();
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
