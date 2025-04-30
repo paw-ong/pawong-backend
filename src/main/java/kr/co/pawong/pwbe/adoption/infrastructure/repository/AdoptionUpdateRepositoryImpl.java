@@ -1,6 +1,5 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Repository;
 public class AdoptionUpdateRepositoryImpl implements AdoptionUpdateRepository {
 
     private final AdoptionJpaRepository adoptionJpaRepository;
-    private final EntityManager entityManager;
 
     /**
      * Adoption 도메인 리스트를 AdoptionEntity로 변환하여 DB에 저장합니다.
@@ -44,7 +42,6 @@ public class AdoptionUpdateRepositoryImpl implements AdoptionUpdateRepository {
         for (Adoption adoption : adoptions) {
             adoptionJpaRepository.updateIsEmbedded(adoption.getAdoptionId(), adoption.isEmbedded());
         }
-        entityManager.clear();
     }
 
     /**
