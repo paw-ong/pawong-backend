@@ -41,7 +41,6 @@ public class ApiRequestServiceImpl implements ApiRequestService {
 
     private final RestTemplate restTemplate;
     private final AdoptionUpdateService adoptionUpdateService;
-    private final AdoptionAiService adoptionAiService;
 
     @Value("${publicdata.api-key}")
     private String serviceKey;
@@ -52,7 +51,7 @@ public class ApiRequestServiceImpl implements ApiRequestService {
     @Override
     public void fetchAndSaveAdoptions() {
         int pageNo = 1; // 시작 페이지 번호
-        int numOfRows = 10; // 한 페이지당 가져올 데이터 수
+        int numOfRows = 500; // 한 페이지당 가져올 데이터 수
         boolean hasMoreData = true; // 더 가져올 데이터가 있는지 여부
         int totalSaved = 0; // 총 저장된 개수
 
@@ -133,7 +132,6 @@ public class ApiRequestServiceImpl implements ApiRequestService {
     /**
      * 공공데이터 API의 Item을 AdoptionCreate로 변환하는 메서드
      * - 날짜 파싱
-     * - 상태가 PROTECTED인 경우에만 searchField, tagsField 생성
      *
      * @param items 공공데이터 API에서 받아온 Item 리스트
      * @return 변환된 AdoptionCreate 리스트
@@ -150,15 +148,6 @@ public class ApiRequestServiceImpl implements ApiRequestService {
             LocalDate noticeSdt = parseLocalDate(item.getNoticeSdt(), dateFormatter);
             LocalDate noticeEdt = parseLocalDate(item.getNoticeEdt(), dateFormatter);
             LocalDateTime updTm = parseLocalDateTime(item.getUpdTm(), dateTimeFormatter);
-
-            String searchField = null;
-            String tagsField = null;
-
-            // processState가 PROTECTED인 경우에만 정제한 결과로 필드 생성
-            if (ProcessState.PROTECTED == ProcessState.fromValue(item.getProcessState())) {
-                searchField = getSearchFields(item);
-                tagsField = getTagsField(item);
-            }
 
             // AdoptionCreate 생성 및 전처리
             AdoptionCreate adoptionCreate = AdoptionCreate.builder()
@@ -183,8 +172,6 @@ public class ApiRequestServiceImpl implements ApiRequestService {
                     .specialMark(item.getSpecialMark())
                     .careRegNo(item.getCareRegNo())
                     .updTm(updTm)
-                    .searchField(searchField)
-                    .tagsField(tagsField)
                     .build();
 
             // ActiveState 설정
@@ -212,45 +199,6 @@ public class ApiRequestServiceImpl implements ApiRequestService {
                 .map(Items::getItem)
                 .filter(items -> !items.isEmpty())
                 .isPresent();
-    }
-
-    /**
-     * 검색 필드(searchField)용 텍스트를 생성하고 AI 서비스로 정제 결과를 반환하는 함수
-     * kindNm, colorCd, specialMark를 공백으로 연결하여 baseText로 사용
-     *
-     * @param item AdoptionApi.Item - 공공데이터 API의 한 동물 데이터
-     * @return 검색 필드에 들어갈 정제된 문자열
-     */
-    private String getSearchFields(AdoptionApi.Item item) {
-        String baseText = String.join(" ",
-                item.getKindNm() != null ? item.getKindNm() : "",
-                item.getColorCd() != null ? item.getColorCd() : "",
-                item.getSpecialMark() != null ? item.getSpecialMark() : ""
-        ).trim();
-
-        // 데이터 정제 결과 반환
-        return adoptionAiService.refineSearchCondition(baseText);
-    }
-
-    /**
-     * 검색 필드(searchField)용 텍스트를 생성하고 AI 서비스로 정제 결과를 반환하는 함수
-     * kindNm, colorCd, specialMark를 공백으로 연결하여 baseText로 사용
-     *
-     * @param item AdoptionApi.Item - 공공데이터 API의 한 동물 데이터
-     * @return 검색 필드에 들어갈 정제된 문자열
-     */
-    private String getTagsField(AdoptionApi.Item item) {
-        String baseText = String.join(" ",
-                item.getKindNm() != null ? item.getKindNm() : "",
-                item.getColorCd() != null ? item.getColorCd() : "",
-                item.getAge() != null ? item.getAge() : "",
-                item.getWeight() != null ? item.getWeight() : "",
-                item.getSpecialMark() != null ? item.getSpecialMark() : ""
-        ).trim();
-
-        // 태그 추출 결과 반환 (공백으로 연결)
-        List<String> tags = adoptionAiService.tag(baseText);
-        return String.join(" ", tags);
     }
 
     /**
