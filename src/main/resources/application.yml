@@ -1,2 +1,7 @@
 api:
   service-key: ${SERVICE_KEY}
+data:
+  elasticsearch:
+    schema-management:
+      create-index: false
+      create-mappings: false
