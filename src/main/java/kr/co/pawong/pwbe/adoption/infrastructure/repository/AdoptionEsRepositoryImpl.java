@@ -6,7 +6,6 @@ import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionEsRepository;
 import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
-import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -19,21 +18,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class AdoptionEsRepositoryImpl implements AdoptionEsRepository {
-    private final AdoptionJpaRepository adoptionJpaRepository;
     private final ElasticsearchOperations elasticsearchOperations;
 
     // 저장될 인덱스 정의
     private static final IndexCoordinates INDEX = IndexCoordinates.of("adoption");
 
-    /**
-     * DB에 저장된 모든 AdoptionEntity를 Adoption 도메인 객체로 변환하여 반환
-     */
-    @Override
-    public List<Adoption> convertToAdoptions() {
-        return adoptionJpaRepository.findAll().stream()
-                .map(AdoptionEntity::toModel)
-                .toList();
-    }
 
     /**
      * 여러 Adoption 객체를 500개씩 Elasticsearch에 벌크로 저장
