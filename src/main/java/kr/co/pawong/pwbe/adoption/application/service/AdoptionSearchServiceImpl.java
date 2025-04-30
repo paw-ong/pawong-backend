@@ -58,7 +58,7 @@ public class AdoptionSearchServiceImpl implements AdoptionSearchService {
     // 위임, 정제된 검색어 문장
     private String refineSearchTerm(AdoptionSearchRequest request) {
         String term = request.getSearchTerm();
-        return adoptionAiService.refineSearchCondition(term);
+        return adoptionAiService.refineSpecialMark(term);
     }
 
     // 위임, 임베딩 값

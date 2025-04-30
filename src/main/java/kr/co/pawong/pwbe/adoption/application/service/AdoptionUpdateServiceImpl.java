@@ -48,7 +48,7 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
         for (Adoption adoption : adoptions) {
             if (adoption.getActiveState() == ActiveState.ACTIVE && !adoption.isAiProcessed()) {
                 log.info("AdoptionId = {}", adoption.getAdoptionId());
-                String refinedSpecialMark = adoptionAiService.refineSearchCondition(adoption.getRefinedSpecialMark());
+                String refinedSpecialMark = adoptionAiService.refineSpecialMark(adoption.getRefinedSpecialMark());
                 List<String> tags = adoptionAiService.tag(adoption.getTagsField());
                 String tagsField = String.join(" ", tags);
 
