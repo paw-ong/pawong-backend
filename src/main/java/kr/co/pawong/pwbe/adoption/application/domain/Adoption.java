@@ -131,7 +131,7 @@ public class Adoption {
      *
      * @return 정제 필드에 들어갈 정제된 문자열
      */
-    public String getRefinedSpecialMark() {
+    public String extractRefinedSpecialMark() {
 
         return String.join(" ",
                 this.kindNm != null ? this.kindNm : "",
@@ -147,7 +147,7 @@ public class Adoption {
      *
      * @return 태그 필드에 들어갈 정제된 문자열
      */
-    public String getTagsField() {
+    public String extractTagsField() {
         return String.join(" ",
                 this.kindNm != null ? this.kindNm : "",
                 this.colorCd != null ? this.colorCd : "",
