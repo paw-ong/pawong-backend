@@ -1,11 +1,7 @@
 package kr.co.pawong.pwbe.adoption.application.service;
 
 import java.util.List;
-import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
-import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionCard;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
@@ -16,9 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +25,7 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
      */
     @Override
     public List<Adoption> getAllAdoptions() {
-        return adoptionQueryRepository.convertToAdoptions();
+        return adoptionQueryRepository.findAll();
     }
 
     // infinite scroll을 위한 slice 방식
