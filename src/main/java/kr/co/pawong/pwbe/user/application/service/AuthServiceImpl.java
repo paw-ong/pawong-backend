@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
-
-  private final KakaoService kakaoService;
-  private final JwtTokenProvider jwtTokenProvider;
   private final UserQueryRepository userQueryRepository;
   private final UserCommandRepository userCommandRepository;
 
