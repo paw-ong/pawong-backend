@@ -11,7 +11,7 @@ import java.util.List;
 public interface ShelterJpaRepository extends JpaRepository<ShelterEntity, Long> {
 
     List<ShelterEntity> findByCareNm(String careNm);
-    List<ShelterEntity> findByCareRegNo(String careRegNo);
+//    List<ShelterEntity> findByCareRegNo(String careRegNo);
 
     /**
      * 모든 ShelterEntity의 careRegNo만 추출해서 리스트로 반환하는 메서드
@@ -23,4 +23,6 @@ public interface ShelterJpaRepository extends JpaRepository<ShelterEntity, Long>
     @Query("SELECT new kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto(s.careRegNo, s.city, s.district) " +
             "FROM ShelterEntity s WHERE s.careRegNo = :careRegNo")
     ShelterInfoDto shelterInfo(@Param("careRegNo") String careRegNo);
+
+    ShelterEntity findByCareRegNo(String careRegNo);
 }
