@@ -45,17 +45,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
+
+            // jwtFilter 실행 -> UsernamePasswordAuthenticationFilter 실행
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
-                    "/api/auth/**",
-                    "/oauth2/authorization/**",
-                    "/login/oauth2/**",
-                    "/oauth2/authorize",
-                    "/oauth/authorize"
-                ).permitAll()
+                    "/oauth2/authorization/**",     // OAuth2 로그인 요청
+                    "/login/oauth2/**",             // OAuth2 code Redirect URI
+                    "/oauth/authorize"              // OAuth2 Authorization Endpoint
+                ).permitAll()                         // 위 경로는 인증 없이 접근 가능
             .anyRequest().authenticated())
 
+            // oauth2 요청만 처리
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo ->
                     userInfo.userService(customOAuth2UserService))
