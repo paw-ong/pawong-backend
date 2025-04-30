@@ -6,6 +6,14 @@ import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryReposito
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import jakarta.persistence.EntityNotFoundException;
+import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
+import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,5 +29,19 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
         return adoptionJpaRepository.findAll().stream()
                 .map(AdoptionEntity::toModel)
                 .toList();
+    }
+
+    @Override
+    public Adoption findByIdOrThrow(Long id) {
+        AdoptionEntity entity = adoptionJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Adoption not found with id: " + id));
+
+        return entity.toModel();
+    }
+
+    @Override
+    public Page<Adoption> findAllPaged(Pageable pageable) {
+        Page<AdoptionEntity> entityPage = adoptionJpaRepository.findAll(pageable);
+        return entityPage.map(AdoptionEntity::toModel);
     }
 }

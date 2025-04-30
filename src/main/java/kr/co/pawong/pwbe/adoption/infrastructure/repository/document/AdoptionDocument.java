@@ -18,7 +18,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(indexName = "Adoption")
+@Document(indexName = "adoption")   // lowercase
 public class AdoptionDocument {
     @Id
     @Field(type = FieldType.Keyword, name = "adoptionId")
@@ -64,4 +64,18 @@ public class AdoptionDocument {
                 .embedding(adoption.getEmbedding())
                 .build();
     }
+
+    public Adoption toModel() {
+        return Adoption.builder()
+                .adoptionId(this.adoptionId)
+                .upKindCd(this.upKindCd)
+                .kindNm(this.kindNm)
+                .colorCd(this.colorCd)
+                .age(this.age)
+                .sexCd(this.sexCd)
+                .neuterYn(this.neuterYn)
+                .specialMark(this.specialMark)
+                .build();
+    }
+
 }

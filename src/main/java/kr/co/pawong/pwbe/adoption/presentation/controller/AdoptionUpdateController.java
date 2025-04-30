@@ -5,6 +5,8 @@ import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.ApiRequestServiceImpl;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionEsService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
+import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
+import kr.co.pawong.pwbe.adoption.application.service.ApiRequestService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController

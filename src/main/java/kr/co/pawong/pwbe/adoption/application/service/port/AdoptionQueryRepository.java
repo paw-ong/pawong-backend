@@ -3,8 +3,14 @@ package kr.co.pawong.pwbe.adoption.application.service.port;
 import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 
+import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface AdoptionQueryRepository {
     // AdoptionEntity -> Adoption
     List<Adoption> convertToAdoptions();
 
+    Adoption findByIdOrThrow(Long adoptionId);
+    Page<Adoption> findAllPaged(Pageable pageable);
 }
