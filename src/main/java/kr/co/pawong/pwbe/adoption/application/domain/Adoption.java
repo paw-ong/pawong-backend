@@ -37,6 +37,8 @@ public class Adoption {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
+    private String city;
+    private String district;
     private String tagsField; // 태깅
     private String refinedSpecialMark; // 정제 데이터
     private float[] embedding; // 임베딩 값
