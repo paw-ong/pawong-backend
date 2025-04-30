@@ -40,16 +40,16 @@ public class AdoptionDocument {
     private String district; // 시군구
 
     @Setter
-    @Field(type = FieldType.Text, name = "searchField", analyzer = "korean")
-    private String searchField; // AI가 정제한 동물 정보
+    @Field(type = FieldType.Text, name = "refinedSpecialMark", analyzer = "korean")
+    private String refinedSpecialMark; // AI가 정제한 동물 정보
 
     @Setter
-    @Field(type = FieldType.Text, name = "taggingField", analyzer = "korean")
+    @Field(type = FieldType.Text, name = "tagsField", analyzer = "korean")
     private String tagsField; // AI가 키워드로 정제한 동물 정보
 
     @Setter
     @Field(type = FieldType.Dense_Vector, dims = 1536, name = "embedding")
-    private float[] embedding; // searchField 임베딩
+    private float[] embedding; // 임베딩
 
     public static AdoptionDocument from(Adoption adoption) {
         return AdoptionDocument.builder()
@@ -59,9 +59,9 @@ public class AdoptionDocument {
                 .neuterYn(adoption.getNeuterYn())
                 .city("")
                 .district("")
-                .searchField(adoption.getSearchField())
+                .refinedSpecialMark(adoption.getRefinedSpecialMark())
                 .tagsField(adoption.getTagsField())
-                .embedding(null)
+                .embedding(adoption.getEmbedding())
                 .build();
     }
 }
