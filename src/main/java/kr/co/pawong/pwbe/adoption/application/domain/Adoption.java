@@ -42,8 +42,8 @@ public class Adoption {
     private String tagsField; // 태깅
     private String refinedSpecialMark; // 정제 데이터
     private float[] embedding; // 임베딩 값
-    private boolean aiProcessed; // 정제 여부
-    private boolean embeddingDone; // 임베딩 여부
+    private boolean isAiProcessed; // 정제 여부
+    private boolean isEmbedded; // 임베딩 여부
 
     // AdoptionCreate -> Adoption
     public static Adoption from(AdoptionCreate adoptionCreate) {
@@ -112,7 +112,7 @@ public class Adoption {
     public void updateAiField(String refinedSpecialMark, String tagsField, boolean isAiProcessed) {
         this.refinedSpecialMark = refinedSpecialMark;
         this.tagsField = tagsField;
-        this.aiProcessed = isAiProcessed;
+        this.isAiProcessed = isAiProcessed;
     }
 
     /**
@@ -129,7 +129,7 @@ public class Adoption {
      *
      * @param embeddingDone 임베딩 완료 여부
      */
-    public void embeddingDone(boolean embeddingDone) {
-        this.embeddingDone = embeddingDone;
+    public void isEmbedded(boolean isEmbedded) {
+        this.isEmbedded = isEmbedded;
     }
 }

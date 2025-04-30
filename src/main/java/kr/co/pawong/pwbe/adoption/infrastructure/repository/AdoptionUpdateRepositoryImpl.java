@@ -40,9 +40,9 @@ public class AdoptionUpdateRepositoryImpl implements AdoptionUpdateRepository {
      */
     @Override
     @Transactional
-    public void updateEmbeddingDone(List<Adoption> adoptions) {
+    public void updateIsEmbedded(List<Adoption> adoptions) {
         for (Adoption adoption : adoptions) {
-            adoptionJpaRepository.updateEmbeddingDone(adoption.getAdoptionId(), adoption.isEmbeddingDone());
+            adoptionJpaRepository.updateIsEmbedded(adoption.getAdoptionId(), adoption.isEmbedded());
         }
         entityManager.clear();
     }

@@ -44,15 +44,15 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
 
                 float[] embedding = adoptionAiService.embed(combinedField);
                 adoption.embed(embedding);
-                adoption.embeddingDone(true);
+                adoption.isEmbedded(true);
             } else {
-                adoption.embeddingDone(false);
+                adoption.isEmbedded(false);
             }
         });
         // 임베딩이 포함된 Adoption 리스트를 Repo에 전달
         adoptionEsRepository.saveAdoptionToEs(adoptions);
 
         // 임베딩 완료 상태를 DB에도 반영
-        adoptionUpdateRepository.updateEmbeddingDone(adoptions);
+        adoptionUpdateRepository.updateIsEmbedded(adoptions);
     }
 }

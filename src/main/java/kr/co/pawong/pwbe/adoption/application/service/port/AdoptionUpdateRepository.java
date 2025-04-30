@@ -8,7 +8,7 @@ public interface AdoptionUpdateRepository {
     void saveAdoptions(List<Adoption> adoptions);
 
     // EmbeddingDone 업데이트
-    void updateEmbeddingDone(List<Adoption> adoptions);
+    void updateIsEmbedded(List<Adoption> adoptions);
 
     // Ai 관련 데이터 업데이트
     void updateAiFields(List<Adoption> adoptions);

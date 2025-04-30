@@ -87,10 +87,10 @@ public class AdoptionEntity {
     private String tagsField; // 태깅
 
     @Column(nullable = false)
-    private boolean aiProcessed;
+    private boolean isAiProcessed;
 
     @Column(nullable = false)
-    private boolean embeddingDone;
+    private boolean isEmbedded;
 
     // Adoption -> AdoptionEntity
     public static AdoptionEntity from(Adoption adoption) {
@@ -121,8 +121,8 @@ public class AdoptionEntity {
         entity.updTm = adoption.getUpdTm();
         entity.refinedSpecialMark = adoption.getRefinedSpecialMark();
         entity.tagsField = adoption.getTagsField();
-        entity.aiProcessed = adoption.isAiProcessed();
-        entity.embeddingDone = adoption.isEmbeddingDone();
+        entity.isAiProcessed = adoption.isAiProcessed();
+        entity.isEmbedded = adoption.isEmbedded();
 
         return entity;
     }
