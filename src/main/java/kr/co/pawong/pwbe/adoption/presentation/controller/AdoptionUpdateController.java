@@ -4,6 +4,7 @@ import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.ApiRequestServiceImpl;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionEsService;
+import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/adoption")
+@RequestMapping("/api/adoptions")
 @RequiredArgsConstructor
 public class AdoptionUpdateController {
 
     private final ApiRequestServiceImpl apiRequestServiceImpl;
-    private final AdoptionEsService adoptionEsService;
+    private final AdoptionQueryService adoptionQueryService;
     private final AdoptionUpdateService adoptionUpdateService;
+    private final AdoptionEsService adoptionEsService;
 
     @PostMapping("/save")
     public ResponseEntity<Void> saveAdoptions() {
@@ -29,10 +31,16 @@ public class AdoptionUpdateController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/saveEs")
+    @PostMapping("/save-es")
     public ResponseEntity<Void> saveAdoptionsEs() {
-        List<Adoption> adoptions = adoptionEsService.getAllAdoptions();
+        List<Adoption> adoptions = adoptionQueryService.getAllAdoptions();
         adoptionEsService.saveAdoptionToEs(adoptions);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("ai-preprocessing")
+    public ResponseEntity<Void> aiProcessAdoptions() {
+        adoptionUpdateService.aiProcessAdoptions();
         return ResponseEntity.ok().build();
     }
 
