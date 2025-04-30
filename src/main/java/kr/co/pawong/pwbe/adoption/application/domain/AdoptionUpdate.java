@@ -41,6 +41,4 @@ public class AdoptionUpdate {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    private String searchField;
-    private String tagsField;
 }

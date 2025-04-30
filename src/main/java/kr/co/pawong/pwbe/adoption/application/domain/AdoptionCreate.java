@@ -40,12 +40,13 @@ public class AdoptionCreate {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    private String searchField;
-    private String tagsField;
-    private Float[] embedding;
 
+    /**
+     * ProcessState 값에 따라 activeState를 갱신하는 메서드.
+     * - ProcessState가 PROTECTED이면 activeState를 ACTIVE로,
+     * - 그 외에는 INACTIVE로 설정한다.
+     */
     public void updateActiveState() {
-        // ProcessState에 따른 ActiveState 설정
         if (this.getProcessState() == ProcessState.PROTECTED) {
             this.activeState = ActiveState.ACTIVE;
         } else {
