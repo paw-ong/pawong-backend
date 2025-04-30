@@ -66,4 +66,9 @@ public class AdoptionSearchServiceImpl implements AdoptionSearchService {
         return adoptionAiService.embed(refinedSearchTerm);
     }
 
+    @Override
+    public List<String> autocomplete(String keyword) {
+        return adoptionSearchRepository.autocomplete(keyword);
+    }
+
 }
