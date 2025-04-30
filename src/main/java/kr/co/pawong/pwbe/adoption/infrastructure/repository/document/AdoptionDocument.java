@@ -51,6 +51,7 @@ public class AdoptionDocument {
     @Field(type = FieldType.Dense_Vector, dims = 1536, name = "embedding")
     private float[] embedding; // 임베딩
 
+    // dto로 변경하기
     public static AdoptionDocument from(Adoption adoption) {
         return AdoptionDocument.builder()
                 .adoptionId(adoption.getAdoptionId())
@@ -69,13 +70,13 @@ public class AdoptionDocument {
         return Adoption.builder()
                 .adoptionId(this.adoptionId)
                 .upKindCd(this.upKindCd)
-                .kindNm(this.kindNm)
-                .colorCd(this.colorCd)
-                .age(this.age)
                 .sexCd(this.sexCd)
                 .neuterYn(this.neuterYn)
-                .specialMark(this.specialMark)
+                .city(this.city)
+                .district(this.district)
+                .refinedSpecialMark(this.refinedSpecialMark)
+                .tagsField(this.tagsField)
+                .embedding(this.embedding)
                 .build();
     }
-
 }
