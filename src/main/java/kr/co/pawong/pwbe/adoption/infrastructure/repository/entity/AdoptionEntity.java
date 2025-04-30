@@ -140,6 +140,8 @@ public class AdoptionEntity {
                 .updTm(this.updTm)
                 .tagsField(this.tagsField)
                 .refinedSpecialMark(this.refinedSpecialMark)
+                .isAiProcessed(this.isAiProcessed)
+                .isEmbedded(this.isEmbedded)
                 .build();
     }
 }
