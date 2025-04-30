@@ -22,14 +22,14 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
 
     // 문장 정제하는 함수
     @Override
-    public String refineSearchCondition(String searchTerm) {
-        validateNotBlank(searchTerm);
-        return chatPort.refineAdoptionSentence(searchTerm);
+    public String refineSpecialMark(String specialMark) {
+        validateNotBlank(specialMark);
+        return chatPort.refineAdoptionSentence(specialMark);
     }
     // 위의 함수를 병렬로 수행하는 함수
     @Override
-    public List<Optional<String>> refineSearchConditionBatch(List<String> terms) {
-        return executor.run(terms, this::refineSearchCondition);
+    public List<Optional<String>> refineSpecialMarkBatch(List<String> specialMarks) {
+        return executor.run(specialMarks, this::refineSpecialMark);
     }
 
     // 입력된 문장에 대해 태그를 선택해서 문자열 리스트로 반환하는 함수

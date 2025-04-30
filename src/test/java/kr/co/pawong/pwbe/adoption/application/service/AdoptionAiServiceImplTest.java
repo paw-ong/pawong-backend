@@ -5,7 +5,6 @@ import kr.co.pawong.pwbe.adoption.application.service.port.EmbeddingProcessorPor
 import kr.co.pawong.pwbe.adoption.application.service.util.AdoptionAiExecutor;
 import kr.co.pawong.pwbe.adoption.fake.FakeEmbeddingAdapter;
 import kr.co.pawong.pwbe.adoption.fake.FakeChatAdapter;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -76,7 +75,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "test";
         // When
-        String output = service.refineSearchCondition(input);
+        String output = service.refineSpecialMark(input);
         // Then
         assertThat(output).isEqualTo(input);
     }
@@ -86,7 +85,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = null;
         // When & Then
-        assertThatThrownBy(() -> service.refineSearchCondition(input))
+        assertThatThrownBy(() -> service.refineSpecialMark(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -95,7 +94,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "";
         // When & Then
-        assertThatThrownBy(() -> service.refineSearchCondition(input))
+        assertThatThrownBy(() -> service.refineSpecialMark(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -104,7 +103,7 @@ class AdoptionAiServiceImplTest {
         // Given
         String input = "  \n  ";
         // When & Then
-        assertThatThrownBy(() -> service.refineSearchCondition(input))
+        assertThatThrownBy(() -> service.refineSpecialMark(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -187,7 +186,7 @@ class AdoptionAiServiceImplTest {
         // Given
         List<String> inputs = List.of("one", "two");
         // When
-        List<Optional<String>> results = service.refineSearchConditionBatch(inputs);
+        List<Optional<String>> results = service.refineSpecialMarkBatch(inputs);
         // Then
         assertThat(results)
                 .hasSize(2)
@@ -203,7 +202,7 @@ class AdoptionAiServiceImplTest {
         // "fail" 입력시 예외 발생
         List<String> inputs = Arrays.asList("ok", "fail", "also", null, "\n \t");
         // When
-        List<Optional<String>> results = service.refineSearchConditionBatch(inputs);
+        List<Optional<String>> results = service.refineSpecialMarkBatch(inputs);
         // Then
         assertThat(results)
                 .hasSize(5)
