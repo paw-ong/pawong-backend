@@ -42,7 +42,7 @@ public class ApiRequestServiceImpl implements ApiRequestService {
     private final RestTemplate restTemplate;
     private final AdoptionUpdateService adoptionUpdateService;
 
-    @Value("${publicdata.api-key}")
+    @Value("${api.service-key}")
     private String serviceKey;
 
     /**
@@ -51,7 +51,7 @@ public class ApiRequestServiceImpl implements ApiRequestService {
     @Override
     public void fetchAndSaveAdoptions() {
         int pageNo = 1; // 시작 페이지 번호
-        int numOfRows = 500; // 한 페이지당 가져올 데이터 수
+        int numOfRows = 1000; // 한 페이지당 가져올 데이터 수
         boolean hasMoreData = true; // 더 가져올 데이터가 있는지 여부
         int totalSaved = 0; // 총 저장된 개수
 

@@ -1,0 +1,2 @@
+api:
+  service-key: ${SERVICE_KEY}
