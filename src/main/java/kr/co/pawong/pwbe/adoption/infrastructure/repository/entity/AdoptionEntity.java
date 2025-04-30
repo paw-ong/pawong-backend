@@ -1,30 +1,15 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.enums.ActiveState;
-import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
-import kr.co.pawong.pwbe.adoption.enums.ProcessState;
-import kr.co.pawong.pwbe.adoption.enums.SexCd;
-import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
-import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
+import kr.co.pawong.pwbe.adoption.enums.*;
 import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import kr.co.pawong.pwbe.shelter.infrastructure.repository.entity.ShelterEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter

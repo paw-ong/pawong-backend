@@ -1,6 +1,5 @@
 package kr.co.pawong.pwbe.adoption.presentation.controller;
 
-import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
 import kr.co.pawong.pwbe.adoption.application.service.ApiRequestService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
@@ -11,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
