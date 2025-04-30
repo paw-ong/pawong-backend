@@ -14,6 +14,7 @@ public class ShelterQueryServiceImpl implements ShelterQueryService {
 
     private final ShelterQueryRepository shelterQueryRepository;
 
+    @Override
     public ShelterInfoDto shelterInfo(String careRegNo) {
         return shelterQueryRepository.shelterInfo(careRegNo);
     }

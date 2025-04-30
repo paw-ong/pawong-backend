@@ -84,6 +84,8 @@ public class AdoptionEntity {
 
     private String specialMark; // 특징
 
+    private String careRegNo; // 보호소 번호
+
     private LocalDateTime updTm; // 수정일
 
     @ManyToOne
@@ -115,6 +117,7 @@ public class AdoptionEntity {
         entity.sexCd = adoption.getSexCd();
         entity.neuterYn = adoption.getNeuterYn();
         entity.specialMark = adoption.getSpecialMark();
+        entity.careRegNo = adoption.getCareRegNo();
         entity.updTm = adoption.getUpdTm();
         entity.shelterEntity = null;
                 //ShelterEntity.from(adoption.getShelter());
@@ -149,6 +152,7 @@ public class AdoptionEntity {
                 .sexCd(sexCd)
                 .neuterYn(neuterYn)
                 .specialMark(specialMark)
+                .careRegNo(careRegNo)
                 .updTm(updTm)
                 .shelter(shelter)
                 .build();

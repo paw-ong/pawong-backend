@@ -13,7 +13,9 @@ public class ShelterQueryRepositoryImpl implements ShelterQueryRepository {
 
     private final ShelterJpaRepository shelterJpaRepository;
 
+
     // adoption 에서 careRegNo를 받아 보호소 정보 반환
+    @Override
     public ShelterInfoDto shelterInfo(String careRegNo) {
         return shelterJpaRepository.shelterInfo(careRegNo);
     }
