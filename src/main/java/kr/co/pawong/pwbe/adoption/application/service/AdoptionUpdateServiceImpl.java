@@ -42,14 +42,15 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
      */
     @Override
     public void aiProcessAdoptions() {
-        List<Adoption> adoptions = adoptionQueryRepository.convertToAdoptions();
+        List<Adoption> adoptions = adoptionQueryRepository.findAll();
 
         List<Adoption> toUpdate = new ArrayList<>();
         for (Adoption adoption : adoptions) {
-            if (adoption.getActiveState() == ActiveState.ACTIVE) {
+            if (adoption.getActiveState() == ActiveState.ACTIVE && !adoption.isAiProcessed()) {
                 log.info("AdoptionId = {}", adoption.getAdoptionId());
-                String refinedSpecialMark = getRefinedSpecialMark(adoption);
-                String tagsField = getTagsField(adoption);
+                String refinedSpecialMark = adoptionAiService.refineSearchCondition(adoption.getRefinedSpecialMark());
+                List<String> tags = adoptionAiService.tag(adoption.getTagsField());
+                String tagsField = String.join(" ", tags);
 
                 boolean aiProcessed =
                         (refinedSpecialMark != null && !refinedSpecialMark.isBlank()) || (tagsField != null
@@ -59,7 +60,8 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
                         || !Objects.equals(adoption.getTagsField(), tagsField)
                         || adoption.isAiProcessed() != aiProcessed) {
 
-                    adoption.updateAiField(refinedSpecialMark, tagsField, aiProcessed);
+
+                    adoption.updateAiField(refinedSpecialMark, tagsField);
                     toUpdate.add(adoption);
                 }
             }
@@ -76,44 +78,5 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
         }
     }
 
-    /**
-     * Adoption 도메인 객체로부터 정제 필드(refinedSpecialMark)용 텍스트를 생성하고
-     * AI 서비스로 정제 결과를 반환하는 메서드
-     * (kindNm, colorCd, specialMark를 공백으로 연결하여 baseText로 사용)
-     *
-     * @param adoption Adoption 도메인 객체
-     * @return 정제 필드에 들어갈 정제된 문자열
-     */
-    private String getRefinedSpecialMark(Adoption adoption) {
-        String baseText = String.join(" ",
-                adoption.getKindNm() != null ? adoption.getKindNm() : "",
-                adoption.getColorCd() != null ? adoption.getColorCd() : "",
-                adoption.getSpecialMark() != null ? adoption.getSpecialMark() : ""
-        ).trim();
 
-        // 데이터 정제 결과 반환
-        return adoptionAiService.refineSearchCondition(baseText);
-    }
-
-    /**
-     * Adoption 도메인 객체로부터 태그 필드(tagsField)용 텍스트를 생성하고
-     * AI 서비스로 태그 추출 결과를 반환하는 메서드
-     * (kindNm, colorCd, age, weight, specialMark를 공백으로 연결하여 baseText로 사용)
-     *
-     * @param adoption Adoption 도메인 객체
-     * @return 태그 필드에 들어갈 정제된 문자열
-     */
-    private String getTagsField(Adoption adoption) {
-        String baseText = String.join(" ",
-                adoption.getKindNm() != null ? adoption.getKindNm() : "",
-                adoption.getColorCd() != null ? adoption.getColorCd() : "",
-                adoption.getAge() != null ? String.valueOf(adoption.getAge()) : "",
-                adoption.getWeight() != null ? adoption.getWeight() : "",
-                adoption.getSpecialMark() != null ? adoption.getSpecialMark() : ""
-        ).trim();
-
-        // 태그 추출 결과 반환 (공백으로 연결)
-        List<String> tags = adoptionAiService.tag(baseText);
-        return String.join(" ", tags);
-    }
 }
