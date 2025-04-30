@@ -13,7 +13,7 @@ public class ExecutorConfig {
      * ThreadPool 을 사용하는 Executor 빈 등록
      */
     @Bean("aiExecutor")
-    public Executor adoptionExecutor() {
+    public Executor aiExecutor() {
         ThreadPoolTaskExecutor exec = new ThreadPoolTaskExecutor();
         exec.setCorePoolSize(10);
         exec.setMaxPoolSize(20);
