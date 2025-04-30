@@ -76,7 +76,9 @@ public class AdoptionEntity {
     @Enumerated(EnumType.STRING)
     private NeuterYn neuterYn; // 중성화여부(타입)
 
-    private String specialMark; // 특징
+    private String specialMark;// 특징
+
+    private String careRegNo; // 보호소 번호
 
     private LocalDateTime updTm; // 수정일
 
@@ -115,6 +117,7 @@ public class AdoptionEntity {
         entity.sexCd = adoption.getSexCd();
         entity.neuterYn = adoption.getNeuterYn();
         entity.specialMark = adoption.getSpecialMark();
+        entity.careRegNo = adoption.getCareRegNo();
         entity.updTm = adoption.getUpdTm();
         entity.refinedSpecialMark = adoption.getRefinedSpecialMark();
         entity.tagsField = adoption.getTagsField();
