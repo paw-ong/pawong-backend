@@ -1,5 +1,8 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository;
 
+import java.time.LocalDate;
+import java.util.List;
+import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -39,5 +42,7 @@ public interface AdoptionJpaRepository extends JpaRepository<AdoptionEntity, Lon
     @Query("SELECT a.careRegNo FROM AdoptionEntity a WHERE a.adoptionId = :id")
     String findCareRegNoByAdoptionId(@Param("id") Long id);
 
-
+    // ActiveState = active, noticeEdt가 today와 같거나 가장 가까운 이후인 것
+    List<AdoptionEntity> findTop12ByActiveStateAndNoticeEdtGreaterThanEqualOrderByNoticeEdtAsc(
+            ActiveState activeState, LocalDate today);
 }
