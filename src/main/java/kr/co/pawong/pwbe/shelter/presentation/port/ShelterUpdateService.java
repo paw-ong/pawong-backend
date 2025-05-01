@@ -1,4 +1,4 @@
-package kr.co.pawong.pwbe.shelter.presentation.controller.port;
+package kr.co.pawong.pwbe.shelter.presentation.port;
 
 import kr.co.pawong.pwbe.shelter.application.domain.ShelterCreate;
 import java.util.List;

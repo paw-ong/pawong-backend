@@ -103,6 +103,7 @@ public class ApiRequestService {
                                 .sexCd(convertToEnum(item.getSexCd(), SexCd.class))
                                 .neuterYn(convertToEnum(item.getNeuterYn(), NeuterYn.class))
                                 .specialMark(item.getSpecialMark())
+                                .careRegNo(item.getCareRegNo())
                                 .updTm(updTm)
                                 .build();
 
