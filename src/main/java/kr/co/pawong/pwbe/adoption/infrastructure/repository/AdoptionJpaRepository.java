@@ -5,9 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 
 public interface AdoptionJpaRepository extends JpaRepository<AdoptionEntity, Long> {
 
@@ -19,7 +16,7 @@ public interface AdoptionJpaRepository extends JpaRepository<AdoptionEntity, Lon
      */
     @Modifying(clearAutomatically = true)
     @Query("UPDATE AdoptionEntity a SET a.isEmbedded = :isEmbedded WHERE a.adoptionId IN :adoptionId")
-    int updateIsEmbedded(
+    void updateIsEmbedded(
             @Param("adoptionId") Long adoptionId,
             @Param("isEmbedded") boolean isEmbedded);
 
