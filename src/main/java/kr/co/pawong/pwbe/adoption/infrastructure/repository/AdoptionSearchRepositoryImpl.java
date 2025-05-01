@@ -121,7 +121,8 @@ public class AdoptionSearchRepositoryImpl implements AdoptionSearchRepository {
                 embeddingList.add(f);
             }
 
-            semantic.should(s -> s.scriptScore(ss -> ss
+            semantic.filter(f -> f.exists(e -> e.field("embedding")))
+                    .should(s -> s.scriptScore(ss -> ss
                     .query(q -> q.matchAll(m -> m))
                     .script(sc -> sc.inline(i -> i
                             .source("cosineSimilarity(params.query_vector, 'embedding') + 1.0") // cosine similarity 활용
