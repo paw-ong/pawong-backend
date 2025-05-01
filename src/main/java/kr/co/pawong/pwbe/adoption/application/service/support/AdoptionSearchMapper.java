@@ -15,7 +15,7 @@ public class AdoptionSearchMapper {
                 .upKindCds(request.getUpKindCds())
                 .sexCd(request.getSexCd())
                 .neuterYn(request.getNeuterYn())
-                .regions(parseRegions(request.getRegions()))
+                .regions(toRegionList(request.getRegions()))
                 .refinedSearchTerm(refinedSearchTerm)
                 .embedding(embedding)
                 .build();
@@ -33,19 +33,20 @@ public class AdoptionSearchMapper {
      * - "서울특별시"        → city="서울특별시", district=null
      * - "인천광역시 부평구" → city="인천광역시", district="부평구"
      */
-    public static List<Region> parseRegions(List<String> regions) {
+    public static List<Region> toRegionList(List<String> regions) {
         if (regions == null) {
             return Collections.emptyList();
         }
         return regions.stream()
-            .map(raw -> {
-                String trimmed = raw.trim();
-                int idx = trimmed.indexOf(' ');
-                return (idx < 0)
-                  ? new Region(trimmed, null)
-                  : new Region(trimmed.substring(0, idx), trimmed.substring(idx + 1));
-            })
+            .map(AdoptionSearchMapper::parseRegion)
             .toList();
+    }
+    public static Region parseRegion(String cityAndDistrict) {
+        String trimmed = cityAndDistrict.trim();
+        int idx = trimmed.indexOf(' ');
+        return (idx < 0)
+            ? new Region(trimmed, null)
+            : new Region(trimmed.substring(0, idx), trimmed.substring(idx + 1));
     }
 
 
