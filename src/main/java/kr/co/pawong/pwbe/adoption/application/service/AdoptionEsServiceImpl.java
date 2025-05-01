@@ -7,6 +7,7 @@ import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionEsRepository;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionUpdateRepository;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionEsService;
+import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
     private final AdoptionEsRepository adoptionEsRepository;
     private final AdoptionUpdateRepository adoptionUpdateRepository;
     private final AdoptionAiService adoptionAiService;
+    private final AdoptionQueryService adoptionQueryService;
 
     /**
      * 전달받은 Adoption 리스트에 대해 임베딩 및 임베딩 완료 여부(embeddingDone) 설정 후
@@ -42,6 +44,7 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
 
                 float[] embedding = adoptionAiService.embed(combinedField);
                 adoption.embed(embedding);
+                adoptionQueryService.findShelterInfoByAdoptionId(adoption.getAdoptionId());
             }
         });
         // 임베딩이 포함된 Adoption 리스트를 Repo에 전달
