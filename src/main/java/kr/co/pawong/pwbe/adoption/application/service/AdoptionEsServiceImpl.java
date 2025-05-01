@@ -30,6 +30,7 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
      *
      * @param adoptions 임베딩 및 저장할 Adoption 리스트
      */
+    // TODO: 이후 ES와 RDB에 원자적 저장 보장하기
     @Override
     public void saveAdoptionToEs(List<Adoption> adoptions) {
         adoptions.forEach(adoption -> {
