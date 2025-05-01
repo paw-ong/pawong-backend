@@ -14,7 +14,15 @@ public class AdoptionSearchCondition {
     private List<UpKindCd> upKindCds;
     private SexCd sexCd;
     private NeuterYn neuterYn;
-//    private List<String> regions;     // 추후 추가
+    private List<Region> regions;
     private String refinedSearchTerm;   // 정제된 검색어 문장
     private float[] embedding;
+
+    /** city/district 를 담는 DTO **/
+    @Getter
+    @AllArgsConstructor
+    public static class Region {
+        private final String city;
+        private final String district;
+    }
 }
