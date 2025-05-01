@@ -42,6 +42,8 @@ public class AdoptionSearchMapper {
             .toList();
     }
     public static Region parseRegion(String cityAndDistrict) {
+        if(cityAndDistrict == null || cityAndDistrict.isEmpty())
+            return new Region(null, null);
         String trimmed = cityAndDistrict.trim();
         int idx = trimmed.indexOf(' ');
         return (idx < 0)
