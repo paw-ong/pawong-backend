@@ -55,6 +55,10 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
     public ShelterInfoDto findShelterInfoByAdoptionId(Long adoptionId) {
         // 1) AdoptionEntity에서 careRegNo 조회
         String careRegNo = adoptionQueryRepository.findCareRegNoByAdoptionId(adoptionId);
+        if (careRegNo == null) {
+            log.warn("careRegNo not found for adoptionId: {}", adoptionId);
+            return null; // 또는 예외 throw
+        }
         // 2) ShelterAdapter 통해 실제 Shelter 컨텍스트에 질의
         return shelterInfoPort.getShelterInfo(careRegNo);
     }
