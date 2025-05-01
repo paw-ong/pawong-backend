@@ -108,7 +108,7 @@ public class AdoptionSearchRepositoryImpl implements AdoptionSearchRepository {
 
         if (condition.getRefinedSearchTerm() != null && !condition.getRefinedSearchTerm().isEmpty()) {
             semantic.should(s -> s.match(m -> m
-                    .field("searchField")
+                    .field("refinedSpecialMark")
                     .query(condition.getRefinedSearchTerm())
                     .analyzer("korean")
                     .boost(1.0f)    // 형태소는 1배의 가중치
