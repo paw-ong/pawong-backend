@@ -6,6 +6,9 @@ spring:
     username: ${DEV_DB_USERNAME}
     password: ${DEV_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
   ai:
     openai:
       api-key: ${OPEN_AI_KEY}
@@ -27,5 +30,3 @@ spring:
         model: ai-human-lab/EEVE-Korean-10.8B-SFT-v0.1
   elasticsearch:
     uris: http://localhost:9200
-api:
-  service-key: ${SERVICE_KEY}

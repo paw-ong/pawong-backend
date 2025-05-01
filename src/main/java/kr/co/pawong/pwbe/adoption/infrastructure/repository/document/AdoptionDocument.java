@@ -27,44 +27,42 @@ public class AdoptionDocument {
     @Field(type = FieldType.Keyword, name = "upKindCd")
     private UpKindCd upKindCd; // 축종코드
 
-    @Field(type = FieldType.Text, name = "KindNm", analyzer = "korean")
-    private String kindNm; // 품종명
-
-    @Field(type = FieldType.Text, name = "colorCd", analyzer = "korean")
-    private String colorCd; // 색상
-
-    @Field(type = FieldType.Integer, name = "age")
-    private Integer age; // 나이(년생) Long
-
     @Field(type = FieldType.Keyword, name = "sexCd")
     private SexCd sexCd; // 성별
 
     @Field(type = FieldType.Keyword, name = "neuterYn")
     private NeuterYn neuterYn; // 중성화여부(타입)
 
-    @Field(type = FieldType.Text, name = "specialMark", analyzer = "korean")
-    private String specialMark; // 특징
+    @Field(type = FieldType.Keyword, name = "city")
+    private String city; // 시도
+
+    @Field(type = FieldType.Keyword, name = "district")
+    private String district; // 시군구
 
     @Setter
-    @Field(type = FieldType.Text, analyzer = "korean")
-    private String searchField; // AI가 정제한 동물 정보
+    @Field(type = FieldType.Text, name = "refinedSpecialMark", analyzer = "korean")
+    private String refinedSpecialMark; // AI가 정제한 동물 정보
 
     @Setter
-    @Field(type = FieldType.Dense_Vector, dims = 1536)
-    private float[] embedding; // searchField 임베딩
+    @Field(type = FieldType.Text, name = "tagsField", analyzer = "korean")
+    private String tagsField; // AI가 키워드로 정제한 동물 정보
 
+    @Setter
+    @Field(type = FieldType.Dense_Vector, dims = 1536, name = "embedding")
+    private float[] embedding; // 임베딩
+
+    // dto로 변경하기
     public static AdoptionDocument from(Adoption adoption) {
         return AdoptionDocument.builder()
                 .adoptionId(adoption.getAdoptionId())
                 .upKindCd(adoption.getUpKindCd())
-                .kindNm(adoption.getKindNm())
-                .colorCd(adoption.getColorCd())
-                .age(adoption.getAge())
                 .sexCd(adoption.getSexCd())
                 .neuterYn(adoption.getNeuterYn())
-                .specialMark(adoption.getSpecialMark())
-                .searchField("")
-                .embedding(null)
+                .city("")
+                .district("")
+                .refinedSpecialMark(adoption.getRefinedSpecialMark())
+                .tagsField(adoption.getTagsField())
+                .embedding(adoption.getEmbedding())
                 .build();
     }
 
@@ -72,13 +70,13 @@ public class AdoptionDocument {
         return Adoption.builder()
                 .adoptionId(this.adoptionId)
                 .upKindCd(this.upKindCd)
-                .kindNm(this.kindNm)
-                .colorCd(this.colorCd)
-                .age(this.age)
                 .sexCd(this.sexCd)
                 .neuterYn(this.neuterYn)
-                .specialMark(this.specialMark)
+                .city(this.city)
+                .district(this.district)
+                .refinedSpecialMark(this.refinedSpecialMark)
+                .tagsField(this.tagsField)
+                .embedding(this.embedding)
                 .build();
     }
-
 }
