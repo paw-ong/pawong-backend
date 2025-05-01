@@ -44,4 +44,14 @@ public class AdoptionUpdateController {
         return ResponseEntity.ok().build();
     }
 
+//    @GetMapping("/{id}/shelter")
+//    public ShelterInfoDto getShelterInfo(@PathVariable Long id) {
+//
+//        ShelterInfoDto dto = adoptionQueryService.findShelterInfoByAdoptionId(id);
+//        log.info("◀ 반환: ShelterInfoDto(careRegNo={}, city={}, district={})",
+//                dto.getCareRegNo(), dto.getCity(), dto.getDistrict());
+//
+//        return dto;
+//    }
+
 }

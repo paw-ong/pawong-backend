@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 
 public interface AdoptionJpaRepository extends JpaRepository<AdoptionEntity, Long> {
 
@@ -35,4 +38,9 @@ public interface AdoptionJpaRepository extends JpaRepository<AdoptionEntity, Lon
             @Param("refinedSpecialMark") String refinedSpecialMark,
             @Param("tagsField") String tagsField,
             @Param("isAiProcessed") boolean isAiProcessed);
+
+    @Query("SELECT a.careRegNo FROM AdoptionEntity a WHERE a.adoptionId = :id")
+    String findCareRegNoByAdoptionId(@Param("id") Long id);
+
+
 }

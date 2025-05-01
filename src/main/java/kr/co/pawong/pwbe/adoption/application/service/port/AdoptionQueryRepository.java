@@ -11,4 +11,7 @@ public interface AdoptionQueryRepository {
 
     Adoption findByIdOrThrow(Long adoptionId);
     Page<Adoption> findAllPaged(Pageable pageable);
+
+    String findCareRegNoByAdoptionId(Long id);
+
 }

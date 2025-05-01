@@ -76,7 +76,7 @@ public class AdoptionEntity {
     @Enumerated(EnumType.STRING)
     private NeuterYn neuterYn; // 중성화여부(타입)
 
-    private String specialMark;// 특징
+    private String specialMark; // 특징
 
     private String careRegNo; // 보호소 번호
 
