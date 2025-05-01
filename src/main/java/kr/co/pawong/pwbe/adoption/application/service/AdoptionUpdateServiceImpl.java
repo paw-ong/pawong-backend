@@ -55,10 +55,9 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
                         (refinedSpecialMark != null && !refinedSpecialMark.isBlank()) || (tagsField != null
                                 && !tagsField.isBlank());
 
-                if (adoption.getRefinedSpecialMark().equals(refinedSpecialMark)
-                        || adoption.getTagsField().equals(tagsField)
+                if ((adoption.getRefinedSpecialMark() != null && adoption.getRefinedSpecialMark().equals(refinedSpecialMark))
+                        || (adoption.getTagsField() != null && adoption.getTagsField().equals(tagsField))
                         || aiProcessed) {
-
 
                     adoption.updateAiField(refinedSpecialMark, tagsField);
                     toUpdate.add(adoption);
