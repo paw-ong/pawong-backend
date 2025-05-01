@@ -5,6 +5,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.json.JsonData;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearchCondition;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearchCondition.Region;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionSearchRepository;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,29 @@ public class AdoptionSearchRepositoryImpl implements AdoptionSearchRepository {
                     .field("neuterYn")
                     .value(condition.getNeuterYn().toString())
             ));
+        }
+
+        if (condition.getRegions() != null && !condition.getRegions().isEmpty()) {
+            BoolQuery.Builder regionBool = new BoolQuery.Builder();
+
+            for (Region region : condition.getRegions()) {
+                BoolQuery.Builder inner = new BoolQuery.Builder()
+                    .filter(f -> f.term(t -> t
+                        .field("city")
+                        .value(FieldValue.of(region.getCity()))
+                    ));
+
+                if (region.getDistrict() != null) {
+                    inner.filter(f -> f.term(t -> t
+                        .field("district")
+                        .value(FieldValue.of(region.getDistrict()))
+                    ));
+                }
+
+                regionBool.should(q -> q.bool(inner.build()));
+            }
+
+            filter.filter(f -> f.bool(regionBool.build()));
         }
 
         return filter.build()._toQuery();
