@@ -90,7 +90,6 @@ class AdoptionQueryBuilderTest extends TestElasticsearchContainer {
 
   @Test
   void 지역검색어가_여러개라면_합집합으로_조회() {
-    // “인천광역시” OR “서울특별시 광진구”
     var condition = AdoptionSearchCondition.builder()
         .regions(List.of(
             new Region("인천광역시", "부평구"),
@@ -113,7 +112,6 @@ class AdoptionQueryBuilderTest extends TestElasticsearchContainer {
 
   @Test
   void 도시_전체_검색어일_경우() {
-    // “인천광역시” OR “서울특별시 광진구”
     var condition = AdoptionSearchCondition.builder()
         .regions(List.of(
             new Region("경기도", null)
@@ -135,7 +133,6 @@ class AdoptionQueryBuilderTest extends TestElasticsearchContainer {
 
   @Test
   void 도시_전체_검색어와_일반_지역_검색어일_경우() {
-    // “인천광역시” OR “서울특별시 광진구”
     var condition = AdoptionSearchCondition.builder()
         .regions(List.of(
             new Region("경기도", null),
