@@ -11,6 +11,7 @@ import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearch
 import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionQueryBuilder;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.TestDocument;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-
+@Disabled("ES 통합 테스트는 전체 빌드 시 제외")
 @Testcontainers
 // ──────────────────────────────────────────────────────────
 // @Container 로 정의한 ElasticsearchContainer를 테스트 시작 전후로
