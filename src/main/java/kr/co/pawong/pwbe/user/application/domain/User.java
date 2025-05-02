@@ -1,5 +1,10 @@
 package kr.co.pawong.pwbe.user.application.domain;
 
-public class User {
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
+@Builder
+public class User {
+    private Long userId;
 }
