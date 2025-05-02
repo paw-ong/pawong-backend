@@ -6,7 +6,9 @@ import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearch
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionSearchRepository;
 import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionQueryBuilder;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
+import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AutocompleteDocument;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -14,6 +16,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 @RequiredArgsConstructor
