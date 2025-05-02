@@ -1,5 +1,7 @@
 package kr.co.pawong.pwbe.user.application.service.port;
 
-public interface UserQueryRepository {
+import kr.co.pawong.pwbe.user.application.domain.User;
 
+public interface UserQueryRepository {
+    User findByUserId(Long userId);
 }
