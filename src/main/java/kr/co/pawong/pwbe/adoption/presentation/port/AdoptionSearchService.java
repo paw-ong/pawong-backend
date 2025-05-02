@@ -5,6 +5,8 @@ import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionS
 import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionIdSearchResponses;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface AdoptionSearchService {
 
@@ -13,4 +15,7 @@ public interface AdoptionSearchService {
 
     // ES에서 조회해서 adoptionIds 반환
     AdoptionIdSearchResponses searchDocumentIds(AdoptionSearchRequest request);
+
+    // ES에서 조회해서 자동완성 리스트 반환
+    List<String> autocomplete(String keyword);
 }
