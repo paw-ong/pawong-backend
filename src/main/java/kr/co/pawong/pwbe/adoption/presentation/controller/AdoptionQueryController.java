@@ -1,8 +1,7 @@
 package kr.co.pawong.pwbe.adoption.presentation.controller;
 
-import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
-import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionRecommendResponse;
+import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionRecommendResponses;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +29,8 @@ public class AdoptionQueryController {
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity<List<AdoptionRecommendResponse>> getSlicedAdoptions() {
-        List<AdoptionRecommendResponse> adoptionRecommendResponses = adoptionQueryService.getRecommendAdoptions();
-        return ResponseEntity.ok(adoptionRecommendResponses);
+    public ResponseEntity<AdoptionRecommendResponses> getRecommendAdoptions() {
+        AdoptionRecommendResponses response = adoptionQueryService.getRecommendAdoptions();
+        return ResponseEntity.ok(response);
     }
 }
