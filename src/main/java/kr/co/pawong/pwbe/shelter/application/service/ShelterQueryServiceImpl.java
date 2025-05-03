@@ -14,11 +14,12 @@ public class ShelterQueryServiceImpl implements ShelterQueryService {
 
     @Override
     public ShelterInfoDto shelterInfo(String careRegNo) {
-        // Repository 통해 Entity 조회
-        var entity = shelterQueryRepository.findByCareRegNo(careRegNo);
-        // DTO로 변환
-        return new ShelterInfoDto(entity.getCareRegNo(),
-                entity.getCity(),
-                entity.getDistrict());
+        ShelterInfoDto shelterInfoDto = shelterQueryRepository.shelterInfo(careRegNo);
+
+        if (shelterInfoDto == null) {
+            return new ShelterInfoDto(careRegNo, "", "");
+        }
+
+        return shelterInfoDto;
     }
 }

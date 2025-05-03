@@ -1,6 +1,7 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository.document;
 
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.RegionInfoDto;
 import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
 import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
@@ -58,8 +59,8 @@ public class AdoptionDocument {
                 .upKindCd(adoption.getUpKindCd())
                 .sexCd(adoption.getSexCd())
                 .neuterYn(adoption.getNeuterYn())
-                .city("")
-                .district("")
+                .city(adoption.getRegionInfo().getCity())
+                .district(adoption.getRegionInfo().getDistrict())
                 .refinedSpecialMark(adoption.getRefinedSpecialMark())
                 .tagsField(adoption.getTagsField())
                 .embedding(adoption.getEmbedding())
@@ -67,16 +68,19 @@ public class AdoptionDocument {
     }
 
     public Adoption toModel() {
-        return Adoption.builder()
+        Adoption adoption = Adoption.builder()
                 .adoptionId(this.adoptionId)
                 .upKindCd(this.upKindCd)
                 .sexCd(this.sexCd)
                 .neuterYn(this.neuterYn)
-                .city(this.city)
-                .district(this.district)
                 .refinedSpecialMark(this.refinedSpecialMark)
                 .tagsField(this.tagsField)
                 .embedding(this.embedding)
                 .build();
+
+        RegionInfoDto regionInfoDto = new RegionInfoDto(this.city, this.district);
+        adoption.regionInfo(regionInfoDto);
+
+        return adoption;
     }
 }

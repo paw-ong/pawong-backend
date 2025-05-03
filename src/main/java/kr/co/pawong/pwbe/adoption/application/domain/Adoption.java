@@ -2,6 +2,7 @@ package kr.co.pawong.pwbe.adoption.application.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.RegionInfoDto;
 import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
 import kr.co.pawong.pwbe.adoption.enums.ProcessState;
@@ -37,13 +38,12 @@ public class Adoption {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    private String city;
-    private String district;
     private String tagsField; // 태깅
     private String refinedSpecialMark; // 정제 데이터
     private float[] embedding; // 임베딩 값
     private boolean isAiProcessed = false; // 정제 여부
     private boolean isEmbedded = false; // 임베딩 여부
+    private RegionInfoDto regionInfo;
 
     // AdoptionCreate -> Adoption
     public static Adoption from(AdoptionCreate adoptionCreate) {
@@ -155,5 +155,9 @@ public class Adoption {
                 this.weight != null ? this.weight : "",
                 this.specialMark != null ? this.specialMark : ""
         ).trim();
+    }
+
+    public void regionInfo(RegionInfoDto regionInfoDto) {
+        this.regionInfo = regionInfoDto;
     }
 }
