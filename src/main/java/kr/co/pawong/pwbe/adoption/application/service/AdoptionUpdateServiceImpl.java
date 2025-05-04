@@ -39,7 +39,7 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
 
     /**
      * DB에서 Adoption 도메인 객체를 모두 조회하여 ACTIVE 상태만 AI 전처리(정제) 후 refinedSpecialMark, tagsField,
-     * aiProcessed가 변경된 경우만 50개씩 정제하고 50개씩 업데이트하는 메서드
+     * aiProcessed가 변경된 경우만 50개씩 정제하고 50개씩 업데이트
      */
     @Override
     public void aiProcessAdoptions() {
