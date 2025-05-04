@@ -29,7 +29,7 @@ public class CustomUserDetails implements UserDetails {
     this.socialId = socialId;
     this.username = String.valueOf(socialId);
     this.password = "";
-    this.authorities = List.of();
+    this.authorities = list;
   }
 
   @Override
