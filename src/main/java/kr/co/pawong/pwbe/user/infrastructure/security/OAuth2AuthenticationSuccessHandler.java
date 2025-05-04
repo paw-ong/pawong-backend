@@ -36,12 +36,11 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         User user = userQueryService.getUserBySocialId(Long.valueOf(socialId));
         if (user == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
-
         // ACTIVE
         String token = jwtTokenProvider.generateTokenByOauth2(authentication, user.getUserId());
         if(user.getStatus() != UserStatus.ACTIVE) {
-
             response.sendRedirect(baseUrl+"/signup/additional-info?token=" + token+"&status=" + user.getStatus());
             return;
         }
