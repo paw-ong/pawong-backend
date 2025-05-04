@@ -87,15 +87,9 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
             if (isAiFieldChanged(adoption, refinedSpecialMark, tagsField)) {
                 adoption.updateAiField(refinedSpecialMark, tagsField);
                 toUpdate.add(adoption);
-
-                // 50개씩 저장
-                if (toUpdate.size() == 50) {
-                    adoptionUpdateRepository.updateAiFields(toUpdate);
-                    toUpdate.clear();
-                }
             }
         }
-        // 남은 데이터 저장
+
         if (!toUpdate.isEmpty()) {
             adoptionUpdateRepository.updateAiFields(toUpdate);
         }
