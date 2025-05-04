@@ -2,6 +2,7 @@ package kr.co.pawong.pwbe.adoption.application.service.support;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearchCondition;
 import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionSearchCondition.Region;
@@ -39,16 +40,18 @@ public class AdoptionSearchMapper {
         }
         return regions.stream()
             .map(AdoptionSearchMapper::parseRegion)
+            .flatMap(Optional::stream)
             .toList();
     }
-    public static Region parseRegion(String cityAndDistrict) {
-        if(cityAndDistrict == null || cityAndDistrict.isEmpty())
-            return new Region(null, null);
+    public static Optional<Region> parseRegion(String cityAndDistrict) {
+        if(cityAndDistrict == null || cityAndDistrict.isBlank())
+            return Optional.empty();
         String trimmed = cityAndDistrict.trim();
         int idx = trimmed.indexOf(' ');
-        return (idx < 0)
+        Region region = (idx < 0)
             ? new Region(trimmed, null)
             : new Region(trimmed.substring(0, idx), trimmed.substring(idx + 1));
+        return Optional.of(region);
     }
 
 
