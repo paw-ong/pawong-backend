@@ -8,7 +8,6 @@ import kr.co.pawong.pwbe.adoption.enums.ProcessState;
 import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
-import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,11 +38,15 @@ public class AdoptionCreate {
     private SexCd sexCd; // 성별
     private NeuterYn neuterYn; // 중성화여부(타입)
     private String specialMark; // 특징
+    private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    private Shelter shelter; // 보호소id(외래키)
 
+    /**
+     * ProcessState 값에 따라 activeState를 갱신하는 메서드.
+     * - ProcessState가 PROTECTED이면 activeState를 ACTIVE로,
+     * - 그 외에는 INACTIVE로 설정한다.
+     */
     public void updateActiveState() {
-        // ProcessState에 따른 ActiveState 설정
         if (this.getProcessState() == ProcessState.PROTECTED) {
             this.activeState = ActiveState.ACTIVE;
         } else {
