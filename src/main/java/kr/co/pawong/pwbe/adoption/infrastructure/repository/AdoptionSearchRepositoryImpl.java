@@ -45,4 +45,27 @@ public class AdoptionSearchRepositoryImpl implements AdoptionSearchRepository {
 
         return elasticsearchOperations.search(searchQuery, AdoptionDocument.class);
     }
+
+    @Override
+    public List<String> autocomplete(String keyword) {
+        var edgeQuery = NativeQuery.builder()
+            .withQuery(q -> q.match(m -> m.field("word.edge").query(keyword)))
+            .withPageable(PageRequest.of(0, 1000))
+            .build();
+        var ngramQuery = NativeQuery.builder()
+            .withQuery(q -> q.bool(b -> b
+                .must(m1 -> m1.match(m2 -> m2.field("word.ngram").query(keyword)))
+                .mustNot(mn -> mn.match(mn2 -> mn2.field("word.edge").query(keyword)))
+            ))
+            .withPageable(PageRequest.of(0, 1000))
+            .build();
+
+        return Stream.concat(
+                elasticsearchOperations.search(edgeQuery, AutocompleteDocument.class)
+                    .stream().map(hit -> hit.getContent().getWord()),
+                elasticsearchOperations.search(ngramQuery, AutocompleteDocument.class)
+                    .stream().map(hit -> hit.getContent().getWord())
+            )
+            .toList();
+    }
 }
