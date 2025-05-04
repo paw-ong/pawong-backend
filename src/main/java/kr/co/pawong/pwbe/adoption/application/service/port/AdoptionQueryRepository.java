@@ -1,5 +1,6 @@
 package kr.co.pawong.pwbe.adoption.application.service.port;
 
+import java.time.LocalDate;
 import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import org.springframework.data.domain.Page;
@@ -10,8 +11,10 @@ public interface AdoptionQueryRepository {
     List<Adoption> findAll();
 
     Adoption findByIdOrThrow(Long adoptionId);
+
     Page<Adoption> findAllPaged(Pageable pageable);
 
     String findCareRegNoByAdoptionId(Long id);
 
+    List<Adoption> findTop12ActiveByNoticeEdt(LocalDate today);
 }
