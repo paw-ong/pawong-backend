@@ -1,6 +1,7 @@
 spring:
   config:
     import: optional:file:.env[.properties]
+  datasource:
     url: ${DEV_DB_URL}
     username: ${DEV_DB_USERNAME}
     password: ${DEV_DB_PASSWORD}
@@ -34,7 +35,7 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "${BASE_URL}/login/oauth2/code/kakao"
             client-authentication-method: client_secret_post
-            scope: profile_nickname
+            scope: profile_nickname, profile_image
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
