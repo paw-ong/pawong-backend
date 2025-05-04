@@ -16,6 +16,14 @@ spring:
       embedding:
         options:
           model: text-embedding-ada-002
+    huggingface:
+      chat:
+        # huggingface에서 제공하는 API 중 'HF Inference API'을 활용.
+        url: https://router.huggingface.co/hf-inference
+        api-key: ${HUGGINGFACE_API_KEY}
+        model: Qwen/QwQ-32B
+      embedding:
+        model: ai-human-lab/EEVE-Korean-10.8B-SFT-v0.1
   security:
     oauth2:
       client:
@@ -36,11 +44,3 @@ spring:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
     base-url: ${BASE_URL}
-    huggingface:
-      chat:
-        # huggingface에서 제공하는 API 중 'HF Inference API'을 활용.
-        url: https://router.huggingface.co/hf-inference
-        api-key: ${HUGGINGFACE_API_KEY}
-        model: Qwen/QwQ-32B
-      embedding:
-        model: ai-human-lab/EEVE-Korean-10.8B-SFT-v0.1
