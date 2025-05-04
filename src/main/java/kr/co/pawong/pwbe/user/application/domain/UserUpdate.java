@@ -10,13 +10,4 @@ public class UserUpdate {
   private String region;
   private String tel;
 
-  public User toDomain(Long userId) {
-    return User.builder()
-        .userId(userId)
-        .nickname(nickname)
-        .region(region)
-        .tel(tel)
-        .build();
-  }
-
 }

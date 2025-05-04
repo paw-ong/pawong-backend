@@ -10,11 +10,4 @@ public class UserCreate {
   private String nickname;
   private String profileImage;
 
-  public User toDomain() {
-    return User.builder()
-        .socialId(socialId)
-        .nickname(nickname)
-        .profileImage(profileImage)
-        .build();
-  }
 }
