@@ -1,15 +1,24 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository.entity;
 
-import jakarta.persistence.*;
-import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.enums.*;
-import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
-import kr.co.pawong.pwbe.shelter.infrastructure.repository.entity.ShelterEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.enums.ActiveState;
+import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
+import kr.co.pawong.pwbe.adoption.enums.ProcessState;
+import kr.co.pawong.pwbe.adoption.enums.SexCd;
+import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
+import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -69,11 +78,19 @@ public class AdoptionEntity {
 
     private String specialMark; // 특징
 
+    private String careRegNo; // 보호소 번호
+
     private LocalDateTime updTm; // 수정일
 
-    @ManyToOne
-    @JoinColumn(name = "shelter_id")
-    private ShelterEntity shelterEntity; // 보호소id(외래키)
+    private String refinedSpecialMark; // 데이터 정제
+
+    private String tagsField; // 태깅
+
+    @Column(nullable = false)
+    private boolean isAiProcessed;
+
+    @Column(nullable = false)
+    private boolean isEmbedded;
 
     // Adoption -> AdoptionEntity
     public static AdoptionEntity from(Adoption adoption) {
@@ -100,42 +117,46 @@ public class AdoptionEntity {
         entity.sexCd = adoption.getSexCd();
         entity.neuterYn = adoption.getNeuterYn();
         entity.specialMark = adoption.getSpecialMark();
+        entity.careRegNo = adoption.getCareRegNo();
         entity.updTm = adoption.getUpdTm();
-        entity.shelterEntity = null;
-                //ShelterEntity.from(adoption.getShelter());
+        entity.refinedSpecialMark = adoption.getRefinedSpecialMark();
+        entity.tagsField = adoption.getTagsField();
+        entity.isAiProcessed = adoption.isAiProcessed();
+        entity.isEmbedded = adoption.isEmbedded();
 
         return entity;
     }
 
     // AdoptionEntity -> Adoption
     public Adoption toModel() {
-        Shelter shelter = null;
-                //shelterEntity != null ? shelterEntity.toModel() : null;
-
         return Adoption.builder()
-                .adoptionId(adoptionId)
-                .desertionNo(desertionNo)
-                .happenDt(happenDt)
-                .happenPlace(happenPlace)
-                .upKindNm(upKindNm)
-                .upKindCd(upKindCd)
-                .kindNm(kindNm)
-                .kindCd(kindCd)
-                .colorCd(colorCd)
-                .age(age)
-                .weight(weight)
-                .noticeNo(noticeNo)
-                .noticeSdt(noticeSdt)
-                .noticeEdt(noticeEdt)
-                .popfile1(popfile1)
-                .popfile2(popfile2)
-                .processState(processState)
-                .activeState(activeState)
-                .sexCd(sexCd)
-                .neuterYn(neuterYn)
-                .specialMark(specialMark)
-                .updTm(updTm)
-                .shelter(shelter)
+                .adoptionId(this.adoptionId)
+                .desertionNo(this.desertionNo)
+                .happenDt(this.happenDt)
+                .happenPlace(this.happenPlace)
+                .upKindCd(this.upKindCd)
+                .upKindNm(this.upKindNm)
+                .kindCd(this.kindCd)
+                .kindNm(this.kindNm)
+                .colorCd(this.colorCd)
+                .age(this.age)
+                .weight(this.weight)
+                .noticeNo(this.noticeNo)
+                .noticeSdt(this.noticeSdt)
+                .noticeEdt(this.noticeEdt)
+                .popfile1(this.popfile1)
+                .popfile2(this.popfile2)
+                .processState(this.processState)
+                .activeState(this.activeState)
+                .sexCd(this.sexCd)
+                .neuterYn(this.neuterYn)
+                .specialMark(this.specialMark)
+                .careRegNo(this.careRegNo)
+                .updTm(this.updTm)
+                .refinedSpecialMark(this.refinedSpecialMark)
+                .tagsField(this.tagsField)
+                .isAiProcessed(this.isAiProcessed)
+                .isEmbedded(this.isEmbedded)
                 .build();
     }
 }

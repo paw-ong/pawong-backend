@@ -14,4 +14,6 @@ public interface AdoptionSearchRepository {
     // 검색 결과의 전체 metadata 포함
     SearchHits<AdoptionDocument> searchSimilarAdoptionSearchHits(AdoptionSearchCondition condition);
 
+    // 자동 완성
+    List<String> autocomplete(String keyword);
 }

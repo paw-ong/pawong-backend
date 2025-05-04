@@ -9,14 +9,21 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class UserQueryRepositoryImpl implements UserQueryRepository {
-    private final UserJpaRepository userJpaRepository;
+  private final UserJpaRepository userJpaRepository;
 
-    @Override
-    public User findByUserId(Long userId) {
-        return userJpaRepository.findByUserId(userId)
-                .map(UserEntity::toDomain)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("User not found")
-                );
-    }
+  @Override
+  public User findByUserId(Long userId) {
+    return userJpaRepository.findByUserId(userId)
+        .map(UserEntity::toDomain)
+        .orElseThrow(() ->
+            new IllegalArgumentException("User not found")
+        );
+  }
+
+  @Override
+  public User findByUserSocialId(Long socialId) {
+    return userJpaRepository.findBySocialId(socialId)
+        .map(UserEntity::toDomain)
+        .orElse(null);
+  }
 }
