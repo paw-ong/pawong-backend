@@ -84,17 +84,11 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
             List<String> tagsList = tagsFields.get(i).orElse(Collections.emptyList());
             String tagsField = String.join(",", tagsList);
 
-            boolean aiProcessed = (refinedSpecialMark != null && !refinedSpecialMark.isBlank()) ||
-                    (tagsField != null && !tagsField.isBlank());
-
-            // Objects.equals()를 사용하여 null 안전 비교
-            if (aiProcessed ||
-                    !Objects.equals(adoption.getRefinedSpecialMark(), refinedSpecialMark) ||
-                    !Objects.equals(adoption.getTagsField(), tagsField)) {
+            if (isAiFieldChanged(adoption, refinedSpecialMark, tagsField)) {
                 adoption.updateAiField(refinedSpecialMark, tagsField);
                 toUpdate.add(adoption);
 
-                // 10개씩 저장
+                // 50개씩 저장
                 if (toUpdate.size() == 50) {
                     adoptionUpdateRepository.updateAiFields(toUpdate);
                     toUpdate.clear();
@@ -105,5 +99,14 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
         if (!toUpdate.isEmpty()) {
             adoptionUpdateRepository.updateAiFields(toUpdate);
         }
+    }
+
+    private boolean isAiFieldChanged(Adoption adoption, String refinedSpecialMark, String tagsField) {
+        boolean aiProcessed = (refinedSpecialMark != null && !refinedSpecialMark.isBlank()) ||
+                (tagsField != null && !tagsField.isBlank());
+
+        // Objects.equals()를 사용하여 null 안전 비교
+        return aiProcessed || !Objects.equals(adoption.getRefinedSpecialMark(), refinedSpecialMark)
+                || !Objects.equals(adoption.getTagsField(), tagsField);
     }
 }
