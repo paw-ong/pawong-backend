@@ -4,8 +4,10 @@ import kr.co.pawong.pwbe.adoption.application.service.port.ShelterInfoPort;
 import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
 import kr.co.pawong.pwbe.shelter.presentation.port.ShelterQueryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ShelterAdapter implements ShelterInfoPort {
@@ -14,7 +16,12 @@ public class ShelterAdapter implements ShelterInfoPort {
 
     @Override
     public ShelterInfoDto getShelterInfo(String careRegNo) {
-        return shelterQueryService.shelterInfo(careRegNo);
+        ShelterInfoDto shelterInfoDto = shelterQueryService.shelterInfo(careRegNo);
+        if (shelterInfoDto == null) {
+            log.warn("ShelterInfo not found for careRegNo: {}", careRegNo);
+            return null; // 또는 예외 throw
+        }
+        return shelterInfoDto; // 또는 예외 throw
     }
 
 

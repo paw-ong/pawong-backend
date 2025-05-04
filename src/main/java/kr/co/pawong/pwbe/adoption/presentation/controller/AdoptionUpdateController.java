@@ -38,7 +38,7 @@ public class AdoptionUpdateController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("ai-preprocessing")
+    @PostMapping("/ai-preprocessing")
     public ResponseEntity<Void> aiProcessAdoptions() {
         adoptionUpdateService.aiProcessAdoptions();
         return ResponseEntity.ok().build();
