@@ -14,6 +14,7 @@ import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -24,6 +25,9 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
     private final AdoptionUpdateRepository adoptionUpdateRepository;
     private final AdoptionQueryRepository adoptionQueryRepository;
     private final AdoptionAiService adoptionAiService;
+
+    @Value("${adoption.batch-size:50")
+    private int batchSize;
 
     // AdoptionCreate -> Adoption -> Repo에 전달
     @Override
@@ -52,7 +56,6 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
 
         log.info("AI로 {} 개의 활성 입양 정보 처리 중", activeNotProcessed.size());
 
-        int batchSize = 50;
         for (int i = 0; i < activeNotProcessed.size(); i += batchSize) {
             int end = Math.min(i + batchSize, activeNotProcessed.size());
             List<Adoption> batch = activeNotProcessed.subList(i, end);
