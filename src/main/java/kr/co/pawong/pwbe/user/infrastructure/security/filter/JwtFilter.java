@@ -33,7 +33,12 @@ public class JwtFilter extends OncePerRequestFilter {
     private boolean isPassedUrls(String uri){
         return uri.startsWith("/oauth2/authorization")
                 || uri.startsWith("/oauth2/authorize")
-                || uri.startsWith("/login/oauth2/code"); // oauth
+                || uri.startsWith("/login/oauth2/code")  // oauth
+                || uri.startsWith("/api/adoptions")
+                || uri.startsWith("/api/adoption")
+                || uri.startsWith("/api/shelters")
+                || uri.startsWith("/api/lost-animals")
+            ;
     }
 
     @Override

@@ -55,6 +55,12 @@ public class SecurityConfig {
                     "/login/oauth2/**",             // OAuth2 code Redirect URI
                     "/oauth/authorize"              // OAuth2 Authorization Endpoint
                 ).permitAll()                         // 위 경로는 인증 없이 접근 가능
+                .requestMatchers(
+                    "/api/adoptions/**",
+                    "/api/adoption/**",
+                    "/api/shelters/**",
+                    "/api/lost-animals/**"
+                ).permitAll()
             .anyRequest().authenticated())
 
             // oauth2 요청만 처리
