@@ -10,6 +10,7 @@ import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -37,7 +38,9 @@ public class Adoption {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
+    @Setter
     private String city;
+    @Setter
     private String district;
     private String tagsField; // 태깅
     private String refinedSpecialMark; // 정제 데이터
@@ -156,4 +159,5 @@ public class Adoption {
                 this.specialMark != null ? this.specialMark : ""
         ).trim();
     }
+
 }
