@@ -31,7 +31,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
-        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();;
+        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
         String socialId = oauthUser.getName();
         User user = userQueryService.getUserBySocialId(Long.valueOf(socialId));
 

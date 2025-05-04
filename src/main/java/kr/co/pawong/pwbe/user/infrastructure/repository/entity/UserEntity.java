@@ -60,19 +60,19 @@ public class UserEntity {
         .profileImage(user.getProfileImage())
         .region(user.getRegion())
         .tel(user.getTel())
-        .status(user.getStatus()==null?UserStatus.PENDING:user.getStatus())
+        .status(user.getStatus())
         .createdAt(LocalDate.now())
         .updatedAt(user.getUpdatedAt())
         .deletedAt(user.getDeletedAt())
         .build();
   }
 
-  public UserEntity update(User user) {
+  public UserEntity updateProfile(User user) {
     this.nickname = user.getNickname();
     this.region = user.getRegion();
     this.tel = user.getTel();
     this.updatedAt = LocalDate.now();
-    this.status = UserStatus.ACTIVE;
+    this.status = user.getStatus();
     return this;
   }
 

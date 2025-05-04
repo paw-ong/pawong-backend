@@ -21,7 +21,7 @@ public class AuthServiceImpl implements AuthService {
   public User createOrGetUser(UserCreate userCreate) {
     User getUser =  userQueryRepository.findByUserSocialId(userCreate.getSocialId());
     if(getUser == null) {
-      return userCommandRepository.save(userCreate.toDomain());
+      return userCommandRepository.save(User.from(userCreate));
     }
     return getUser;
   }

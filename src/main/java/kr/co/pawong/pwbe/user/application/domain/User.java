@@ -24,7 +24,7 @@ public class User {
         .socialId(userCreate.getSocialId())
         .nickname(userCreate.getNickname())
         .profileImage(userCreate.getProfileImage())
-        .status(UserStatus.ACTIVE)
+        .status(UserStatus.PENDING)
         .createdAt(LocalDate.now())
         .build();
   }

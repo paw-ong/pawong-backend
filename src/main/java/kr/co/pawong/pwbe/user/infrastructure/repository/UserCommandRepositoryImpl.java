@@ -19,12 +19,12 @@ public class UserCommandRepositoryImpl implements UserCommandRepository {
   }
 
   @Override
-  public User update(User user) {
+  public User updateProfile(User user) {
     return userJpaRepository.findByUserId(user.getUserId())
         .orElseThrow(() ->
             new IllegalArgumentException("User not found")
         )
-        .update(user)
+        .updateProfile(user)
         .toDomain();
   }
 }
