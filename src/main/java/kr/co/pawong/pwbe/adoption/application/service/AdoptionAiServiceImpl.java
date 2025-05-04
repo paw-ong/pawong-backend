@@ -1,19 +1,20 @@
 package kr.co.pawong.pwbe.adoption.application.service;
 
-import kr.co.pawong.pwbe.adoption.application.service.port.EmbeddingProcessorPort;
-import kr.co.pawong.pwbe.adoption.application.service.port.ChatProcessorPort;
-import kr.co.pawong.pwbe.adoption.application.service.util.AdoptionAiExecutor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import kr.co.pawong.pwbe.adoption.application.service.port.ChatProcessorPort;
+import kr.co.pawong.pwbe.adoption.application.service.port.EmbeddingProcessorPort;
+import kr.co.pawong.pwbe.adoption.application.service.util.AdoptionAiExecutor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 /**
  * Adoption에서 사용하는 AI 관련 기능을 제공합니다.
  * @exception: null이나 빈 문자열, 공백이 입력된 경우 IllegalArgumentException을 던집니다.
  */
 @Service
+@Slf4j
 public class AdoptionAiServiceImpl implements AdoptionAiService {
 
     private final EmbeddingProcessorPort embeddingPort;
@@ -47,8 +48,14 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     // 문장 임베딩하는 함수
     @Override
     public float[] embed(String completion) {
-        validateNotBlank(completion);
-        return embeddingPort.embed(completion);
+        try {
+            validateNotBlank(completion);
+            return embeddingPort.embed(completion);
+        } catch (IllegalArgumentException e) {
+            log.warn("Invalid input for embedding: {}", e.getMessage());
+            return new float[0]; // 빈 임베딩 반환 또는 다른 기본값
+        }
+
     }
     // 위의 함수를 병렬로 수행하는 함수
     @Override
