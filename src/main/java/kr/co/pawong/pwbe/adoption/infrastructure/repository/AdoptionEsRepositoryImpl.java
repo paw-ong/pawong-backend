@@ -2,7 +2,7 @@ package kr.co.pawong.pwbe.adoption.infrastructure.repository;
 
 import java.util.List;
 import java.util.Objects;
-import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionEsDto;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionEsRepository;
 import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.document.AdoptionDocument;
@@ -23,40 +23,38 @@ public class AdoptionEsRepositoryImpl implements AdoptionEsRepository {
     // 저장될 인덱스 정의
     private static final IndexCoordinates INDEX = IndexCoordinates.of("adoption");
 
-
     /**
      * 여러 Adoption 객체를 500개씩 Elasticsearch에 벌크로 저장
-     * @param adoptions Elasticsearch에 저장할 Adoption 도메인 객체 리스트
      */
     @Override
-    public void saveAdoptionToEs(List<Adoption> adoptions) {
+    public void saveAdoptionToEs(List<AdoptionEsDto> adoptionEsDtos) {
         try {
             // 빈 리스트인 경우 처리하지 않고 반환
-            if (adoptions.isEmpty()) {
+            if (adoptionEsDtos.isEmpty()) {
                 return;
             }
 
             int batchSize = 500; // 한 번에 저장할 크기
             int totalSaved = 0; // ES에 저장된 데이터 총 개수
 
-            for (int i = 0; i < adoptions.size(); i += batchSize) {
-                int end = Math.min(i + batchSize, adoptions.size());
-                List<Adoption> batch = adoptions.subList(i, end);
+            for (int i = 0; i < adoptionEsDtos.size(); i += batchSize) {
+                int end = Math.min(i + batchSize, adoptionEsDtos.size());
+                List<AdoptionEsDto> batch = adoptionEsDtos.subList(i, end);
 
                 // Active 상태의 Adoption만 AdoptionDocument로 반환
                 List<IndexQuery> queries = batch.stream()
-                        .filter(adoption -> ActiveState.ACTIVE == adoption.getActiveState())
-                        .map(adoption -> {
+                        .filter(adoptionEsDto -> ActiveState.ACTIVE == adoptionEsDto.getActiveState())
+                        .map(adoptionEsDto -> {
                             try {
                                 // Adoption -> AdoptionDocument
-                                AdoptionDocument adoptionDocument = AdoptionDocument.from(adoption);
+                                AdoptionDocument adoptionDocument = AdoptionDocument.from(adoptionEsDto);
                                 // ES에 저장할 IndexQuery 생성
                                 return new IndexQueryBuilder()
                                         .withIndex(INDEX.getIndexName())
                                         .withObject(adoptionDocument)
                                         .build();
                             } catch (Exception e) {
-                                log.error("동물 ID: {}의 문서 변환 중 오류 발생: {}", adoption.getAdoptionId(),
+                                log.error("동물 ID: {}의 문서 변환 중 오류 발생: {}", adoptionEsDto.getAdoptionId(),
                                         e.getMessage());
                                 return null;
                             }

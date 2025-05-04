@@ -1,7 +1,7 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository.document;
 
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
-import kr.co.pawong.pwbe.adoption.application.service.dto.request.RegionInfoDto;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionEsDto;
 import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
 import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
@@ -52,23 +52,22 @@ public class AdoptionDocument {
     @Field(type = FieldType.Dense_Vector, dims = 1536, name = "embedding")
     private float[] embedding; // 임베딩
 
-    // dto로 변경하기
-    public static AdoptionDocument from(Adoption adoption) {
+    public static AdoptionDocument from(AdoptionEsDto adoptionEsDto) {
         return AdoptionDocument.builder()
-                .adoptionId(adoption.getAdoptionId())
-                .upKindCd(adoption.getUpKindCd())
-                .sexCd(adoption.getSexCd())
-                .neuterYn(adoption.getNeuterYn())
-                .city(adoption.getRegionInfo().getCity())
-                .district(adoption.getRegionInfo().getDistrict())
-                .refinedSpecialMark(adoption.getRefinedSpecialMark())
-                .tagsField(adoption.getTagsField())
-                .embedding(adoption.getEmbedding())
+                .adoptionId(adoptionEsDto.getAdoptionId())
+                .upKindCd(adoptionEsDto.getUpKindCd())
+                .sexCd(adoptionEsDto.getSexCd())
+                .neuterYn(adoptionEsDto.getNeuterYn())
+                .city(adoptionEsDto.getCity())
+                .district(adoptionEsDto.getDistrict())
+                .refinedSpecialMark(adoptionEsDto.getRefinedSpecialMark())
+                .tagsField(adoptionEsDto.getTagsField())
+                .embedding(adoptionEsDto.getEmbedding())
                 .build();
     }
 
     public Adoption toModel() {
-        Adoption adoption = Adoption.builder()
+        return Adoption.builder()
                 .adoptionId(this.adoptionId)
                 .upKindCd(this.upKindCd)
                 .sexCd(this.sexCd)
@@ -77,10 +76,5 @@ public class AdoptionDocument {
                 .tagsField(this.tagsField)
                 .embedding(this.embedding)
                 .build();
-
-        RegionInfoDto regionInfoDto = new RegionInfoDto(this.city, this.district);
-        adoption.regionInfo(regionInfoDto);
-
-        return adoption;
     }
 }

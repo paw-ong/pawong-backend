@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionEsDto;
 import kr.co.pawong.pwbe.adoption.application.service.dto.request.RegionInfoDto;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionEsRepository;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionUpdateRepository;
@@ -40,15 +41,17 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
             processBatch(batch);
         }
 
-        for (Adoption adoption : adoptions) {
-            // 지역 정보
-            RegionInfoDto regionInfoDto = RegionInfoDto.from(adoptionQueryService.findShelterInfoByAdoptionId(
-                    adoption.getAdoptionId()));
+        List<AdoptionEsDto> adoptionEsDtos = adoptions.stream()
+                .map(adoption -> {
+                    RegionInfoDto regionInfoDto = RegionInfoDto.from(adoptionQueryService.findShelterInfoByAdoptionId(
+                            adoption.getAdoptionId()));
 
-            adoption.regionInfo(regionInfoDto);
-        }
+                    return AdoptionEsDto.from(adoption, regionInfoDto);
+                })
+                .toList();
+
         // 임베딩이 포함된 Adoption 리스트를 Repo에 전달
-        adoptionEsRepository.saveAdoptionToEs(adoptions);
+        adoptionEsRepository.saveAdoptionToEs(adoptionEsDtos);
 
         // 임베딩 완료 상태를 DB에도 반영
         adoptionUpdateRepository.updateIsEmbedded(adoptions);
