@@ -27,8 +27,8 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
     }
 
     @Override
-    public String findCareRegNoByAdoptionId(Long id) {
-        return adoptionJpaRepository.findCareRegNoByAdoptionId(id);
+    public String findCareRegNoByAdoptionId(Long adoptionId) {
+        return adoptionJpaRepository.findCareRegNoByAdoptionId(adoptionId);
     }
 
     @Override
@@ -44,4 +44,10 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
         Page<AdoptionEntity> entityPage = adoptionJpaRepository.findAll(pageable);
         return entityPage.map(AdoptionEntity::toModel);
     }
+
+    @Override
+    public AdoptionEntity findByAdoptionId(Long adoptionId) {
+        return adoptionJpaRepository.findByAdoptionId(adoptionId);
+    }
+
 }

@@ -42,5 +42,7 @@ public interface AdoptionJpaRepository extends JpaRepository<AdoptionEntity, Lon
     @Query("SELECT a.careRegNo FROM AdoptionEntity a WHERE a.adoptionId = :id")
     String findCareRegNoByAdoptionId(@Param("id") Long id);
 
+    AdoptionEntity findByAdoptionId(Long adoptionId);
+
 
 }

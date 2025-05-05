@@ -2,6 +2,7 @@ package kr.co.pawong.pwbe.shelter.presentation.controller;
 
 import kr.co.pawong.pwbe.shelter.application.domain.ShelterCreate;
 import kr.co.pawong.pwbe.shelter.application.service.ApiShelterService;
+import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterDetailDto;
 import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
 import kr.co.pawong.pwbe.shelter.presentation.port.ShelterQueryService;
 import kr.co.pawong.pwbe.shelter.presentation.port.ShelterUpdateService;
@@ -21,7 +22,6 @@ public class ShelterUpdateController {
 
     private final ApiShelterService apiShelterService;
     private final ShelterUpdateService shelterUpdateService;
-    private final ShelterQueryService  shelterQueryService;
 
     @PostMapping("/save")
     public ResponseEntity<Void> saveShelters() {
@@ -33,12 +33,4 @@ public class ShelterUpdateController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/info/{care_Reg_No}")
-    public void shelterInfoDto(@PathVariable("care_Reg_No") String careRegNo) {
-        ShelterInfoDto shelterInfoDto = shelterQueryService.shelterInfo(careRegNo);
-
-        log.info("보호소 번호 : {}", shelterInfoDto.getCareRegNo());
-        log.info("도.시 : {}", shelterInfoDto.getCity());
-        log.info("시군구 : {}", shelterInfoDto.getDistrict());
-    }
 }

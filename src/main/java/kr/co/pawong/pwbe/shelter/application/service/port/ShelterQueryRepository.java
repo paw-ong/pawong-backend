@@ -5,7 +5,5 @@ import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
 
 public interface ShelterQueryRepository {
 
-    ShelterInfoDto shelterInfo(String careRegNo);
-
     ShelterEntity findByCareRegNo(String careRegNo);
 }

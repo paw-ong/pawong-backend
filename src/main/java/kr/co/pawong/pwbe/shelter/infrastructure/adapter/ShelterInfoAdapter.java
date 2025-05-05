@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ShelterAdapter implements ShelterInfoPort {
+public class ShelterInfoAdapter implements ShelterInfoPort {
 
     private final ShelterQueryService shelterQueryService;
 
