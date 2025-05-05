@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   @Override
   public AuthResponse signUp(Long userId, UserUpdate userUpdate) {
-    User pendingUser = userQueryRepository.findByUserId(userId);
+    User pendingUser = userQueryRepository.findByUserIdOrThrow(userId);
     User updatedUser = userCommandRepository.updateProfile(pendingUser.update(userUpdate));
     return new AuthResponse(
         updatedUser.getUserId(),

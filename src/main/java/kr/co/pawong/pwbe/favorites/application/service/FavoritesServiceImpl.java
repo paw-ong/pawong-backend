@@ -29,7 +29,7 @@ public class FavoritesServiceImpl implements FavoritesService {
         final Long adoptionId = request.getAdoptionId();
 
         // 1) User 존재 검증 (없으면 IllegalArgumentException)
-        userQueryRepository.findByUserId(userId);
+        userQueryRepository.findByUserIdOrThrow(userId);
 
         // 2) Adoption 존재 검증 (없으면 EntityNotFoundException 등)
         adoptionQueryRepository.findByIdOrThrow(adoptionId);
@@ -56,7 +56,7 @@ public class FavoritesServiceImpl implements FavoritesService {
     @Override
     @Transactional(readOnly = true)
     public List<Favorites> findAllByUserId(Long userId) {
-        userQueryRepository.findByUserId(userId);   // 유저가 존재하는지 먼저 검증
+        userQueryRepository.findByUserIdOrThrow(userId);   // 유저가 존재하는지 먼저 검증
         return favoritesRepository.findAllByUserId(userId);
     }
 
@@ -73,7 +73,7 @@ public class FavoritesServiceImpl implements FavoritesService {
         Long adoptionId = request.getAdoptionId();
 
         // 유저와 공고 존재 검증
-        userQueryRepository.findByUserId(userId);
+        userQueryRepository.findByUserIdOrThrow(userId);
         adoptionQueryRepository.findByIdOrThrow(adoptionId);
 
         // 사용자가 해당 공고를 찜했는지 확인 (존재하면 true, 없으면 false)
