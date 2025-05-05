@@ -14,6 +14,7 @@ import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionEsService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +26,9 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
     private final AdoptionAiService adoptionAiService;
     private final AdoptionQueryService adoptionQueryService;
 
-    private static final int BATCH_SIZE = 50;
+    @Value("${adoption.batch-size:50}")
+    private int batchSize;
+
     // 전달받은 Adoption 리스트에 대해 임베딩 및 임베딩 완료 여부 설정,
     // shelter에서 가져온 지역 정보와 같이 ES에 저장 후 RDB에 isEmbedded 업데이트
     // TODO: 이후 ES와 RDB에 원자적 저장 보장하기
@@ -35,7 +38,7 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
                 .filter(adoption -> adoption.isAiProcessed() && !adoption.isEmbedded())
                 .toList();
 
-        List<List<Adoption>> batches = splitIntoBatches(adoptionsToEmbed, BATCH_SIZE);
+        List<List<Adoption>> batches = splitIntoBatches(adoptionsToEmbed,batchSize);
 
         for (List<Adoption> batch : batches) {
             processBatch(batch);
