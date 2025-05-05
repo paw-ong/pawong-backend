@@ -26,7 +26,7 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
     private final AdoptionQueryRepository adoptionQueryRepository;
     private final AdoptionAiService adoptionAiService;
 
-    @Value("${adoption.batch-size:50")
+    @Value("${adoption.batch-size:50}")
     private int batchSize;
 
     // AdoptionCreate -> Adoption -> Repo에 전달
