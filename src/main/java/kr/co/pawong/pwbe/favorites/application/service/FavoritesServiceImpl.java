@@ -1,15 +1,20 @@
 package kr.co.pawong.pwbe.favorites.application.service;
 
+import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionCard;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
+import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionCardMapper;
 import kr.co.pawong.pwbe.favorites.application.domain.Favorites;
 import kr.co.pawong.pwbe.favorites.application.service.dto.FavoritesRequest;
 import kr.co.pawong.pwbe.favorites.application.service.port.FavoritesRepository;
+import kr.co.pawong.pwbe.favorites.presentation.dto.response.FavoritesListResponse;
 import kr.co.pawong.pwbe.user.application.service.port.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,19 +58,19 @@ public class FavoritesServiceImpl implements FavoritesService {
                 });
     }
 
+    // 찜목록 확인 기능
     @Override
     @Transactional(readOnly = true)
-    public List<Favorites> findAllByUserId(Long userId) {
+    public FavoritesListResponse findAllByUserId(Long userId) {
         userQueryRepository.findByUserIdOrThrow(userId);   // 유저가 존재하는지 먼저 검증
-        return favoritesRepository.findAllByUserId(userId);
+        List<Favorites> favoritesList = favoritesRepository.findAllByUserId(userId);
+        List<AdoptionCard> adoptionCards = mapFavoritesListToAdoptionCards(favoritesList);
+        return FavoritesListResponse.builder()
+                .favoritesList(adoptionCards)
+                .build();
     }
 
-    /**
-     *
-     * @param userId
-     * @param adoptionId
-     * @return
-     */
+    // 찜 여부를 확인하는 기능
     @Override
     @Transactional(readOnly = true)
     public boolean checkFavoriteStatus(FavoritesRequest request) {
@@ -80,5 +85,15 @@ public class FavoritesServiceImpl implements FavoritesService {
         return favoritesRepository
                 .findByUserIdAndAdoptionId(userId, adoptionId)
                 .isPresent();
+    }
+
+    private List<AdoptionCard> mapFavoritesListToAdoptionCards(List<Favorites> favoritesList) {
+        List<AdoptionCard> adoptionCards = new ArrayList<>(favoritesList.size());
+        for(Favorites favorites : favoritesList) {
+            Long adoptionId = favorites.getAdoptionId();
+            Adoption adoption = adoptionQueryRepository.findByIdOrThrow(adoptionId);
+            adoptionCards.add(AdoptionCardMapper.toAdoptionCard(adoption));
+        }
+        return adoptionCards;
     }
 }

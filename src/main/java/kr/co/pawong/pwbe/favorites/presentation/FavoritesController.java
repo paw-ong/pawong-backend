@@ -1,5 +1,6 @@
 package kr.co.pawong.pwbe.favorites.presentation;
 
+import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionCard;
 import kr.co.pawong.pwbe.favorites.application.domain.Favorites;
 import kr.co.pawong.pwbe.favorites.application.service.FavoritesService;
 import kr.co.pawong.pwbe.favorites.application.service.dto.FavoritesRequest;
@@ -26,10 +27,7 @@ public class FavoritesController {
             @AuthenticationPrincipal CustomUserDetails principal
     ) {
         Long userId = principal.getUserId();
-        List<Favorites> favoritesList = favoritesService.findAllByUserId(userId);   // favorites가 도메인명이므로 favoritesList로 네이밍
-        FavoritesListResponse response = FavoritesListResponse.builder()
-                .favoritesList(favoritesList)
-                .build();
+        FavoritesListResponse response = favoritesService.findAllByUserId(userId);   // favorites가 도메인명이므로 favoritesList로 네이밍
         return ResponseEntity.ok(response);
     }
 
