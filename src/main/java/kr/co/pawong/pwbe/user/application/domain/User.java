@@ -21,12 +21,12 @@ public class User {
 
   public static User from(UserCreate userCreate) {
     return User.builder()
-        .socialId(userCreate.getSocialId())
-        .nickname(userCreate.getNickname())
-        .profileImage(userCreate.getProfileImage())
-        .status(UserStatus.PENDING)
-        .createdAt(LocalDate.now())
-        .build();
+            .socialId(userCreate.getSocialId())
+            .nickname(userCreate.getNickname())
+            .profileImage(userCreate.getProfileImage())
+            .status(UserStatus.PENDING)
+            .createdAt(LocalDate.now())
+            .build();
   }
 
   public User update(UserUpdate userUpdate) {
@@ -37,7 +37,4 @@ public class User {
     this.status = UserStatus.ACTIVE;
     return this;
   }
-
-
-
 }

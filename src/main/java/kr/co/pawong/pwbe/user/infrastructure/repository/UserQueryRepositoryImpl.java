@@ -12,7 +12,7 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
   private final UserJpaRepository userJpaRepository;
 
   @Override
-  public User findByUserId(Long userId) {
+  public User findByUserIdOrThrow(Long userId) {
     return userJpaRepository.findByUserId(userId)
         .map(UserEntity::toDomain)
         .orElseThrow(() ->
