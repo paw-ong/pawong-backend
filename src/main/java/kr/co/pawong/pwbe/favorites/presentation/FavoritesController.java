@@ -1,7 +1,5 @@
 package kr.co.pawong.pwbe.favorites.presentation;
 
-import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionCard;
-import kr.co.pawong.pwbe.favorites.application.domain.Favorites;
 import kr.co.pawong.pwbe.favorites.application.service.FavoritesService;
 import kr.co.pawong.pwbe.favorites.application.service.dto.FavoritesRequest;
 import kr.co.pawong.pwbe.favorites.presentation.dto.response.FavoritesListResponse;
@@ -12,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/users/me/favorites")
@@ -22,6 +18,9 @@ public class FavoritesController {
 
     private final FavoritesService favoritesService;
 
+    /**
+     * 현재 로그인된 유저가 찜 목록을 받아오는 API
+     */
     @GetMapping("")
     public ResponseEntity<FavoritesListResponse> getFavorites(
             @AuthenticationPrincipal CustomUserDetails principal
@@ -32,9 +31,7 @@ public class FavoritesController {
     }
 
     /**
-     * 현재 로그인된 유저가 adoption 공고를 토글 방식으로 찜합니다.
-     * @param adoptionId
-     * @param principal -> 인증된 사용자 정보에서 userId를 꺼냅니다.
+     * 현재 로그인된 유저가 adoption 공고를 토글 방식으로 찜하는 API
      */
     @PostMapping("/{adoptionId}")
     public ResponseEntity<FavoritesResponse> toggleFavorite(
@@ -48,19 +45,12 @@ public class FavoritesController {
                 .build();
 
         // 호출 결과로 찜 완료: true, 찜 취소: false
-        boolean isInFavorites = favoritesService.toggleFavorite(request);
-        // 응답 DTO
-        FavoritesResponse response = FavoritesResponse.builder()
-                .isInFavorites(isInFavorites)
-                .build();
-
+        FavoritesResponse response = favoritesService.toggleFavorite(request);
         return ResponseEntity.ok(response);
     }
 
     /**
-     * 현재 로그인된 유저가 adoptionId 공고를 찜했는지 상태를 확인합니다.
-     * @param adoptionId
-     * @param principal -> 인증된 사용자 정보에서 userId를 꺼냅니다.
+     * 현재 로그인된 유저가 adoptionId 공고를 찜했는지 상태를 확인하는 API
      */
     @GetMapping("/{adoptionId}/status")
     public ResponseEntity<FavoritesResponse> checkFavoriteStatus(
@@ -68,16 +58,13 @@ public class FavoritesController {
             @AuthenticationPrincipal CustomUserDetails principal
     ) {
         Long userId = principal.getUserId();
-
-        // true: 이미 찜한 상태, false: 찜하지 않은 상태
-        boolean isInFavorites = favoritesService.checkFavoriteStatus(FavoritesRequest.builder()
+        FavoritesRequest request = FavoritesRequest.builder()
                 .userId(userId)
                 .adoptionId(adoptionId)
-                .build());
-        // 응답 DTO
-        FavoritesResponse response = FavoritesResponse.builder()
-                .isInFavorites(isInFavorites)
                 .build();
+
+        // true: 이미 찜한 상태, false: 찜하지 않은 상태
+        FavoritesResponse response = favoritesService.checkFavoriteStatus(request);
         return ResponseEntity.ok(response);
     }
 }

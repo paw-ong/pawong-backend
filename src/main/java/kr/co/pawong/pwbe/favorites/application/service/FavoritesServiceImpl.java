@@ -8,6 +8,7 @@ import kr.co.pawong.pwbe.favorites.application.domain.Favorites;
 import kr.co.pawong.pwbe.favorites.application.service.dto.FavoritesRequest;
 import kr.co.pawong.pwbe.favorites.application.service.port.FavoritesRepository;
 import kr.co.pawong.pwbe.favorites.presentation.dto.response.FavoritesListResponse;
+import kr.co.pawong.pwbe.favorites.presentation.dto.response.FavoritesResponse;
 import kr.co.pawong.pwbe.user.application.service.port.UserQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class FavoritesServiceImpl implements FavoritesService {
     // toggle 방식의 찜 (이미 찜을 한 경우 찜 취소. 찜을 안한 경우 찜.)
     @Override
     @Transactional
-    public boolean toggleFavorite(FavoritesRequest request) {
+    public FavoritesResponse toggleFavorite(FavoritesRequest request) {
         final Long userId = request.getUserId();
         final Long adoptionId = request.getAdoptionId();
 
@@ -47,14 +48,14 @@ public class FavoritesServiceImpl implements FavoritesService {
                     favoritesRepository.deleteById(fav.getFavoritesId());
                     log.info("찜 취소. (userId={}, adoptionId={})",
                             userId, adoptionId);
-                    return false;
+                    return FavoritesResponse.builder().isInFavorites(false).build();
                 })
                 .orElseGet(() -> {
                     // 아직 찜하지 않았으면 새로 저장
                     Favorites newFav = Favorites.of(userId, adoptionId);
                     favoritesRepository.save(newFav);
                     log.info("찜 추가. (userId={} adoptionId={})", userId, adoptionId);
-                    return true;
+                    return FavoritesResponse.builder().isInFavorites(true).build();
                 });
     }
 
@@ -73,7 +74,7 @@ public class FavoritesServiceImpl implements FavoritesService {
     // 찜 여부를 확인하는 기능
     @Override
     @Transactional(readOnly = true)
-    public boolean checkFavoriteStatus(FavoritesRequest request) {
+    public FavoritesResponse checkFavoriteStatus(FavoritesRequest request) {
         Long userId = request.getUserId();
         Long adoptionId = request.getAdoptionId();
 
@@ -82,9 +83,10 @@ public class FavoritesServiceImpl implements FavoritesService {
         adoptionQueryRepository.findByIdOrThrow(adoptionId);
 
         // 사용자가 해당 공고를 찜했는지 확인 (존재하면 true, 없으면 false)
-        return favoritesRepository
+        boolean present = favoritesRepository
                 .findByUserIdAndAdoptionId(userId, adoptionId)
                 .isPresent();
+        return FavoritesResponse.builder().isInFavorites(present).build();
     }
 
     private List<AdoptionCard> mapFavoritesListToAdoptionCards(List<Favorites> favoritesList) {
