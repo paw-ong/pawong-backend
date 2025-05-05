@@ -93,31 +93,18 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
     @Override
     public AdoptionDetailResponse getAdoptionDetail(Long adoptionId) {
         // 1) Adoption 엔티티 조회 (없으면 예외 처리)
-        var entity = adoptionQueryRepository.findByAdoptionId(adoptionId);
-        if (entity == null) {
+        Adoption adoption = adoptionQueryRepository.findByAdoptionId(adoptionId);
+        if (adoption == null) {
             throw new EntityNotFoundException("아이디 확인 불가. id=" + adoptionId);
         }
 
         // 2) AdoptionDetailDto로 매핑
-        var adoptionDto = new AdoptionDetailDto(
-                entity.getCareRegNo(),
-                entity.getUpKindNm(),
-                entity.getSexCd(),
-                entity.getNeuterYn(),
-                entity.getWeight(),
-                entity.getAge(),
-                entity.getColorCd(),
-                entity.getDesertionNo(),
-                entity.getNoticeEdt(),
-                entity.getTagsField(),
-                entity.getPopfile1(),
-                entity.getPopfile2()
-        );
+        AdoptionDetailDto adoptionDetailDto = AdoptionDetailDto.from(adoption);
 
         // 3) Port를 통해 ShelterDetail 조회
-        var shelterDetailDto = shelterDetailPort.getShelterDetail(entity.getCareRegNo());
+        var shelterDetailDto = shelterDetailPort.getShelterDetail(adoptionDetailDto.getCareRegNo());
 
         // 4) Response 생성 후 반환
-        return new AdoptionDetailResponse(adoptionDto, shelterDetailDto);
+        return new AdoptionDetailResponse(adoptionDetailDto, shelterDetailDto);
     }
 }

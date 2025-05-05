@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShelterJpaRepository extends JpaRepository<ShelterEntity, Long> {
 
@@ -19,5 +20,5 @@ public interface ShelterJpaRepository extends JpaRepository<ShelterEntity, Long>
     @Query("SELECT s.careRegNo FROM ShelterEntity s")
     List<String> findAllCareRegNos();
 
-    ShelterEntity findByCareRegNo(String careRegNo);
+    Optional<ShelterEntity> findByCareRegNo(String careRegNo);
 }

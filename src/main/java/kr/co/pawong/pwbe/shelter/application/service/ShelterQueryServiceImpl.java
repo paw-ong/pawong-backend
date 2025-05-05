@@ -1,5 +1,6 @@
 package kr.co.pawong.pwbe.shelter.application.service;
 
+import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import kr.co.pawong.pwbe.shelter.application.service.port.ShelterQueryRepository;
 import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterDetailDto;
 import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
@@ -31,17 +32,8 @@ public class ShelterQueryServiceImpl implements ShelterQueryService {
 
     @Override
     public ShelterDetailDto shelterDetail(String careRegNo){
-        var entity = shelterQueryRepository.findByCareRegNo(careRegNo);
+        Shelter shelter = shelterQueryRepository.findByCareRegNo(careRegNo);
 
-        return new ShelterDetailDto(entity.getCareNm(),
-                entity.getCareTel(),
-                entity.getCloseDay(),
-                entity.getSaveTrgtAnimal(),
-                entity.getDivisionNm(),
-                entity.getWeekOprStime(),
-                entity.getWeekOprEtime(),
-                entity.getVetPersonCnt(),
-                entity.getSpecsPersonCnt(),
-                entity.getCareAddr());
+        return ShelterDetailDto.from(shelter);
     }
 }

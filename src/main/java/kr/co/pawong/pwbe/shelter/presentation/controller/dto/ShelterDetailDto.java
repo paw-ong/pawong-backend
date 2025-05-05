@@ -2,14 +2,12 @@ package kr.co.pawong.pwbe.shelter.presentation.controller.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import kr.co.pawong.pwbe.shelter.enums.DivisionNm;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShelterDetailDto {
@@ -24,5 +22,19 @@ public class ShelterDetailDto {
     private Integer specsPersonCnt; // 사양관리사 인원수
     private String careAddr; // 소재지 도로명 주소
 
+    public static ShelterDetailDto from(Shelter shelter) {
+        return ShelterDetailDto.builder()
+                .careNm(shelter.getCareNm())
+                .careTel(shelter.getCareTel())
+                .closeDay(shelter.getCloseDay())
+                .saveTrgtAnimal(shelter.getSaveTrgtAnimal())
+                .divisionNm(shelter.getDivisionNm())
+                .weekOprStime(shelter.getWeekOprStime())
+                .weekOprEtime(shelter.getWeekOprEtime())
+                .vetPersonCnt(shelter.getVetPersonCnt())
+                .specsPersonCnt(shelter.getSpecsPersonCnt())
+                .careAddr(shelter.getCareAddr())
+                .build();
+    }
 
 }
