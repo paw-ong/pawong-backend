@@ -13,9 +13,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class AdoptionSearchRequest {
-    private List<UpKindCd> upKindCds;   // ex: upKindCds=KIND1&upKindCds=KIND2
+    private List<UpKindCd> upKindCds; // ex: upKindCds=KIND1&upKindCds=KIND2
     private SexCd sexCd;              // ex: sexCd=FEMALE
     private NeuterYn neuterYn;        // ex: neuterYn=Y
-//    private List<String> regions;     // ex: regions=서울&regions=부산, 추후에 추가
-    private String searchTerm;           // 검색어 문장
+    private List<String> regions;     // ex: regions=서울&regions=부산
+    private String searchTerm;        // 검색어 문장
 }

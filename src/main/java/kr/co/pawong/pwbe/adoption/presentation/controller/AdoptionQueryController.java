@@ -1,6 +1,7 @@
 package kr.co.pawong.pwbe.adoption.presentation.controller;
 
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
+import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionRecommendResponses;
 import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionDetailResponse;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,12 @@ public class AdoptionQueryController {
             @PageableDefault(page = 0, size = 20, sort = "noticeSdt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         SliceAdoptionSearchResponses response = adoptionQueryService.fetchSlicedAdoptions(pageable);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/recommend")
+    public ResponseEntity<AdoptionRecommendResponses> getRecommendAdoptions() {
+        AdoptionRecommendResponses response = adoptionQueryService.getRecommendAdoptions();
         return ResponseEntity.ok(response);
     }
 
