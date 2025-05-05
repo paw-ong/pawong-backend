@@ -17,7 +17,7 @@ public interface AdoptionQueryRepository {
 
     String findCareRegNoByAdoptionId(Long adoptionId);
 
-    AdoptionEntity findByAdoptionId(Long adoptionId);
+    Adoption findByAdoptionId(Long adoptionId);
 
     List<Adoption> findTop12ActiveByNoticeEdt(LocalDate today);
 }

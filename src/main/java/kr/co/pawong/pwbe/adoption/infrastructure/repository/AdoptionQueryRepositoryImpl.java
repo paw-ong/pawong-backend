@@ -58,8 +58,12 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
     }
 
     @Override
-    public AdoptionEntity findByAdoptionId(Long adoptionId) {
-        return adoptionJpaRepository.findByAdoptionId(adoptionId);
+    public Adoption findByAdoptionId(Long adoptionId) {
+        return adoptionJpaRepository.findByAdoptionId(adoptionId)
+                .map(AdoptionEntity::toModel)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("입양 정보가 없습니다. id=" + adoptionId)
+                );
     }
 
 }
