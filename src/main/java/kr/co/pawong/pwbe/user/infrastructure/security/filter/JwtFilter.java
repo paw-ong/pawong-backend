@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import kr.co.pawong.pwbe.user.application.domain.User;
 import kr.co.pawong.pwbe.user.infrastructure.security.JwtTokenProvider;
 import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
@@ -15,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
 
 @Slf4j
 @Component
@@ -30,7 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
         this.userQueryService = userQueryService;
     }
 
-    private boolean isPassedUrls(String uri){
+    private boolean shouldSkip(String uri){
         return uri.startsWith("/oauth2/authorization")
                 || uri.startsWith("/oauth2/authorize")
                 || uri.startsWith("/login/oauth2/code")  // oauth
@@ -47,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
 
         // 제외 URL 검사
-        if (isPassedUrls(uri)) {
+        if (shouldSkip(uri)) {
             filterChain.doFilter(request, response);
             return;
         }
