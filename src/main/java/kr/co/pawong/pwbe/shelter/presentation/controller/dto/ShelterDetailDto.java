@@ -3,6 +3,7 @@ package kr.co.pawong.pwbe.shelter.presentation.controller.dto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import kr.co.pawong.pwbe.shelter.enums.DivisionNm;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,12 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ShelterDetailDto {
     private String careNm; // 동물보호센터명
     private String careTel; // 전화번호
     private String closeDay; // 휴무일
     private String saveTrgtAnimal; // 구조대상동물
-    @Enumerated(EnumType.STRING)
     private DivisionNm divisionNm; // 동물보호센터 유형
     private String weekOprStime; // 평일 운영시작 시간
     private String weekOprEtime; // 평일 운영종료 시간
@@ -23,16 +24,5 @@ public class ShelterDetailDto {
     private Integer specsPersonCnt; // 사양관리사 인원수
     private String careAddr; // 소재지 도로명 주소
 
-    public ShelterDetailDto(String careNm, String careTel, String closeDay, String saveTrgtAnimal, DivisionNm divisionNm, String weekOprStime, String weekOprEtime, Integer vetPersonCnt, Integer specsPersonCnt, String careAddr) {
-        this.careNm = careNm;
-        this.careTel = careTel;
-        this.closeDay = closeDay;
-        this.saveTrgtAnimal = saveTrgtAnimal;
-        this.divisionNm = divisionNm;
-        this.weekOprStime = weekOprStime;
-        this.weekOprEtime = weekOprEtime;
-        this.vetPersonCnt = vetPersonCnt;
-        this.specsPersonCnt = specsPersonCnt;
-        this.careAddr = careAddr;
-    }
+
 }
