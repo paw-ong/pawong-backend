@@ -1,13 +1,17 @@
 package kr.co.pawong.pwbe.favorites.presentation;
 
+import kr.co.pawong.pwbe.favorites.application.domain.Favorites;
 import kr.co.pawong.pwbe.favorites.application.service.FavoritesService;
 import kr.co.pawong.pwbe.favorites.application.service.dto.FavoritesRequest;
+import kr.co.pawong.pwbe.favorites.presentation.dto.response.FavoritesListResponse;
 import kr.co.pawong.pwbe.favorites.presentation.dto.response.FavoritesResponse;
 import kr.co.pawong.pwbe.user.infrastructure.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -17,10 +21,22 @@ public class FavoritesController {
 
     private final FavoritesService favoritesService;
 
+    @GetMapping("")
+    public ResponseEntity<FavoritesListResponse> getFavorites(
+            @AuthenticationPrincipal CustomUserDetails principal
+    ) {
+        Long userId = principal.getUserId();
+        List<Favorites> favoritesList = favoritesService.findAllByUserId(userId);   // favorites가 도메인명이므로 favoritesList로 네이밍
+        FavoritesListResponse response = FavoritesListResponse.builder()
+                .favoritesList(favoritesList)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     /**
-     * 현재 로그인된 유저가 adoption 공고를 토글 방식으로 찜한다.
+     * 현재 로그인된 유저가 adoption 공고를 토글 방식으로 찜합니다.
      * @param adoptionId
-     * @param principal -> 인증된 사용자 정보에서 userId를 꺼낼 수 있다.
+     * @param principal -> 인증된 사용자 정보에서 userId를 꺼냅니다.
      */
     @PostMapping("/{adoptionId}")
     public ResponseEntity<FavoritesResponse> toggleFavorite(
@@ -44,9 +60,9 @@ public class FavoritesController {
     }
 
     /**
-     * 현재 로그인된 유저가 adoptionId 공고를 찜했는지 상태를 확인한다.
+     * 현재 로그인된 유저가 adoptionId 공고를 찜했는지 상태를 확인합니다.
      * @param adoptionId
-     * @param principal -> 인증된 사용자 정보에서 userId를 꺼낼 수 있다.
+     * @param principal -> 인증된 사용자 정보에서 userId를 꺼냅니다.
      */
     @GetMapping("/{adoptionId}/status")
     public ResponseEntity<FavoritesResponse> checkFavoriteStatus(
