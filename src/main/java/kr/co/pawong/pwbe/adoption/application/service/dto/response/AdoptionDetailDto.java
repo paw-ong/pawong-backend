@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AdoptionDetailDto {
     private String careRegNo; // 보호소 번호
-    private UpKindNm upKindNm; // 축종명
+    private String kindNm; // 품종명
     private SexCd sexCd; // 성별
     private NeuterYn neuterYn; // 중성화여부(타입)
     private String weight; // 체중
@@ -32,7 +32,7 @@ public class AdoptionDetailDto {
     public static AdoptionDetailDto from(Adoption adoption) {
         return AdoptionDetailDto.builder()
                 .careRegNo(adoption.getCareRegNo())
-                .upKindNm(adoption.getUpKindNm())
+                .kindNm(adoption.getKindNm())
                 .sexCd(adoption.getSexCd())
                 .neuterYn(adoption.getNeuterYn())
                 .weight(adoption.getWeight())
