@@ -1,11 +1,9 @@
 package kr.co.pawong.pwbe.adoption.application.service.port;
 
 import java.util.List;
-import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionEsDto;
 
 public interface AdoptionEsRepository {
-
-    // Adoption -> AdoptionDocument -> ES
-    void saveAdoptionToEs(List<Adoption> adoptions);
-
+    // AdoptionEsDto -> AdoptionDocument -> ES
+    void saveAdoptionToEs(List<AdoptionEsDto> adoptionEsDtos);
 }

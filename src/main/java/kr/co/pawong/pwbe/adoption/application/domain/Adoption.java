@@ -10,7 +10,6 @@ import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindNm;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Builder
@@ -38,10 +37,6 @@ public class Adoption {
     private String specialMark; // 특징
     private String careRegNo; // 보호소 번호
     private LocalDateTime updTm; // 수정일
-    @Setter
-    private String city;
-    @Setter
-    private String district;
     private String tagsField; // 태깅
     private String refinedSpecialMark; // 정제 데이터
     private float[] embedding; // 임베딩 값
@@ -105,35 +100,21 @@ public class Adoption {
                 .build();
     }
 
-    /**
-     * AI 정제 결과로 searchField, tagsField, aiProcessed 값을 갱신하는 메서드
-     *
-     * @param refinedSpecialMark   정제된 검색 필드 값
-     * @param tagsField     정제된 태그 필드 값
-     */
+    // AI 정제 결과로 searchField, tagsField, aiProcessed 값을 갱신
     public void updateAiField(String refinedSpecialMark, String tagsField) {
         this.refinedSpecialMark = refinedSpecialMark;
         this.tagsField = tagsField;
         this.isAiProcessed = true;
     }
 
-    /**
-     * 임베딩 결과를 Adoption 객체에 저장하는 메서드
-     *
-     * @param embedding 임베딩 벡터 값
-     */
+    // 임베딩 결과를 Adoption 객체에 저장
     public void embed(float[] embedding) {
         this.embedding = embedding;
         this.isEmbedded = true;
     }
 
-    /**
-     * Adoption 도메인 객체로부터 정제 필드(refinedSpecialMark)용 텍스트를 생성하고
-     * AI 서비스로 정제 결과를 반환하는 메서드
-     * (kindNm, colorCd, specialMark를 공백으로 연결하여 baseText로 사용)
-     *
-     * @return 정제 필드에 들어갈 정제된 문자열
-     */
+
+    // kindNm, colorCd, specialMark를 공백으로 연결하여 baseText로 사용
     public String extractRefinedSpecialMark() {
 
         return String.join(" ",
@@ -143,13 +124,7 @@ public class Adoption {
         ).trim();
     }
 
-    /**
-     * Adoption 도메인 객체로부터 태그 필드(tagsField)용 텍스트를 생성하고
-     * AI 서비스로 태그 추출 결과를 반환하는 메서드
-     * (kindNm, colorCd, age, weight, specialMark를 공백으로 연결하여 baseText로 사용)
-     *
-     * @return 태그 필드에 들어갈 정제된 문자열
-     */
+    // kindNm, colorCd, age, weight, specialMark를 공백으로 연결하여 baseText로 사용
     public String extractTagsField() {
         return String.join(" ",
                 this.kindNm != null ? this.kindNm : "",
@@ -159,5 +134,4 @@ public class Adoption {
                 this.specialMark != null ? this.specialMark : ""
         ).trim();
     }
-
 }
