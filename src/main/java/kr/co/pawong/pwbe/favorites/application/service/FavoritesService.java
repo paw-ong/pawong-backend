@@ -1,8 +1,12 @@
 package kr.co.pawong.pwbe.favorites.application.service;
 
+import kr.co.pawong.pwbe.favorites.application.domain.Favorites;
 import kr.co.pawong.pwbe.favorites.application.service.dto.FavoritesRequest;
-import kr.co.pawong.pwbe.favorites.presentation.dto.response.FavoritesResponse;
+
+import java.util.List;
 
 public interface FavoritesService {
-    FavoritesResponse like(FavoritesRequest request);
+    boolean toggleFavorite(FavoritesRequest request);
+    boolean checkFavoriteStatus(FavoritesRequest request);
+    List<Favorites> findAllByUserId(Long userId);
 }
