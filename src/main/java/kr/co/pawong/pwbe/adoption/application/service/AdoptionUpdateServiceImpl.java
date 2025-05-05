@@ -1,7 +1,11 @@
 package kr.co.pawong.pwbe.adoption.application.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.domain.AdoptionCreate;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
@@ -10,6 +14,7 @@ import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -20,6 +25,9 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
     private final AdoptionUpdateRepository adoptionUpdateRepository;
     private final AdoptionQueryRepository adoptionQueryRepository;
     private final AdoptionAiService adoptionAiService;
+
+    @Value("${adoption.batch-size:50")
+    private int batchSize;
 
     // AdoptionCreate -> Adoption -> Repo에 전달
     @Override
@@ -34,46 +42,68 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
     }
 
     /**
-     * DB에서 Adoption 도메인 객체를 모두 조회하여
-     * ACTIVE 상태만 AI 전처리(정제) 후
-     * refinedSpecialMark, tagsField, aiProcessed가 변경된 경우만
-     * 10개씩 정제하고 10개씩 업데이트하는 메서드
+     * DB에서 Adoption 도메인 객체를 모두 조회하여 ACTIVE 상태만 AI 전처리(정제) 후 refinedSpecialMark, tagsField,
+     * aiProcessed가 변경된 경우만 50개씩 정제하고 50개씩 업데이트
      */
     @Override
     public void aiProcessAdoptions() {
         List<Adoption> adoptions = adoptionQueryRepository.findAll();
 
+        List<Adoption> activeNotProcessed = adoptions.stream()
+                .filter(adoption -> adoption.getActiveState() == ActiveState.ACTIVE
+                        && !adoption.isAiProcessed())
+                .toList();
+
+        log.info("AI로 {} 개의 활성 입양 정보 처리 중", activeNotProcessed.size());
+
+        for (int i = 0; i < activeNotProcessed.size(); i += batchSize) {
+            int end = Math.min(i + batchSize, activeNotProcessed.size());
+            List<Adoption> batch = activeNotProcessed.subList(i, end);
+
+            processBatch(batch);
+        }
+    }
+
+    private void processBatch(List<Adoption> batch) {
+        List<String> specialMarks = batch.stream()
+                .map(Adoption::extractRefinedSpecialMark)
+                .collect(Collectors.toList());
+
+        List<String> tags = batch.stream()
+                .map(Adoption::extractTagsField)
+                .collect(Collectors.toList());
+
+        List<Optional<String>> refinedSpecialMarks = adoptionAiService.refineSpecialMarkBatch(
+                specialMarks);
+        List<Optional<List<String>>> tagsFields = adoptionAiService.tagBatch(tags);
+
         List<Adoption> toUpdate = new ArrayList<>();
-        for (Adoption adoption : adoptions) {
-            if (adoption.getActiveState() == ActiveState.ACTIVE && !adoption.isAiProcessed()) {
-                log.info("AdoptionId = {}", adoption.getAdoptionId());
-                String refinedSpecialMark = adoptionAiService.refineSpecialMark(adoption.extractRefinedSpecialMark());
-                List<String> tags = adoptionAiService.tag(adoption.extractTagsField());
-                String tagsField = String.join(" ", tags);
 
-                boolean aiProcessed =
-                        (refinedSpecialMark != null && !refinedSpecialMark.isBlank()) || (tagsField != null
-                                && !tagsField.isBlank());
+        for (int i = 0; i < batch.size(); i++) {
+            Adoption adoption = batch.get(i);
+            log.info("AdoptionId = {}", adoption.getAdoptionId());
 
-                if ((aiProcessed || adoption.getRefinedSpecialMark() != null && adoption.getRefinedSpecialMark().equals(refinedSpecialMark))
-                        || (adoption.getTagsField() != null && adoption.getTagsField().equals(tagsField))) {
+            String refinedSpecialMark = refinedSpecialMarks.get(i).orElse("");
+            List<String> tagsList = tagsFields.get(i).orElse(Collections.emptyList());
+            String tagsField = String.join(",", tagsList);
 
-                    adoption.updateAiField(refinedSpecialMark, tagsField);
-                    toUpdate.add(adoption);
-                }
-            }
-            // 10개씩 저장
-            if (toUpdate.size() == 10) {
-                adoptionUpdateRepository.updateAiFields(toUpdate);
-                toUpdate.clear();
+            if (isAiFieldChanged(adoption, refinedSpecialMark, tagsField)) {
+                adoption.updateAiField(refinedSpecialMark, tagsField);
+                toUpdate.add(adoption);
             }
         }
 
-        // 남은 데이터 저장
         if (!toUpdate.isEmpty()) {
             adoptionUpdateRepository.updateAiFields(toUpdate);
         }
     }
 
+    private boolean isAiFieldChanged(Adoption adoption, String refinedSpecialMark, String tagsField) {
+        boolean aiProcessed = (refinedSpecialMark != null && !refinedSpecialMark.isBlank()) ||
+                (tagsField != null && !tagsField.isBlank());
 
+        // Objects.equals()를 사용하여 null 안전 비교
+        return aiProcessed || !Objects.equals(adoption.getRefinedSpecialMark(), refinedSpecialMark)
+                || !Objects.equals(adoption.getTagsField(), tagsField);
+    }
 }
