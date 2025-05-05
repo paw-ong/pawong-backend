@@ -1,8 +1,8 @@
 package kr.co.pawong.pwbe.favorites.infrastructure.entity;
 
 import jakarta.persistence.*;
+import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
 import kr.co.pawong.pwbe.favorites.application.domain.Favorites;
-import kr.co.pawong.pwbe.favorites.enums.FavoriteTargetType;
 import kr.co.pawong.pwbe.user.infrastructure.repository.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Favorites", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "target_id", "target_type"})
-})
+@Table(
+        name = "Favorites",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "adoption_id"})
+)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,33 +22,48 @@ public class FavoritesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "favorites_id", nullable = false)
+    private Long favoritesId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
     private UserEntity user;
 
-    private Long targetId; // 찜 대상의 ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "adoption_id", nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
+    private AdoptionEntity adoption;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 30, nullable = false)
-    private FavoriteTargetType targetType; // 유기동물/실종제보/봉사공고 등 추후 확장성 고려, 현재는 ADOPTION만 존재.
-
-    public static FavoritesEntity of(UserEntity user, Long targetId, FavoriteTargetType type) {
+    /**
+     * 신규 생성용 팩토리 (favoritesId는 DB에서 할당)
+     */
+    public static FavoritesEntity of(UserEntity user, AdoptionEntity adoption) {
         return FavoritesEntity.builder()
                 .user(user)
-                .targetId(targetId)
-                .targetType(type)
+                .adoption(adoption)
                 .build();
     }
 
+    /**
+     * 도메인 → 엔티티 매핑
+     */
+    public static FavoritesEntity from(Favorites domain, UserEntity user, AdoptionEntity adoption) {
+        return FavoritesEntity.builder()
+                .favoritesId(domain.getFavoritesId())
+                .user(user)
+                .adoption(adoption)
+                .build();
+    }
+
+    /**
+     * 엔티티 → 도메인 매핑
+     */
     public Favorites toDomain() {
         return Favorites.builder()
-                .id(this.id)
+                .favoritesId(this.favoritesId)
                 .userId(this.user.getUserId())
-                .targetId(this.targetId)
-                .targetType(this.targetType)
+                .adoptionId(this.adoption.getAdoptionId())
                 .build();
     }
-
 }
