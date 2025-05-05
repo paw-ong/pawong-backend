@@ -7,6 +7,8 @@ import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionEsRepository;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionUpdateRepository;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionEsService;
+import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
+import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
     private final AdoptionEsRepository adoptionEsRepository;
     private final AdoptionUpdateRepository adoptionUpdateRepository;
     private final AdoptionAiService adoptionAiService;
+    private final AdoptionQueryService adoptionQueryService;
 
     /**
      * 전달받은 Adoption 리스트에 대해 임베딩 및 임베딩 완료 여부(embeddingDone) 설정 후
@@ -35,6 +38,7 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
     public void saveAdoptionToEs(List<Adoption> adoptions) {
         adoptions.forEach(adoption -> {
 
+
             if ((adoption.isAiProcessed() && !adoption.isEmbedded())) {
                 String combinedField = Stream.of(adoption.getRefinedSpecialMark(), adoption.getTagsField())
                         .filter(field -> field != null && !field.isBlank())
@@ -42,6 +46,11 @@ public class AdoptionEsServiceImpl implements AdoptionEsService {
 
                 float[] embedding = adoptionAiService.embed(combinedField);
                 adoption.embed(embedding);
+                ShelterInfoDto shelterInfo = adoptionQueryService.findShelterInfoByAdoptionId(adoption.getAdoptionId());
+                if (shelterInfo != null) {
+                    adoption.setCity(shelterInfo.getCity());
+                    adoption.setDistrict(shelterInfo.getDistrict());
+                }
             }
         });
         // 임베딩이 포함된 Adoption 리스트를 Repo에 전달
