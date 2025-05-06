@@ -1,6 +1,7 @@
 package kr.co.pawong.pwbe.user.infrastructure.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
@@ -74,11 +75,23 @@ public class JwtTokenProvider {
         );
     }
 
+    // 토큰이 유효한지 검증
     public boolean validateToken(String token) {
-        if (token != null && getUsername(token) != null && isExpired(token)) {
-            return true;
+        if (token == null || getUsername(token) == null) {
+            return false;
         }
-        return false;
+        try {
+            Claims claims = getClaims(token);
+            return !isExpired(claims);
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;   // 파싱 오류나 서명 오류, 만료 오류 등 모두 false 처리
+        }
+    }
+
+    // 토큰의 만료 여부를 확인.
+    // @return 만료되었으면 true, 아직 유효하면 false
+    private boolean isExpired(Claims claims) {
+        return claims.getExpiration().before(new Date());   // 만료 시간이 현재보다 뒤(미래)에 있어야 true
     }
 
     // token에서 userId를 꺼내오는 메소드
@@ -88,13 +101,14 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    public boolean isExpired(String token) {
-        Claims claims = getClaims(token);
-        return claims.getExpiration().after(new Date(System.currentTimeMillis()));
-    }
-
+     // 토큰에서 Claims를 꺼내오기
+     // 파싱 실패 시 예외 발생
     private Claims getClaims(String token) {
-        return Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
 }

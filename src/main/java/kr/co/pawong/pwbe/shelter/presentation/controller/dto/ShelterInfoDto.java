@@ -13,6 +13,10 @@ public class ShelterInfoDto {
     private String district; // 시군구
 
     public static ShelterInfoDto from(Shelter shelter) {
+        if (shelter == null) {
+            // 보호소 정보가 없으면 null 반환
+            return null;
+        }
         return ShelterInfoDto.builder()
                 .careRegNo(shelter.getCareRegNo())
                 .city(shelter.getCity())

@@ -1,6 +1,7 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository.document;
 
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.application.service.dto.request.AdoptionEsDto;
 import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
 import kr.co.pawong.pwbe.adoption.enums.SexCd;
 import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
@@ -51,18 +52,17 @@ public class AdoptionDocument {
     @Field(type = FieldType.Dense_Vector, dims = 1536, name = "embedding")
     private float[] embedding; // 임베딩
 
-    // dto로 변경하기
-    public static AdoptionDocument from(Adoption adoption) {
+    public static AdoptionDocument from(AdoptionEsDto adoptionEsDto) {
         return AdoptionDocument.builder()
-                .adoptionId(adoption.getAdoptionId())
-                .upKindCd(adoption.getUpKindCd())
-                .sexCd(adoption.getSexCd())
-                .neuterYn(adoption.getNeuterYn())
-                .city(adoption.getCity())
-                .district(adoption.getDistrict())
-                .refinedSpecialMark(adoption.getRefinedSpecialMark())
-                .tagsField(adoption.getTagsField())
-                .embedding(adoption.getEmbedding())
+                .adoptionId(adoptionEsDto.getAdoptionId())
+                .upKindCd(adoptionEsDto.getUpKindCd())
+                .sexCd(adoptionEsDto.getSexCd())
+                .neuterYn(adoptionEsDto.getNeuterYn())
+                .city(adoptionEsDto.getCity())
+                .district(adoptionEsDto.getDistrict())
+                .refinedSpecialMark(adoptionEsDto.getRefinedSpecialMark())
+                .tagsField(adoptionEsDto.getTagsField())
+                .embedding(adoptionEsDto.getEmbedding())
                 .build();
     }
 
@@ -72,8 +72,6 @@ public class AdoptionDocument {
                 .upKindCd(this.upKindCd)
                 .sexCd(this.sexCd)
                 .neuterYn(this.neuterYn)
-                .city(this.city)
-                .district(this.district)
                 .refinedSpecialMark(this.refinedSpecialMark)
                 .tagsField(this.tagsField)
                 .embedding(this.embedding)

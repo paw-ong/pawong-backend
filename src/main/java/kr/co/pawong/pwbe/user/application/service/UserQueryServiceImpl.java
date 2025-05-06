@@ -13,7 +13,7 @@ public class UserQueryServiceImpl implements UserQueryService {
 
   @Override
   public User getUser(Long userId) {
-    return userQueryRepository.findByUserId(userId);
+    return userQueryRepository.findByUserIdOrThrow(userId);
   }
 
   @Override

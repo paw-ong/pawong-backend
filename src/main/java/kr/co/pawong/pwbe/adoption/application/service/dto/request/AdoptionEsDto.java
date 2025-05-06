@@ -1,0 +1,43 @@
+package kr.co.pawong.pwbe.adoption.application.service.dto.request;
+
+import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
+import kr.co.pawong.pwbe.adoption.enums.ActiveState;
+import kr.co.pawong.pwbe.adoption.enums.NeuterYn;
+import kr.co.pawong.pwbe.adoption.enums.SexCd;
+import kr.co.pawong.pwbe.adoption.enums.UpKindCd;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class AdoptionEsDto {
+    private Long adoptionId;
+    private ActiveState activeState;
+    private UpKindCd upKindCd;
+    private SexCd sexCd;
+    private NeuterYn neuterYn;
+    private String city;
+    private String district;
+    private String refinedSpecialMark;
+    private String tagsField;
+    private float[] embedding;
+
+    public static AdoptionEsDto from(Adoption adoption, RegionInfoDto regionInfo) {
+        return AdoptionEsDto.builder()
+                .adoptionId(adoption.getAdoptionId())
+                .activeState(adoption.getActiveState())
+                .upKindCd(adoption.getUpKindCd())
+                .sexCd(adoption.getSexCd())
+                .neuterYn(adoption.getNeuterYn())
+                .city(regionInfo.getCity())
+                .district(regionInfo.getDistrict())
+                .refinedSpecialMark(adoption.getRefinedSpecialMark())
+                .tagsField(adoption.getTagsField())
+                .embedding(adoption.getEmbedding())
+                .build();
+    }
+}

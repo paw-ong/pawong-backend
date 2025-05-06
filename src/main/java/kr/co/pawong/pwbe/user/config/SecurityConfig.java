@@ -2,14 +2,13 @@ package kr.co.pawong.pwbe.user.config;
 
 import kr.co.pawong.pwbe.user.infrastructure.security.CustomAuthenticationEntryPoint;
 import kr.co.pawong.pwbe.user.infrastructure.security.CustomOAuth2UserService;
-import kr.co.pawong.pwbe.user.infrastructure.security.filter.JwtFilter;
 import kr.co.pawong.pwbe.user.infrastructure.security.JwtTokenProvider;
 import kr.co.pawong.pwbe.user.infrastructure.security.OAuth2AuthenticationSuccessHandler;
+import kr.co.pawong.pwbe.user.infrastructure.security.filter.JwtFilter;
 import kr.co.pawong.pwbe.user.presentation.controller.port.UserQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -33,7 +32,7 @@ public class SecurityConfig {
     private final UserQueryService userQueryService;
 
     public SecurityConfig(JwtFilter jwtFilter, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService,
-        UserQueryService userQueryService) {
+                          UserQueryService userQueryService) {
         this.jwtFilter = jwtFilter;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
@@ -44,34 +43,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
 
-            // jwtFilter 실행 -> UsernamePasswordAuthenticationFilter 실행
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                // jwtFilter 실행 -> UsernamePasswordAuthenticationFilter 실행
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(
-                    "/oauth2/authorization/**",     // OAuth2 로그인 요청
-                    "/login/oauth2/**",             // OAuth2 code Redirect URI
-                    "/oauth/authorize"              // OAuth2 Authorization Endpoint
-                ).permitAll()                         // 위 경로는 인증 없이 접근 가능
-                .requestMatchers(
-                    "/api/adoptions/**",
-                    "/api/adoption/**",
-                    "/api/shelters/**",
-                    "/api/lost-animals/**"
-                ).permitAll()
-            .anyRequest().authenticated())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/oauth2/authorization/**",     // OAuth2 로그인 요청
+                                "/login/oauth2/**",             // OAuth2 code Redirect URI
+                                "/oauth/authorize"              // OAuth2 Authorization Endpoint
+                        ).permitAll()                         // 위 경로는 인증 없이 접근 가능
+                        .requestMatchers(
+                                "/api/adoptions/**",
+                                "/api/adoption/**",
+                                "/api/shelters/**",
+                                "/api/lost-animals/**"
+                        ).permitAll()
+                        .anyRequest().authenticated())
 
-            // oauth2 요청만 처리
-            .oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfo ->
-                    userInfo.userService(customOAuth2UserService))
-                .successHandler(oAuth2AuthenticationSuccessHandler())
-            )
+                // oauth2 요청만 처리
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo ->
+                                userInfo.userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler())
+                )
 
-            .exceptionHandling(exception -> exception
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         return http.build();
     }

@@ -6,10 +6,8 @@ import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterDetailDto;
 import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
 import kr.co.pawong.pwbe.shelter.presentation.port.ShelterQueryService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ShelterQueryServiceImpl implements ShelterQueryService {
@@ -18,10 +16,15 @@ public class ShelterQueryServiceImpl implements ShelterQueryService {
 
     @Override
     public ShelterInfoDto shelterInfo(String careRegNo) {
-        // Repository 통해 Entity 조회
         Shelter shelter = shelterQueryRepository.findByCareRegNoOrThrow(careRegNo);
 
-        return ShelterInfoDto.from(shelter);
+        ShelterInfoDto shelterInfoDto = ShelterInfoDto.from(shelter);
+
+        if (shelterInfoDto == null) {
+            return new ShelterInfoDto(careRegNo, "", "");
+        }
+
+        return shelterInfoDto;
     }
 
     @Override
