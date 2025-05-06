@@ -46,7 +46,8 @@ public class AdoptionSearchServiceImpl implements AdoptionSearchService {
     // ES에서 검색 시 adoptionId를 반환
     @Override
     public AdoptionIdSearchResponses searchDocumentIds(AdoptionSearchRequest request) {
-        String refinedSearchTerm = refineSearchTerm(request);
+//        String refinedSearchTerm = refineSearchTerm(request);
+        String refinedSearchTerm = request.getSearchTerm();
         AdoptionSearchCondition condition = AdoptionSearchMapper.fromRequest(request, refinedSearchTerm, embed(refinedSearchTerm));
 
         List<Adoption> adoptions = adoptionSearchRepository.searchSimilarAdoptions(condition);
