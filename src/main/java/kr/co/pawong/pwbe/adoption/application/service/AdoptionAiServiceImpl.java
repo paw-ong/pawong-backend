@@ -24,7 +24,9 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     // 문장 정제하는 함수
     @Override
     public String refineSpecialMark(String specialMark) {
-        validateNotBlank(specialMark);
+        if (!isValidateInput(specialMark)) {
+            return "";
+        }
         return chatPort.refineAdoptionSentence(specialMark);
     }
     // 위의 함수를 병렬로 수행하는 함수
@@ -36,7 +38,9 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     // 입력된 문장에 대해 태그를 선택해서 문자열 리스트로 반환하는 함수
     @Override
     public List<String> tag(String feature) {
-        validateNotBlank(feature);
+        if (!isValidateInput(feature)) {
+            return List.of();
+        }
         return chatPort.getTagsByFeature(feature);
     }
     // 위의 함수를 병렬로 수행하는 함수
@@ -48,14 +52,10 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     // 문장 임베딩하는 함수
     @Override
     public float[] embed(String completion) {
-        try {
-            validateNotBlank(completion);
-            return embeddingPort.embed(completion);
-        } catch (IllegalArgumentException e) {
-            log.warn("Invalid input for embedding: {}", e.getMessage());
+        if (!isValidateInput(completion)) {
             return new float[0]; // 빈 임베딩 반환 또는 다른 기본값
         }
-
+        return embeddingPort.embed(completion);
     }
     // 위의 함수를 병렬로 수행하는 함수
     @Override
@@ -64,10 +64,8 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     }
 
     // 입력값 검증하는 함수
-    private void validateNotBlank(String input) {
-        if (input == null || input.isBlank()) {
-            throw new IllegalArgumentException("Input cannot be null or blank.");
-        }
+    private boolean isValidateInput(String input) {
+        return input != null && !input.isBlank();
     }
 
 
