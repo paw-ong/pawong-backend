@@ -1,7 +1,5 @@
 package kr.co.pawong.pwbe.shelter.presentation.controller.dto;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import kr.co.pawong.pwbe.shelter.enums.DivisionNm;
 import lombok.*;
@@ -23,6 +21,10 @@ public class ShelterDetailDto {
     private String careAddr; // 소재지 도로명 주소
 
     public static ShelterDetailDto from(Shelter shelter) {
+        if (shelter == null) {
+            // 보호소 정보가 없으면 null 반환
+            return new ShelterDetailDto("","","","",null,"","",0,0,"");
+        }
         return ShelterDetailDto.builder()
                 .careNm(shelter.getCareNm())
                 .careTel(shelter.getCareTel())
