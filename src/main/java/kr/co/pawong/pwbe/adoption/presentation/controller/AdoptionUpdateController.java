@@ -32,8 +32,7 @@ public class AdoptionUpdateController {
     @PostMapping("/save-es")
     public ResponseEntity<Void> saveAdoptionsEs() {
         List<Adoption> adoptions = adoptionQueryService.getAllAdoptions();
-        List<Adoption> subAoptions = adoptions.subList(0, 50);
-        adoptionEsService.saveAdoptionToEs(subAoptions);
+        adoptionEsService.saveAdoptionToEs(adoptions);
         return ResponseEntity.ok().build();
     }
 
