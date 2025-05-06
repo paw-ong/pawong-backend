@@ -30,8 +30,8 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
     }
 
     @Override
-    public String findCareRegNoByAdoptionId(Long id) {
-        return adoptionJpaRepository.findCareRegNoByAdoptionId(id);
+    public String findCareRegNoByAdoptionId(Long adoptionId) {
+        return adoptionJpaRepository.findCareRegNoByAdoptionId(adoptionId);
     }
 
     @Override
@@ -56,4 +56,14 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
                 .map(AdoptionEntity::toModel)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Adoption findByAdoptionIdOrThrow(Long adoptionId) {
+        return adoptionJpaRepository.findByAdoptionId(adoptionId)
+                .map(AdoptionEntity::toModel)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("입양 정보가 없습니다. id=" + adoptionId)
+                );
+    }
+
 }

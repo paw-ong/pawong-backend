@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -43,15 +41,5 @@ public class AdoptionUpdateController {
         adoptionUpdateService.aiProcessAdoptions();
         return ResponseEntity.ok().build();
     }
-
-//    @GetMapping("/{id}/shelter")
-//    public ShelterInfoDto getShelterInfo(@PathVariable Long id) {
-//
-//        ShelterInfoDto dto = adoptionQueryService.findShelterInfoByAdoptionId(id);
-//        log.info("◀ 반환: ShelterInfoDto(careRegNo={}, city={}, district={})",
-//                dto.getCareRegNo(), dto.getCity(), dto.getDistrict());
-//
-//        return dto;
-//    }
 
 }

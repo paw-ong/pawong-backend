@@ -1,7 +1,6 @@
 package kr.co.pawong.pwbe.user.presentation.controller.dto.response;
 
 import java.time.LocalDate;
-import java.util.List;
 import kr.co.pawong.pwbe.user.application.domain.User;
 import kr.co.pawong.pwbe.user.enums.UserStatus;
 import lombok.AllArgsConstructor;

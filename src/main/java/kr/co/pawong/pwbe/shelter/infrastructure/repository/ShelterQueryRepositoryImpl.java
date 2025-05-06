@@ -1,8 +1,9 @@
 package kr.co.pawong.pwbe.shelter.infrastructure.repository;
 
+import jakarta.persistence.EntityNotFoundException;
+import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 import kr.co.pawong.pwbe.shelter.application.service.port.ShelterQueryRepository;
 import kr.co.pawong.pwbe.shelter.infrastructure.repository.entity.ShelterEntity;
-import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -14,15 +15,10 @@ public class ShelterQueryRepositoryImpl implements ShelterQueryRepository {
 
     private final ShelterJpaRepository shelterJpaRepository;
 
-
-    // adoption 에서 careRegNo를 받아 보호소 정보 반환
     @Override
-    public ShelterInfoDto shelterInfo(String careRegNo) {
-        return shelterJpaRepository.shelterInfo(careRegNo);
-    }
-
-    @Override
-    public ShelterEntity findByCareRegNo(String careRegNo) {
-        return shelterJpaRepository.findByCareRegNo(careRegNo);
+    public Shelter findByCareRegNoOrThrow(String careRegNo) {
+        return shelterJpaRepository.findByCareRegNo(careRegNo)
+                .map(ShelterEntity::toModel)
+                .orElse(null);
     }
 }

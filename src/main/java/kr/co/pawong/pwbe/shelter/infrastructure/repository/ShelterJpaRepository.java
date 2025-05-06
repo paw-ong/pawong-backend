@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShelterJpaRepository extends JpaRepository<ShelterEntity, Long> {
 
@@ -19,10 +20,5 @@ public interface ShelterJpaRepository extends JpaRepository<ShelterEntity, Long>
     @Query("SELECT s.careRegNo FROM ShelterEntity s")
     List<String> findAllCareRegNos();
 
-    // adoption 에서 careRegNo를 받아 보호소 정보 반환
-    @Query("SELECT new kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto(s.careRegNo, s.city, s.district) " +
-            "FROM ShelterEntity s WHERE s.careRegNo = :careRegNo")
-    ShelterInfoDto shelterInfo(@Param("careRegNo") String careRegNo);
-
-    ShelterEntity findByCareRegNo(String careRegNo);
+    Optional<ShelterEntity> findByCareRegNo(String careRegNo);
 }

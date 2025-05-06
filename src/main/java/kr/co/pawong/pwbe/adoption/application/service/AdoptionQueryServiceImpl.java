@@ -3,13 +3,18 @@ package kr.co.pawong.pwbe.adoption.application.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import jakarta.persistence.EntityNotFoundException;
 import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionCard;
+import kr.co.pawong.pwbe.adoption.application.service.dto.response.AdoptionDetailDto;
 import kr.co.pawong.pwbe.adoption.application.service.dto.response.SliceAdoptionSearchResponses;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
+import kr.co.pawong.pwbe.adoption.application.service.port.ShelterDetailPort;
 import kr.co.pawong.pwbe.adoption.application.service.port.ShelterInfoPort;
 import kr.co.pawong.pwbe.adoption.application.service.support.AdoptionCardMapper;
 import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionRecommendResponses;
+import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionDetailResponse;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 @Slf4j
 @Service
@@ -35,6 +41,7 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
     }
 
     private final ShelterInfoPort shelterInfoPort;
+    private final ShelterDetailPort shelterDetailPort;
 
     // infinite scroll을 위한 slice 방식
     @Override
@@ -82,4 +89,19 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
         return shelterInfoPort.getShelterInfo(careRegNo);
     }
 
+
+    @Override
+    public AdoptionDetailResponse getAdoptionDetail(Long adoptionId) {
+        // 1) Adoption 엔티티 조회
+        Adoption adoption = adoptionQueryRepository.findByAdoptionIdOrThrow(adoptionId);
+
+        // 2) AdoptionDetailDto로 매핑
+        AdoptionDetailDto adoptionDetailDto = AdoptionDetailDto.from(adoption);
+
+        // 3) Port를 통해 ShelterDetail 조회
+        var shelterDetailDto = shelterDetailPort.getShelterDetail(adoptionDetailDto.getCareRegNo());
+
+        // 4) Response 생성 후 반환
+        return new AdoptionDetailResponse(adoptionDetailDto, shelterDetailDto);
+    }
 }

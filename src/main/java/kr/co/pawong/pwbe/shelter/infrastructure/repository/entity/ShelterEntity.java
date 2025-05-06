@@ -94,4 +94,40 @@ public class ShelterEntity {
 
         return entity;
     }
+
+    public Shelter toModel() {
+        return Shelter.builder()
+                .shelterId(this.shelterId)
+                .careNm(this.careNm)
+                .careRegNo(this.careRegNo)
+                .orgNm(this.orgNm)
+                .divisionNm(this.divisionNm)
+                .saveTrgtAnimal(this.saveTrgtAnimal)
+                .careAddr(this.careAddr)
+                .jibunAddr(this.jibunAddr)
+                .city(this.city)
+                .district(this.district)
+                .lat(this.lat)
+                .lng(this.lng)
+                .dsignationDate(this.dsignationDate)
+                .weekOprStime(this.weekOprStime)
+                .weekOprEtime(this.weekOprEtime)
+                .weekCellStime(this.weekCellStime)
+                .weekCellEtime(this.weekCellEtime)
+                .weekendOprStime(this.weekendOprStime)
+                .weekendOprEtime(this.weekendOprEtime)
+                .weekendCellStime(this.weekendCellStime)
+                .weekendCellEtime(this.weekendCellEtime)
+                .closeDay(this.closeDay)
+                .vetPersonCnt(this.vetPersonCnt)
+                .specsPersonCnt(this.specsPersonCnt)
+                .medicalCnt(this.medicalCnt)
+                .breedCnt(this.breedCnt)
+                .quarabtineCnt(this.quarabtineCnt)
+                .feedCnt(this.feedCnt)
+                .transCarCnt(this.transCarCnt)
+                .careTel(this.careTel)
+                .dataStdDt(this.dataStdDt)
+                .build();
+    }
 }
