@@ -6,7 +6,6 @@ import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionEsService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionQueryService;
 import kr.co.pawong.pwbe.adoption.presentation.port.AdoptionUpdateService;
 import kr.co.pawong.pwbe.adoption.presentation.port.ApiRequestService;
-import kr.co.pawong.pwbe.shelter.presentation.controller.dto.ShelterInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,16 +41,6 @@ public class AdoptionUpdateController {
     public ResponseEntity<Void> aiProcessAdoptions() {
         adoptionUpdateService.aiProcessAdoptions();
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{id}/shelter")
-    public ShelterInfoDto getShelterInfo(@PathVariable Long id) {
-
-        ShelterInfoDto dto = adoptionQueryService.findShelterInfoByAdoptionId(id);
-        log.info("◀ 반환: ShelterInfoDto(careRegNo={}, city={}, district={})",
-                dto.getCareRegNo(), dto.getCity(), dto.getDistrict());
-
-        return dto;
     }
 
 }
