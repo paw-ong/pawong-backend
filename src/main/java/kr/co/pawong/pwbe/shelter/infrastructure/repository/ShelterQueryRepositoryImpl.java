@@ -18,7 +18,7 @@ public class ShelterQueryRepositoryImpl implements ShelterQueryRepository {
     private final ShelterJpaRepository shelterJpaRepository;
 
     @Override
-    public Shelter findByCareRegNo(String careRegNo) {
+    public Shelter findByCareRegNoOrThrow(String careRegNo) {
         return shelterJpaRepository.findByCareRegNo(careRegNo)
                 .map(ShelterEntity::toModel)
                 .orElseThrow(() ->

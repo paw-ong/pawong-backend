@@ -19,20 +19,14 @@ public class ShelterQueryServiceImpl implements ShelterQueryService {
     @Override
     public ShelterInfoDto shelterInfo(String careRegNo) {
         // Repository 통해 Entity 조회
-        var entity = shelterQueryRepository.findByCareRegNo(careRegNo);
-        if (entity == null) {
-            log.warn("ShelterEntity not found for careRegNo: {}", careRegNo);
-            return null;
-        }
-        // DTO로 변환
-        return new ShelterInfoDto(entity.getCareRegNo(),
-                entity.getCity(),
-                entity.getDistrict());
+        Shelter shelter = shelterQueryRepository.findByCareRegNoOrThrow(careRegNo);
+
+        return ShelterInfoDto.from(shelter);
     }
 
     @Override
     public ShelterDetailDto shelterDetail(String careRegNo){
-        Shelter shelter = shelterQueryRepository.findByCareRegNo(careRegNo);
+        Shelter shelter = shelterQueryRepository.findByCareRegNoOrThrow(careRegNo);
 
         return ShelterDetailDto.from(shelter);
     }

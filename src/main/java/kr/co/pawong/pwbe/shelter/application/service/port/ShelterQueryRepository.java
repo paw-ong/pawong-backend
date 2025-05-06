@@ -5,5 +5,5 @@ import kr.co.pawong.pwbe.shelter.application.domain.Shelter;
 
 public interface ShelterQueryRepository {
 
-    Shelter findByCareRegNo(String careRegNo);
+    Shelter findByCareRegNoOrThrow(String careRegNo);
 }

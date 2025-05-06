@@ -92,11 +92,8 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
 
     @Override
     public AdoptionDetailResponse getAdoptionDetail(Long adoptionId) {
-        // 1) Adoption 엔티티 조회 (없으면 예외 처리)
+        // 1) Adoption 엔티티 조회
         Adoption adoption = adoptionQueryRepository.findByAdoptionIdOrThrow(adoptionId);
-        if (adoption == null) {
-            throw new EntityNotFoundException("아이디 확인 불가. id=" + adoptionId);
-        }
 
         // 2) AdoptionDetailDto로 매핑
         AdoptionDetailDto adoptionDetailDto = AdoptionDetailDto.from(adoption);
