@@ -58,7 +58,7 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
     }
 
     @Override
-    public Adoption findByAdoptionId(Long adoptionId) {
+    public Adoption findByAdoptionIdOrThrow(Long adoptionId) {
         return adoptionJpaRepository.findByAdoptionId(adoptionId)
                 .map(AdoptionEntity::toModel)
                 .orElseThrow(() ->
