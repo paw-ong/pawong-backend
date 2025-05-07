@@ -15,6 +15,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -45,8 +47,8 @@ public class AdoptionDocument {
     private String refinedSpecialMark; // AI가 정제한 동물 정보
 
     @Setter
-    @Field(type = FieldType.Text, name = "tagsField", analyzer = "korean")
-    private String tagsField; // AI가 키워드로 정제한 동물 정보
+    @Field(type = FieldType.Keyword, name = "tagsField")
+    private List<String> tagsField; // AI가 키워드로 정제한 동물 정보
 
     @Setter
     @Field(type = FieldType.Dense_Vector, dims = 1536, name = "embedding")
@@ -73,7 +75,7 @@ public class AdoptionDocument {
                 .sexCd(this.sexCd)
                 .neuterYn(this.neuterYn)
                 .refinedSpecialMark(this.refinedSpecialMark)
-                .tagsField(this.tagsField)
+                .tagsField(String.join(",", this.tagsField))
                 .embedding(this.embedding)
                 .build();
     }

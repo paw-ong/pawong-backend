@@ -16,6 +16,7 @@ public class AdoptionSearchCondition {
     private NeuterYn neuterYn;
     private List<Region> regions;
     private String refinedSearchTerm;   // 정제된 검색어 문장
+    private List<String> tags;
     private float[] embedding;
 
     /** city/district 를 담는 DTO **/

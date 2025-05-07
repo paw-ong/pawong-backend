@@ -46,8 +46,10 @@ public class AdoptionSearchServiceImpl implements AdoptionSearchService {
     // ES에서 검색 시 adoptionId를 반환
     @Override
     public AdoptionIdSearchResponses searchDocumentIds(AdoptionSearchRequest request) {
-        String refinedSearchTerm = refineSearchTerm(request);
-        AdoptionSearchCondition condition = AdoptionSearchMapper.fromRequest(request, refinedSearchTerm, embed(refinedSearchTerm));
+//        String refinedSearchTerm = refineSearchTerm(request);
+        String refinedSearchTerm = request.getSearchTerm();
+        List<String> tags = tag(request);
+        AdoptionSearchCondition condition = AdoptionSearchMapper.fromRequest(request, refinedSearchTerm, tags, embed(refinedSearchTerm));
 
         List<Adoption> adoptions = adoptionSearchRepository.searchSimilarAdoptions(condition);
         return new AdoptionIdSearchResponses(adoptions.stream()
@@ -59,6 +61,11 @@ public class AdoptionSearchServiceImpl implements AdoptionSearchService {
     private String refineSearchTerm(AdoptionSearchRequest request) {
         String term = request.getSearchTerm();
         return adoptionAiService.refineSpecialMark(term);
+    }
+
+    // 위임, 태깅
+    private List<String> tag(AdoptionSearchRequest request) {
+        return adoptionAiService.tag(request.getSearchTerm());
     }
 
     // 위임, 임베딩 값

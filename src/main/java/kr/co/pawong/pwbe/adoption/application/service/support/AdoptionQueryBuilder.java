@@ -84,6 +84,17 @@ public class AdoptionQueryBuilder {
       ));
     }
 
+    // tags가 있으면 tagsField에 terms 매칭 추가
+    if (condition.getTags() != null && !condition.getTags().isEmpty()) {
+      for (String tag : condition.getTags()) {
+        semantic.should(s -> s.term(t -> t
+                .field("tagsField")
+                .value(tag)
+                .boost(4.0f)      // 각 태그 매칭 시 점수 가중치
+        ));
+      }
+    }
+
     if (condition.getEmbedding() != null && condition.getEmbedding().length == 1536) {
       List<Float> embeddingList = new ArrayList<>(condition.getEmbedding().length);
       for (float f : condition.getEmbedding()) {
@@ -97,7 +108,7 @@ public class AdoptionQueryBuilder {
                   .source("cosineSimilarity(params.query_vector, 'embedding') + 1.0") // cosine similarity 활용
                   .params("query_vector", JsonData.of(embeddingList))
               ))
-              .boost(2.0f)    // 벡터는 2배의 가중치
+              .boost(4.0f)    // 벡터는 2배의 가중치
           ));
     }
 

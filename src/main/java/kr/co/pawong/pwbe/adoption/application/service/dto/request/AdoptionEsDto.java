@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,7 +25,7 @@ public class AdoptionEsDto {
     private String city;
     private String district;
     private String refinedSpecialMark;
-    private String tagsField;
+    private List<String> tagsField;
     private float[] embedding;
 
     public static AdoptionEsDto from(Adoption adoption, RegionInfoDto regionInfo) {
@@ -36,7 +38,7 @@ public class AdoptionEsDto {
                 .city(regionInfo.getCity())
                 .district(regionInfo.getDistrict())
                 .refinedSpecialMark(adoption.getRefinedSpecialMark())
-                .tagsField(adoption.getTagsField())
+                .tagsField(adoption.getTagsField() == null ? List.of() : List.of(adoption.getTagsField().split(",")))
                 .embedding(adoption.getEmbedding())
                 .build();
     }
