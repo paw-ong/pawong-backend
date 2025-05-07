@@ -11,13 +11,14 @@ import kr.co.pawong.pwbe.adoption.presentation.controller.dto.response.AdoptionI
 
 public class AdoptionSearchMapper {
 
-    public static AdoptionSearchCondition fromRequest(AdoptionSearchRequest request, String refinedSearchTerm, float[] embedding) {
+    public static AdoptionSearchCondition fromRequest(AdoptionSearchRequest request, String refinedSearchTerm, List<String> tags, float[] embedding) {
         return AdoptionSearchCondition.builder()
                 .upKindCds(request.getUpKindCds())
                 .sexCd(request.getSexCd())
                 .neuterYn(request.getNeuterYn())
                 .regions(toRegionList(request.getRegions()))
                 .refinedSearchTerm(refinedSearchTerm)
+                .tags(tags)
                 .embedding(embedding)
                 .build();
     }
