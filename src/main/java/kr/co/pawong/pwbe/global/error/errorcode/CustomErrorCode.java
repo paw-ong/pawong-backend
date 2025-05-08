@@ -16,7 +16,8 @@ public enum CustomErrorCode implements ErrorCode {
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버와의 연결에 실패하였습니다."),
     DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 연결에 실패하였습니다."),
 
-    USER_NOT_FOUND(NOT_FOUND, "유저가 존재하지 않습니다.")
+    USER_NOT_FOUND(NOT_FOUND, "유저가 존재하지 않습니다."),
+    TOKEN_INVALIDATE(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다")
     ;
 
     private final HttpStatus httpStatus;

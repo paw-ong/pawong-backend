@@ -1,6 +1,6 @@
 package kr.co.pawong.pwbe.user.config;
 
-import kr.co.pawong.pwbe.user.infrastructure.security.CustomAuthenticationEntryPoint;
+import kr.co.pawong.pwbe.user.infrastructure.security.error.CustomAuthenticationEntryPoint;
 import kr.co.pawong.pwbe.user.infrastructure.security.CustomOAuth2UserService;
 import kr.co.pawong.pwbe.user.infrastructure.security.JwtTokenProvider;
 import kr.co.pawong.pwbe.user.infrastructure.security.OAuth2AuthenticationSuccessHandler;
@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -30,14 +31,22 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final UserQueryService userQueryService;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfig(JwtFilter jwtFilter, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService,
-                          UserQueryService userQueryService) {
+    public SecurityConfig(
+            JwtFilter jwtFilter,
+            JwtTokenProvider jwtTokenProvider,
+            UserDetailsService userDetailsService,
+            CustomOAuth2UserService customOAuth2UserService,
+            UserQueryService userQueryService,
+            CustomAuthenticationEntryPoint customAuthenticationEntryPoint
+    ) {
         this.jwtFilter = jwtFilter;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
         this.customOAuth2UserService = customOAuth2UserService;
         this.userQueryService = userQueryService;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     @Bean
@@ -46,7 +55,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 // jwtFilter 실행 -> UsernamePasswordAuthenticationFilter 실행
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtFilter, ExceptionTranslationFilter.class)
 
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
@@ -70,7 +80,7 @@ public class SecurityConfig {
                 )
 
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+                        .authenticationEntryPoint(customAuthenticationEntryPoint));
 
         return http.build();
     }
