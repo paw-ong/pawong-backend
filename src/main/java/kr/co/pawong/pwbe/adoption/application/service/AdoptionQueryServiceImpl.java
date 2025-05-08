@@ -63,12 +63,12 @@ public class AdoptionQueryServiceImpl implements AdoptionQueryService {
         LocalDate today = LocalDate.now();
         List<Adoption> adoptions = adoptionQueryRepository.findTop12ActiveByNoticeEdt(today);
         // 각 입양 정보의 noticeEdt와 activeState 로그 출력
-        for (Adoption adoption : adoptions) {
-            log.info("AdoptionId: {}, noticeEdt: {}, activeState: {}",
-                    adoption.getAdoptionId(),
-                    adoption.getNoticeEdt(),
-                    adoption.getActiveState());
-        }
+//        for (Adoption adoption : adoptions) {
+//            log.info("AdoptionId: {}, noticeEdt: {}, activeState: {}",
+//                    adoption.getAdoptionId(),
+//                    adoption.getNoticeEdt(),
+//                    adoption.getActiveState());
+//        }
 
         List<AdoptionCard> adoptionCards = adoptions.stream()
                 .map(AdoptionCardMapper::toAdoptionCard)
