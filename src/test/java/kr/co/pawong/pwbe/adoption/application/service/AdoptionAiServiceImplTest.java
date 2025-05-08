@@ -16,6 +16,7 @@ import java.util.concurrent.Executor;
 import static org.assertj.core.api.Assertions.*;
 
 class AdoptionAiServiceImplTest {
+
     private AdoptionAiServiceImpl service;
 
     @BeforeEach
@@ -31,7 +32,9 @@ class AdoptionAiServiceImplTest {
         service = new AdoptionAiServiceImpl(fakeEmb, fakeChat, executor);
     }
 
-    /** embed */
+    /**
+     * embed
+     */
     @Test
     void 임베딩_정상_요청() {
         // Given
@@ -72,7 +75,9 @@ class AdoptionAiServiceImplTest {
         assertThat(output).isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION]);
     }
 
-    /** refine */
+    /**
+     * refine
+     */
     @Test
     void 문자열_정제_정상_요청() {
         // Given
@@ -113,7 +118,9 @@ class AdoptionAiServiceImplTest {
         assertThat(output).isEqualTo("");
     }
 
-    /** tag */
+    /**
+     * tag
+     */
     @Test
     void 태깅_정상_요청() {
         // Given
@@ -160,7 +167,9 @@ class AdoptionAiServiceImplTest {
                 .isEmpty();
     }
 
-    /** embed batch */
+    /**
+     * embed batch
+     */
     @Test
     void 임베딩_병렬_작업이_모두_성공한_경우() {
         // Given
@@ -190,12 +199,16 @@ class AdoptionAiServiceImplTest {
                         opt0 -> assertThat(opt0).get().isEqualTo(new float[]{1.01f, 1.02f}),
                         opt1 -> assertThat(opt1).isEmpty(),
                         opt2 -> assertThat(opt2).get().isEqualTo(new float[]{1.01f, 1.02f}),
-                        opt3 -> assertThat(opt3).get().isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION]),
-                        opt4 -> assertThat(opt4).get().isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION])
+                        opt3 -> assertThat(opt3).get()
+                                .isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION]),
+                        opt4 -> assertThat(opt4).get()
+                                .isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION])
                 );
     }
 
-    /** refine batch */
+    /**
+     * refine batch
+     */
     @Test
     void 문자열_정제_병렬_작업이_모두_성공한_경우() {
         // Given
@@ -230,7 +243,9 @@ class AdoptionAiServiceImplTest {
                 );
     }
 
-    /** tag batch */
+    /**
+     * tag batch
+     */
     @Test
     void 태깅_병렬_작업이_모두_성공한_경우() {
         // Given
