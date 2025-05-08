@@ -12,4 +12,9 @@ public class FilterAuthenticationException extends AuthenticationException {
         super(errorCode.name());
         this.errorCode = errorCode;
     }
+
+    public FilterAuthenticationException(ErrorCode errorCode, String detailMessage) {
+        super(detailMessage);
+        this.errorCode = errorCode;
+    }
 }
