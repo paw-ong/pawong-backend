@@ -43,30 +43,33 @@ class AdoptionAiServiceImplTest {
     }
 
     @Test
-    void 임베딩에_null이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 임베딩에_null이_입력된_경우_제로_벡터가_반환됨() {
         // Given
         String input = null;
-        // When & Then
-        assertThatThrownBy(() -> service.embed(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        // When
+        float[] output = service.embed(input);
+        // Then
+        assertThat(output).isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION]);
     }
 
     @Test
-    void 임베딩에_빈_문자열이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 임베딩에_빈_문자열이_입력된_경우_제로_벡터가_반환됨() {
         // Given
         String input = "";
-        // When & Then
-        assertThatThrownBy(() -> service.embed(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        // When
+        float[] output = service.embed(input);
+        // Then
+        assertThat(output).isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION]);
     }
 
     @Test
-    void 임베딩에_공백이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 임베딩에_공백이_입력된_경우_제로_벡터가_반환됨() {
         // Given
         String input = "    \n   ";
-        // When & Then
-        assertThatThrownBy(() -> service.embed(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        // When
+        float[] output = service.embed(input);
+        // Then
+        assertThat(output).isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION]);
     }
 
     /** refine */
@@ -81,30 +84,33 @@ class AdoptionAiServiceImplTest {
     }
 
     @Test
-    void 문자열_정제에_null이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 문자열_정제에_null이_입력된_경우_빈_문자열이_반환됨() {
         // Given
         String input = null;
+        // When
+        String output = service.refineSpecialMark(input);
         // When & Then
-        assertThatThrownBy(() -> service.refineSpecialMark(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThat(output).isEqualTo("");
     }
 
     @Test
-    void 문자열_정제에_빈_문자열이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 문자열_정제에_빈_문자열이_입력된_경우_빈_문자열이_반환됨() {
         // Given
         String input = "";
+        // When
+        String output = service.refineSpecialMark(input);
         // When & Then
-        assertThatThrownBy(() -> service.refineSpecialMark(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThat(output).isEqualTo("");
     }
 
     @Test
-    void 문자열_정제에_공백이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 문자열_정제에_공백이_입력된_경우_빈_문자열이_반환됨() {
         // Given
         String input = "  \n  ";
+        // When
+        String output = service.refineSpecialMark(input);
         // When & Then
-        assertThatThrownBy(() -> service.refineSpecialMark(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThat(output).isEqualTo("");
     }
 
     /** tag */
@@ -119,30 +125,39 @@ class AdoptionAiServiceImplTest {
     }
 
     @Test
-    void 태깅_시에_null이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 태깅_시에_null이_입력된_경우_빈_배열이_반환됨() {
         // Given
         String input = null;
-        // When & Then
-        assertThatThrownBy(() -> service.tag(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        // When
+        List<String> output = service.tag(input);
+        // Then
+        assertThat(output)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
-    void 태깅_시에_빈_문자열이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 태깅_시에_빈_문자열이_입력된_경우_빈_배열이_반환됨() {
         // Given
         String input = "";
-        // When & Then
-        assertThatThrownBy(() -> service.tag(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        // When
+        List<String> output = service.tag(input);
+        // Then
+        assertThat(output)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
-    void 태깅_시에_공백이_입력된_경우_IllegalArgumentException을_던짐() {
+    void 태깅_시에_공백이_입력된_경우_빈_배열이_반환됨() {
         // Given
         String input = "  \n  ";
-        // When & Then
-        assertThatThrownBy(() -> service.tag(input))
-                .isInstanceOf(IllegalArgumentException.class);
+        // When
+        List<String> output = service.tag(input);
+        // Then
+        assertThat(output)
+                .isNotNull()
+                .isEmpty();
     }
 
     /** embed batch */
@@ -156,13 +171,13 @@ class AdoptionAiServiceImplTest {
         assertThat(results)
                 .hasSize(2)
                 .satisfiesExactly(
-                        opt0 -> assertThat(opt0).get().isEqualTo(new float[]{1.01f, 1.02f}),     // length=1 -> [1.0]
-                        opt1 -> assertThat(opt1).get().isEqualTo(new float[]{1.01f, 1.02f})      // length=2 -> [2.0]
+                        opt0 -> assertThat(opt0).get().isEqualTo(new float[]{1.01f, 1.02f}),
+                        opt1 -> assertThat(opt1).get().isEqualTo(new float[]{1.01f, 1.02f})
                 );
     }
 
     @Test
-    void 임베딩_병렬_작업에_실패가_포함된_경우_해당값은_Optional_Empty_가_됨() {
+    void 임베딩_병렬_작업에_실패가_포함된_경우_해당값은_제로_벡터가_됨() {
         // Given
         // "fail" 입력시 예외 발생
         List<String> texts = Arrays.asList("ok", "fail", "zzz", null, "    ");
@@ -172,11 +187,11 @@ class AdoptionAiServiceImplTest {
         assertThat(results)
                 .hasSize(5)
                 .satisfiesExactly(
-                        opt0 -> assertThat(opt0).get().isEqualTo(new float[]{1.01f, 1.02f}),     // "ok".length=2
-                        opt1 -> assertThat(opt1).isEmpty(),                       // "fail" 예외
-                        opt2 -> assertThat(opt2).get().isEqualTo(new float[]{1.01f, 1.02f}),     // "zzz".length=3
-                        opt3 -> assertThat(opt3).isEmpty(),                       // 입력값이 null인 예외
-                        opt4 -> assertThat(opt4).isEmpty()                        // 입력값이 공백인 예외
+                        opt0 -> assertThat(opt0).get().isEqualTo(new float[]{1.01f, 1.02f}),
+                        opt1 -> assertThat(opt1).isEmpty(),
+                        opt2 -> assertThat(opt2).get().isEqualTo(new float[]{1.01f, 1.02f}),
+                        opt3 -> assertThat(opt3).get().isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION]),
+                        opt4 -> assertThat(opt4).get().isEqualTo(new float[AdoptionAiServiceImpl.EMBEDDING_DIMENSION])
                 );
     }
 
@@ -210,8 +225,8 @@ class AdoptionAiServiceImplTest {
                         opt0 -> assertThat(opt0).contains("test"),
                         opt1 -> assertThat(opt1).isEmpty(),
                         opt2 -> assertThat(opt2).contains("test"),
-                        opt3 -> assertThat(opt3).isEmpty(),
-                        opt4 -> assertThat(opt4).isEmpty()
+                        opt3 -> assertThat(opt3).get().isEqualTo(""),
+                        opt4 -> assertThat(opt4).get().isEqualTo("")
                 );
     }
 
@@ -244,8 +259,14 @@ class AdoptionAiServiceImplTest {
                         opt0 -> assertThat(opt0).contains(List.of("정이많음", "사람을좋아함")),
                         opt1 -> assertThat(opt1).isEmpty(),
                         opt2 -> assertThat(opt2).contains(List.of("정이많음", "사람을좋아함")),
-                        opt3 -> assertThat(opt3).isEmpty(),
-                        opt4 -> assertThat(opt4).isEmpty()
+                        opt3 -> {
+                            assertThat(opt3).isPresent();
+                            assertThat(opt3.get()).isEmpty();
+                        },
+                        opt4 -> {
+                            assertThat(opt4).isPresent();
+                            assertThat(opt4.get()).isEmpty();
+                        }
                 );
     }
 

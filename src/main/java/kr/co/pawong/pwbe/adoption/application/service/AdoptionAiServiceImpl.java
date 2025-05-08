@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AdoptionAiServiceImpl implements AdoptionAiService {
 
+    public static final int EMBEDDING_DIMENSION = 1536;
+
     private final EmbeddingProcessorPort embeddingPort;
     private final ChatProcessorPort chatPort;
     private final AdoptionAiExecutor executor;
@@ -53,7 +55,7 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     @Override
     public float[] embed(String completion) {
         if (!isValidateInput(completion)) {
-            return new float[0]; // 빈 임베딩 반환 또는 다른 기본값
+            return new float[EMBEDDING_DIMENSION]; // 디폴트 제로 벡터 반환
         }
         return embeddingPort.embed(completion);
     }
