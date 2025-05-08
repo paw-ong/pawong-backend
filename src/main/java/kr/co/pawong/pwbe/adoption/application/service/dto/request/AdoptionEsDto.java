@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class AdoptionEsDto {
+
     private Long adoptionId;
     private ActiveState activeState;
     private UpKindCd upKindCd;
@@ -29,6 +30,9 @@ public class AdoptionEsDto {
     private float[] embedding;
 
     public static AdoptionEsDto from(Adoption adoption, RegionInfoDto regionInfo) {
+        List<String> tagsField = adoption.getTagsField() == null ? List.of()
+                : List.of(adoption.getTagsField().split(","));
+
         return AdoptionEsDto.builder()
                 .adoptionId(adoption.getAdoptionId())
                 .activeState(adoption.getActiveState())
@@ -38,7 +42,7 @@ public class AdoptionEsDto {
                 .city(regionInfo.getCity())
                 .district(regionInfo.getDistrict())
                 .refinedSpecialMark(adoption.getRefinedSpecialMark())
-                .tagsField(adoption.getTagsField() == null ? List.of() : List.of(adoption.getTagsField().split(",")))
+                .tagsField(tagsField)
                 .embedding(adoption.getEmbedding())
                 .build();
     }
