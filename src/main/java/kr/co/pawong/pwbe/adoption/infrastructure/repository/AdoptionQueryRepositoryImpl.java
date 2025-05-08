@@ -1,6 +1,7 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.repository;
 
-import jakarta.persistence.EntityNotFoundException;
+import static kr.co.pawong.pwbe.global.error.errorcode.CustomErrorCode.ADOPTION_NOT_FOUND;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import kr.co.pawong.pwbe.adoption.application.domain.Adoption;
 import kr.co.pawong.pwbe.adoption.application.service.port.AdoptionQueryRepository;
 import kr.co.pawong.pwbe.adoption.enums.ActiveState;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
+import kr.co.pawong.pwbe.global.error.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +39,8 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
     @Override
     public Adoption findByIdOrThrow(Long id) {
         AdoptionEntity entity = adoptionJpaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Adoption not found with id: " + id));
+                .orElseThrow(() ->
+                        new BaseException(ADOPTION_NOT_FOUND));
 
         return entity.toModel();
     }
@@ -51,7 +54,7 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
     @Override
     public List<Adoption> findTop12ActiveByNoticeEdt(LocalDate today) {
         return adoptionJpaRepository.findTop12ByActiveStateAndNoticeEdtGreaterThanEqualOrderByNoticeEdtAsc(
-                ActiveState.ACTIVE, today)
+                        ActiveState.ACTIVE, today)
                 .stream()
                 .map(AdoptionEntity::toModel)
                 .collect(Collectors.toList());
@@ -62,8 +65,7 @@ public class AdoptionQueryRepositoryImpl implements AdoptionQueryRepository {
         return adoptionJpaRepository.findByAdoptionId(adoptionId)
                 .map(AdoptionEntity::toModel)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("입양 정보가 없습니다. id=" + adoptionId)
-                );
+                        new BaseException(ADOPTION_NOT_FOUND));
     }
 
 }
