@@ -54,8 +54,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // jwtFilter 실행 -> UsernamePasswordAuthenticationFilter 실행
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                // ExceptionTranslationFilter -> jwtFilter 실행
                 .addFilterAfter(jwtFilter, ExceptionTranslationFilter.class)
 
                 .authorizeHttpRequests(authorize -> authorize
