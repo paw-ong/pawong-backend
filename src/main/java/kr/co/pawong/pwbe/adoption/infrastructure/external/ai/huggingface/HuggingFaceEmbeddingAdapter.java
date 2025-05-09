@@ -1,6 +1,9 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.huggingface;
 
+import static kr.co.pawong.pwbe.global.error.errorcode.CustomErrorCode.SEARCH_ERROR;
+
 import kr.co.pawong.pwbe.adoption.application.service.port.EmbeddingProcessorPort;
+import kr.co.pawong.pwbe.global.error.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
@@ -17,10 +20,14 @@ public class HuggingFaceEmbeddingAdapter implements EmbeddingProcessorPort {
 
     @Override
     public @Nullable float[] embed(String completion) {
+        return getEmbedding(completion);
+    }
+
+    private float[] getEmbedding(String completion) {
         try {
             return embeddingModel.embed(completion);
-        } catch (NoSuchElementException e) {
-            return null;
+        } catch (Exception e) {
+            throw new BaseException(SEARCH_ERROR, e);
         }
     }
 }

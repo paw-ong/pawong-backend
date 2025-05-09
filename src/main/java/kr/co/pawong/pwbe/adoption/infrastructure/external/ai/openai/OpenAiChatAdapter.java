@@ -27,7 +27,7 @@ public class OpenAiChatAdapter implements ChatProcessorPort {
 
     @Override
     public String queryByPrompt(String prompt) {
-        return chatModel.call(prompt);
+        return getCompletion(prompt);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class OpenAiChatAdapter implements ChatProcessorPort {
 
     @Override
     public List<String> getTagsByFeature(String feature) {
-        String tagsStr = chatModel.call(TAGGING_TEMPLATE_1.getMessage(feature));
+        String tagsStr = getCompletion(TAGGING_TEMPLATE_1.getMessage(feature));
         log.info("tagsField: {}", tagsStr);
         return AnimalFeature.extractValidTags(tagsStr);
     }
