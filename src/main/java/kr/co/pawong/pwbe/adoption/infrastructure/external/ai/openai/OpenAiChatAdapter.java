@@ -2,10 +2,12 @@ package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.openai;
 
 import static kr.co.pawong.pwbe.adoption.infrastructure.external.ai.enums.RefineMsg.REFINE_TEMPLATE_1;
 import static kr.co.pawong.pwbe.adoption.infrastructure.external.ai.enums.TaggingMsg.TAGGING_TEMPLATE_1;
+import static kr.co.pawong.pwbe.global.error.errorcode.CustomErrorCode.SEARCH_ERROR;
 
 import java.util.List;
 import kr.co.pawong.pwbe.adoption.application.service.port.ChatProcessorPort;
 import kr.co.pawong.pwbe.adoption.infrastructure.external.ai.enums.AnimalFeature;
+import kr.co.pawong.pwbe.global.error.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -30,7 +32,7 @@ public class OpenAiChatAdapter implements ChatProcessorPort {
 
     @Override
     public String refineAdoptionSentence(String sentence) {
-        String refinedStr = chatModel.call(REFINE_TEMPLATE_1.getMessage(sentence));
+        String refinedStr = getCompletion(REFINE_TEMPLATE_1.getMessage(sentence));
         log.info("refinedSpecialMark: {}", refinedStr);
         return refinedStr;
     }
@@ -40,5 +42,13 @@ public class OpenAiChatAdapter implements ChatProcessorPort {
         String tagsStr = chatModel.call(TAGGING_TEMPLATE_1.getMessage(feature));
         log.info("tagsField: {}", tagsStr);
         return AnimalFeature.extractValidTags(tagsStr);
+    }
+
+    private String getCompletion(String sentence) {
+        try {
+            return chatModel.call(sentence);
+        } catch (Exception e) {
+            throw new BaseException(SEARCH_ERROR, e);
+        }
     }
 }
