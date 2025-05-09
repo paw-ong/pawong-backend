@@ -24,7 +24,7 @@ public class HuggingFaceChatAdapter implements ChatProcessorPort {
 
     @Override
     public String queryByPrompt(String prompt) {
-        return chatModel.call(prompt);
+        return getCompletion(prompt);
     }
 
     @Override
