@@ -11,11 +11,14 @@ import org.springframework.stereotype.Service;
 
 /**
  * Adoption에서 사용하는 AI 관련 기능을 제공합니다.
+ *
  * @exception: null이나 빈 문자열, 공백이 입력된 경우 IllegalArgumentException을 던집니다.
  */
 @Service
 @Slf4j
 public class AdoptionAiServiceImpl implements AdoptionAiService {
+
+    public static final int EMBEDDING_DIMENSION = 1536;
 
     private final EmbeddingProcessorPort embeddingPort;
     private final ChatProcessorPort chatPort;
@@ -29,6 +32,7 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
         }
         return chatPort.refineAdoptionSentence(specialMark);
     }
+
     // 위의 함수를 병렬로 수행하는 함수
     @Override
     public List<Optional<String>> refineSpecialMarkBatch(List<String> specialMarks) {
@@ -43,6 +47,7 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
         }
         return chatPort.getTagsByFeature(feature);
     }
+
     // 위의 함수를 병렬로 수행하는 함수
     @Override
     public List<Optional<List<String>>> tagBatch(List<String> features) {
@@ -53,10 +58,11 @@ public class AdoptionAiServiceImpl implements AdoptionAiService {
     @Override
     public float[] embed(String completion) {
         if (!isValidateInput(completion)) {
-            return new float[0]; // 빈 임베딩 반환 또는 다른 기본값
+            return new float[EMBEDDING_DIMENSION]; // 디폴트 제로 벡터 반환
         }
         return embeddingPort.embed(completion);
     }
+
     // 위의 함수를 병렬로 수행하는 함수
     @Override
     public List<Optional<float[]>> embedBatch(List<String> completions) {
