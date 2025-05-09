@@ -1,7 +1,10 @@
 package kr.co.pawong.pwbe.user.infrastructure.security;
 
+import static kr.co.pawong.pwbe.global.error.errorcode.CustomErrorCode.USERNAME_NOT_FOUND;
+
 import kr.co.pawong.pwbe.user.infrastructure.repository.UserJpaRepository;
 import kr.co.pawong.pwbe.user.infrastructure.repository.entity.UserEntity;
+import kr.co.pawong.pwbe.user.infrastructure.security.error.exception.FilterAuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +23,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userJpaRepository.findBySocialId(Long.valueOf(username))
-            .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+            .orElseThrow(() ->
+                    new FilterAuthenticationException(USERNAME_NOT_FOUND, "User not found with username: " + username));
         return new CustomUserDetails(userEntity);
     }
 

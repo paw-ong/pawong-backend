@@ -1,6 +1,10 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.huggingface;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -12,14 +16,10 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.*;
-import java.util.stream.Stream;
-
 /**
  * @reference: https://huggingface.co/docs/inference-providers/tasks/chat-completion
- * @implements: ChatModel - 스프링 AI 라이브러리에서 만들어 놓은 채팅 전용 인터페이스입니다.
- * 이를 구현해서 HuggingFace Inference API 기반의 채팅 모델을 만들었습니다.
- * 사용자 메시지를 기반으로 AI 모델의 응답을 생성하는 기능을 제공합니다.
+ * @implements: ChatModel - 스프링 AI 라이브러리에서 만들어 놓은 채팅 전용 인터페이스입니다. 이를 구현해서 HuggingFace Inference API
+ * 기반의 채팅 모델을 만들었습니다. 사용자 메시지를 기반으로 AI 모델의 응답을 생성하는 기능을 제공합니다.
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -30,23 +30,24 @@ public class HuggingFaceChatModel implements ChatModel {
     private final RetryTemplate retryTemplate;
     private final WebClient webClient;     // baseUrl="https://router.huggingface.co/hf-inference"
     private final String modelName;        // ex) "Qwen/QwQ-32B"
-    private final ChatOptions defaultOptions = ChatOptions.builder().maxTokens(MAX_TOKEN_LENGTH).build();
+    private final ChatOptions defaultOptions = ChatOptions.builder().maxTokens(MAX_TOKEN_LENGTH)
+            .build();
 
     @Override
     public ChatResponse call(Prompt prompt) {
         // 1) prompt.getInstructions() → HF 스펙 메시지 리스트로 변환
-        List<Map<String,String>> hfMessages = prompt.getInstructions().stream()
+        List<Map<String, String>> hfMessages = prompt.getInstructions().stream()
                 .map(m -> Map.of(
                         "role", m.getMessageType().getValue(),
-                        "content",  m.getContent()
+                        "content", m.getContent()
                 ))
                 .toList();
 
         // 2) 요청 바디 구성 (스펙 기반)
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("messages",   hfMessages);
+        body.put("messages", hfMessages);
         body.put("max_tokens", defaultOptions.getMaxTokens());
-        body.put("stream",     false);
+        body.put("stream", false);
 
         // retryTemplate을 통해서 기본 3번 재시도(네트워크 에러를 비롯한 언체크 예외라도 발생하면 재시도함.
         return retryTemplate.execute(
@@ -70,13 +71,9 @@ public class HuggingFaceChatModel implements ChatModel {
                 },
                 // 모든 재시도에서 실패하면 아래 로직을 수행
                 (ctx) -> {
-                    Throwable lastError = ctx.getLastThrowable();
-                    log.error("HuggingFace 챗 요청 {}회 모두 실패했습니다. 마지막 오류: {}",
-                            ctx.getRetryCount(),
-                            lastError != null ? lastError.getMessage() : "없음");
-                    return ChatResponse.builder()
-                            .generations(Collections.emptyList())
-                            .build();
+                    log.error("HuggingFace 챗 요청 {}회 모두 실패했습니다.",
+                            ctx.getRetryCount());
+                    throw new RuntimeException("HuggingFace 챗 요청할 때 예외 발생", ctx.getLastThrowable());
                 }
         );
     }

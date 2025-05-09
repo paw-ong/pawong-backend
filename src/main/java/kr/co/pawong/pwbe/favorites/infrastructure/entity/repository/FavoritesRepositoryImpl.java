@@ -1,10 +1,14 @@
 package kr.co.pawong.pwbe.favorites.infrastructure.entity.repository;
 
+import static kr.co.pawong.pwbe.global.error.errorcode.CustomErrorCode.ADOPTION_NOT_FOUND;
+import static kr.co.pawong.pwbe.global.error.errorcode.CustomErrorCode.USER_NOT_FOUND;
+
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.AdoptionJpaRepository;
 import kr.co.pawong.pwbe.adoption.infrastructure.repository.entity.AdoptionEntity;
 import kr.co.pawong.pwbe.favorites.application.domain.Favorites;
 import kr.co.pawong.pwbe.favorites.application.service.port.FavoritesRepository;
 import kr.co.pawong.pwbe.favorites.infrastructure.entity.FavoritesEntity;
+import kr.co.pawong.pwbe.global.error.exception.BaseException;
 import kr.co.pawong.pwbe.user.infrastructure.repository.UserJpaRepository;
 import kr.co.pawong.pwbe.user.infrastructure.repository.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +48,11 @@ public class FavoritesRepositoryImpl implements FavoritesRepository {
     @Transactional
     public void save(Favorites favorites) {
         UserEntity userEntity = userJpaRepository.findById(favorites.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + favorites.getUserId()));
+                .orElseThrow(() ->
+                        new BaseException(USER_NOT_FOUND));
         AdoptionEntity adoptionEntity = adoptionJpaRepository.findById(favorites.getAdoptionId())
-                .orElseThrow(() -> new IllegalArgumentException("Adoption not found: " + favorites.getAdoptionId()));
+                .orElseThrow(() ->
+                        new BaseException(ADOPTION_NOT_FOUND));
 
         FavoritesEntity entity = FavoritesEntity.from(favorites, userEntity, adoptionEntity);
         favoritesJpaRepository.save(entity);

@@ -81,7 +81,7 @@ public class AdoptionUpdateServiceImpl implements AdoptionUpdateService {
 
         for (int i = 0; i < batch.size(); i++) {
             Adoption adoption = batch.get(i);
-            log.info("AdoptionId = {}", adoption.getAdoptionId());
+//            log.info("AdoptionId = {}", adoption.getAdoptionId());
 
             String refinedSpecialMark = refinedSpecialMarks.get(i).orElse("");
             List<String> tagsList = tagsFields.get(i).orElse(Collections.emptyList());

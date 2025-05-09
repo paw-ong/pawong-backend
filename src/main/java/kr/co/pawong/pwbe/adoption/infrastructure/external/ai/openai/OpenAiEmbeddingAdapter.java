@@ -1,6 +1,9 @@
 package kr.co.pawong.pwbe.adoption.infrastructure.external.ai.openai;
 
+import static kr.co.pawong.pwbe.global.error.errorcode.CustomErrorCode.SEARCH_ERROR;
+
 import kr.co.pawong.pwbe.adoption.application.service.port.EmbeddingProcessorPort;
+import kr.co.pawong.pwbe.global.error.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +21,14 @@ public class OpenAiEmbeddingAdapter implements EmbeddingProcessorPort {
 
     @Override
     public float[] embed(String completion) {
-        return embeddingModel.embed(completion);
+        return getEmbedding(completion);
+    }
+
+    private float[] getEmbedding(String completion) {
+        try {
+            return embeddingModel.embed(completion);
+        } catch (Exception e) {
+            throw new BaseException(SEARCH_ERROR, e);
+        }
     }
 }
